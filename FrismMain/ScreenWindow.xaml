@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Frism.ScreenWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Frism"
+             mc:Ignorable="d" 
+             d:DesignHeight="410" d:DesignWidth="384">
+    <Grid Background="White"  x:Name="ImageGrid" >
+
+        <Image Name="PreviewImage" Source="{Binding ImageSource, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
+
+        <Rectangle x:Name="CropRectangle" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
+        
+    </Grid>
+</UserControl>

@@ -1,5 +1,2 @@
-# C_Sharp
-C# program
-
-
-UNO
+Deep Vision Inspection for Trash Burstes
+It use CAVIAR FRISM Engine !
