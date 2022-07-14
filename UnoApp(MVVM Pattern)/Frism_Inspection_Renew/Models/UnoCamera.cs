@@ -34,7 +34,7 @@ namespace Frism_Inspection_Renew.Models
         private Dictionary<ICameraInfo, String> itemInfos;
         public ICameraInfo selectedCamera1 = null;
 
-        /////////////// Grab Mode //////////////
+        /////////////// Grab Mode /////////////
         private bool Trigger = false;
         public bool MainMode = false;
 

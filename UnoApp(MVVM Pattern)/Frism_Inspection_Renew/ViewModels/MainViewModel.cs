@@ -109,17 +109,32 @@ namespace Frism_Inspection_Renew
             System.Windows.Forms.MessageBox.Show("Exception caught:\n" + exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+
+
+        /// <summary>
+        /// Open a Window for setting cameras
+        /// </summary>
+        /// <param name="obj"></param>
         private void SetCameraBtnRun(object obj)
         {
-           
+            
         }
 
 
+        /// <summary>
+        /// Start Initializing the program
+        /// </summary>
+        /// <param name="obj"></param>
         private void InitializeBtnRun(object obj)
         {
 
         }        
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
         private void StopInspectBtnRun(object obj)
         {
 
