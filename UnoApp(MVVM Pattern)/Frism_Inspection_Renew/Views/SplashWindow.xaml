@@ -1,0 +1,20 @@
+﻿<Window x:Class="Frism_Inspection_Renew.Views.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Topmost="true"
+        x:Name="MainLoding"
+        Height="430"
+        Width="680"
+        Background="#00062f">
+    <Grid Margin="10,10,10,10">
+        <ProgressBar x:Name="progressBar" IsIndeterminate="True" Height="30" VerticalAlignment="Bottom" Margin="0,0,0,10" />
+        <TextBlock HorizontalAlignment="Center"
+                   VerticalAlignment="Center" Margin="299,377,309,17">Loading...</TextBlock>
+        <Image x:Name="mainImage" Margin="12,10,10,45" Source="Resources/frism_V splash.png" Stretch="Fill" Visibility="Visible"/>
+        <TextBlock x:Name="mainText" Margin="148,269,167,103" Height="38" Width="345" FontStretch="Expanded"><Run Text="Trashbusters 세척후 컵 검사기..." Background="Black" Foreground="White" FontSize="18"/></TextBlock>
+        <TextBlock x:Name="subText"  Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"  Height="38" Width="444" FontStretch="Expanded"><Run Text="세팅중...잠시만 기다려주세요" Background="Black" Foreground="White" FontSize="30"/></TextBlock>
+    </Grid>
+</Window>

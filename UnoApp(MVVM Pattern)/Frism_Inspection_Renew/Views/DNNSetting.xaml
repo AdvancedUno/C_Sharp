@@ -1,0 +1,61 @@
+﻿<Window x:Class="Frism_Inspection_Renew.Views.DNNSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frism_Inspection_Renew.Views"
+        mc:Ignorable="d"
+        Title="DNNSetting" Height="487.329" Width="850"
+        Closing="Window_Closing">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Max Thread Count : " Grid.Column="0" Grid.Row="0" FontSize="20"/>
+        <TextBlock Text="Max Tile Width : " Grid.Column="0" Grid.Row="1" FontSize="20"/>
+        <TextBlock Text="Max Tile Height : " Grid.Column="0" Grid.Row="2" FontSize="20"/>
+        <TextBlock Text="Gpu Number : " Grid.Column="0" Grid.Row="3" FontSize="20"/>
+        <TextBlock Text="Min Defect Size (Top) : " Grid.Column="0" Grid.Row="4" FontSize="20"/>
+        <TextBlock Text="Min P Value (Top) : " Grid.Column="0" Grid.Row="5" FontSize="20"/>
+        <TextBlock Text="Min Defect Size (Side) : " Grid.Column="0" Grid.Row="6" FontSize="20"/>
+        <TextBlock Text="Min P Value (Side) : " Grid.Column="0" Grid.Row="7" FontSize="20"/>
+
+        <TextBox x:Name="MaxThreadCountTxtBox" Text="4" Grid.Column="1" Grid.Row="0" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MaxTileWidthTxtBox" Text="1600" Grid.Column="1" Grid.Row="1" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MaxTileHeightTxtBox" Text="1200" Grid.Column="1" Grid.Row="2" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="GpuNumberTxtBox" Text="0" Grid.Column="1" Grid.Row="3" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MinDefectNumTxtBoxTop" Text="1" Grid.Column="1" Grid.Row="4" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MinPValueTxtBoxTop" Text="0.5" Grid.Column="1" Grid.Row="5" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MinDefectNumTxtBoxSide" Text="1" Grid.Column="1" Grid.Row="6" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MinPValueTxtBoxSide" Text="0.5" Grid.Column="1" Grid.Row="7" FontSize="24" TextAlignment="Center"/>
+
+        <Button Content="Apply" x:Name="DnnApplyBtn" Click="DnnApplyBtn_Click" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="8"/>
+
+
+        <CheckBox x:Name="InspectCheckBox" Content="검사 유무" Unchecked="InspectCheckBox_Unchecked" Checked="InspectCheckBox_Checked" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="True" FontSize="24" Visibility ="Hidden"/>
+        <CheckBox x:Name="SnapShotCheckBox" Content="Snapshot" Unchecked="SnapShotCheckBox_Unchecked" Checked="SnapShotCheckBox_Checked" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="False" FontSize="24" Margin="58,10,31,10" Width="147" Visibility="Hidden"/>
+        <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="저장 경로: " x:Name="FolderPathTxt" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontSize="24"/>
+            <Button   x:Name="SelectFolderButton" Content="...." HorizontalAlignment="Center" Click="SelectFolderButton_Click"  VerticalAlignment="Center" Margin="5,16,5,9" Width="67" Height="26"/>
+
+        </StackPanel>
+
+
+
+
+    </Grid>
+</Window>

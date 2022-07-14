@@ -1,0 +1,75 @@
+﻿<Window x:Class="Frism_Inspection_Renew.Views.SetCameraView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frism_Inspection_Renew.Views"
+        mc:Ignorable="d"
+        Title="SetCameraView" Height="1377" Width="1821">
+    <ScrollViewer Background="White" Padding="12,20,12,12">
+        <ScrollViewer.Resources>
+            <DataTemplate x:Key="DisplayNameTemplate">
+                <TextBlock Text="{Binding Path=DisplayName}" />
+            </DataTemplate>
+        </ScrollViewer.Resources>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox Name="GroupComboBox"  SelectionChanged="GroupComboBox_SelectionChanged" Margin="0,0,10,0" VerticalAlignment="Center" ItemsSource="{Binding Items}" Width="400"/>
+                    <Button Content="전체화면" Name="fullScreenBtn" Click="fullScreenBtn_Click"/>
+                    <ComboBox Name ="CameraInfoBox" SelectionChanged="CameraInfoBox_SelectionChanged" Margin="10 0 10 0" VerticalAlignment="Center" Width="300"/>
+                    <Button Content="전체 세팅" Name="SetAllBtn" Click="SetBtn_Click" Margin="0 0 5 0"/>
+                    <Button Content="전체 시작" Name="StartAllBtn" Click="StartAllBtn_Click" Margin="0 0 5 0" IsEnabled="False"/>
+                    <Button Content="삭제" Name="DeleteBtn" Click="DeleteBtn_Click" Margin="0 0 5 0" />
+                    <Button Content="조명 설정" Name="SetLEDBtn" Click="SetLEDBtn_Click" />
+                </StackPanel>
+            </Grid>
+
+
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 10 0 10">
+                <Button Content="1번 카메라 설정" Click="Button_Click_1" Height="30"/>
+                <local:Sub_SetCameraView x:Name="FirstBlock" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="1" Margin="0 10 0 10">
+                <Button Content="2번 카메라 설정" Click="Button_Click_2" Height="30"/>
+                <local:Sub_SetCameraView x:Name="SecondBlock" />
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.Column="0" Margin="0 0 0 10">
+                <Button Content="3번 카메라 설정" Click="Button_Click_3" Height="30"/>
+                <local:Sub_SetCameraView x:Name="ThirdBlock" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Grid.Column="1" Margin="0 0 0 10">
+                <Button Content="4번 카메라 설정" Click="Button_Click_4" Height="30"/>
+                <local:Sub_SetCameraView x:Name="FourthBlock"/>
+            </StackPanel>
+
+
+
+
+
+            <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                <TextBox x:Name="CameraInfoTxt" Width="100" Height="25" Margin="0 10 0 0"/>
+                <Button x:Name="SettingCameraButton"  Content="Finish Setting Cameras" Click="SettingCameraButton_Click"  HorizontalAlignment="Center" Margin="5" Height="30" Background="DarkGray"/>
+                <Button x:Name="ResetButton"  Content="Reset Cameras"  HorizontalAlignment="Center" Margin="5" Click="ResetButton_Click"/>
+            </StackPanel>
+
+        </Grid>
+
+    </ScrollViewer>
+</Window>
