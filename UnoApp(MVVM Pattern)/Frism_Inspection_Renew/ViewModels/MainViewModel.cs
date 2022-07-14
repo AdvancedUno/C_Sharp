@@ -132,33 +132,57 @@ namespace Frism_Inspection_Renew
 
 
         /// <summary>
-        /// 
+        /// Stop Inspection and stop cameras from capturing images, but do not close cameras
         /// </summary>
         /// <param name="obj"></param>
         private void StopInspectBtnRun(object obj)
         {
 
         }
+        
 
+
+        /// <summary>
+        /// Start Inspection and turn on the LED Light to show the User that the program is ready to inspect objects
+        /// </summary>
+        /// <param name="obj"></param>
         private void StartInspectBtnRun(object obj)
         {
 
         }
 
+
+        /// <summary>
+        /// Open a History Window that will allow user to check the history of resulted images from the inspection.
+        /// </summary>
+        /// <param name="obj"></param>
         private void ShowHistoryBtnRun(object obj)
         {
 
         } 
 
+
+
+        /// <summary>
+        /// Open an InspectionSetting Window where Users can set parameters for the inspection.
+        /// </summary>
+        /// <param name="obj"></param>
         private void InspectionSettingBtnRun(object obj)
         {
 
         }
         
+
+        /// <summary>
+        /// When clicked, resets the Ok and NG image counts, and also makes the MainView Window to inspection read position
+        /// </summary>
+        /// <param name="obj"></param>
         private void InspectCountResetBtnRun(object obj)
         {
 
         }
+
+
 
         private bool CanExecute_func(object obj)
         {
@@ -169,7 +193,9 @@ namespace Frism_Inspection_Renew
 
 
 
-
+        /// <summary>
+        /// Update Camera infos and add them to the CameraInfosDictionary
+        /// </summary>
         public void UpdateDeviceList()
         {
             Logger.Debug("Update Device List");
@@ -197,6 +223,8 @@ namespace Frism_Inspection_Renew
 
             }
         }
+
+
 
         public void UpdateCameraList()
         {
