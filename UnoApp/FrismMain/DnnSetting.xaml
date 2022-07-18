@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frism"
         mc:Ignorable="d"
-        Title="Window1" Height="487.329" Width="850"
+        Title="DNN 세팅" Height="487.329" Width="850"
         Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -25,23 +25,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Max Thread Count : " Grid.Column="0" Grid.Row="0" FontSize="20"/>
-        <TextBlock Text="Max Tile Width : " Grid.Column="0" Grid.Row="1" FontSize="20"/>
-        <TextBlock Text="Max Tile Height : " Grid.Column="0" Grid.Row="2" FontSize="20"/>
-        <TextBlock Text="Gpu Number : " Grid.Column="0" Grid.Row="3" FontSize="20"/>
-        <TextBlock Text="Min Defect Size (Top) : " Grid.Column="0" Grid.Row="4" FontSize="20"/>
-        <TextBlock Text="Min P Value (Top) : " Grid.Column="0" Grid.Row="5" FontSize="20"/>
-        <TextBlock Text="Min Defect Size (Side) : " Grid.Column="0" Grid.Row="6" FontSize="20"/>
-        <TextBlock Text="Min P Value (Side) : " Grid.Column="0" Grid.Row="7" FontSize="20"/>
+        
+        <TextBlock Text="Max Tile Width : " Grid.Column="0" Grid.Row="0" FontSize="20"/>
+        <TextBlock Text="Max Tile Height : " Grid.Column="0" Grid.Row="1" FontSize="20"/>
+        <TextBlock Text="Gpu Number : " Grid.Column="0" Grid.Row="2" FontSize="20"/>
+        <TextBlock Text="Min Defect Size (Top) : " Grid.Column="0" Grid.Row="3" FontSize="20"/>
+        <TextBlock Text="Min P Value (Top) : " Grid.Column="0" Grid.Row="4" FontSize="20"/>
+        <TextBlock Text="Min Defect Size (Side) : " Grid.Column="0" Grid.Row="5" FontSize="20"/>
+        <TextBlock Text="Min P Value (Side) : " Grid.Column="0" Grid.Row="6" FontSize="20"/>
 
-        <TextBox x:Name="MaxThreadCountTxtBox" Text="4" Grid.Column="1" Grid.Row="0" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="MaxTileWidthTxtBox" Text="1600" Grid.Column="1" Grid.Row="1" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="MaxTileHeightTxtBox" Text="1200" Grid.Column="1" Grid.Row="2" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="GpuNumberTxtBox" Text="0" Grid.Column="1" Grid.Row="3" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="MinDefectNumTxtBoxTop" Text="1" Grid.Column="1" Grid.Row="4" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="MinPValueTxtBoxTop" Text="0.5" Grid.Column="1" Grid.Row="5" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="MinDefectNumTxtBoxSide" Text="1" Grid.Column="1" Grid.Row="6" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="MinPValueTxtBoxSide" Text="0.5" Grid.Column="1" Grid.Row="7" FontSize="24" TextAlignment="Center"/>
+        
+        <TextBox x:Name="MaxTileWidthTxtBox" Text="1600" Grid.Column="1" Grid.Row="0" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MaxTileHeightTxtBox" Text="1200" Grid.Column="1" Grid.Row="1" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="GpuNumberTxtBox" Text="0" Grid.Column="1" Grid.Row="2" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MinDefectNumTxtBoxTop" Text="1" Grid.Column="1" Grid.Row="3" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MinPValueTxtBoxTop" Text="0.5" Grid.Column="1" Grid.Row="4" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MinDefectNumTxtBoxSide" Text="1" Grid.Column="1" Grid.Row="5" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="MinPValueTxtBoxSide" Text="0.5" Grid.Column="1" Grid.Row="6" FontSize="24" TextAlignment="Center"/>
 
         <Button Content="Apply" x:Name="DnnApplyBtn" Click="DnnApplyBtn_Click" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="8"/>
 

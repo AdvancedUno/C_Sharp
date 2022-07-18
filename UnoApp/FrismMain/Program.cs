@@ -15,6 +15,17 @@ using Automation.BDaq;
 
 namespace Frism
 {
+    public class BlowDelegateClass
+    {
+        public delegate void MyEventHandelr();
+        public event MyEventHandelr blowEvent;
+        public void StartBlowing()
+        {
+            blowEvent?.Invoke();
+        }
+    };
+
+
 
     public class Program
     {
@@ -95,9 +106,24 @@ namespace Frism
 
         public static Stopwatch watch = new Stopwatch();
 
+
+        public static string deviceDescription = "PCI-1730,BID#0";
+        public static string profilePath = "D:\\profile_i\\dev2.xml";
+
+        public static int startPort = 0;
+        public static int portCount = 1;
+
+        public static ErrorCode errorCode = ErrorCode.Success;
+
+        public static InstantDoCtrl instantDoCtrl;
+
+        public static byte[] bufferForWriting;
+
         int sum = 0;
 
-        
+        public static BlowDelegateClass blowDelegateClass;
+
+
 
 
         public static void Saving()
@@ -113,7 +139,6 @@ namespace Frism
                     Directory.CreateDirectory(Program.saveFolderPath);
                 }
             }
-
 
             while (checkSet)
             {
@@ -145,11 +170,8 @@ namespace Frism
 
                         Task.Factory.StartNew((Action)(() =>
                         {
-                            //if (imgResult1 == null) Console.WriteLine("1111111111111111111");
                             saveImg1.Save(saveImagePath + "\\" + desiredName + "_[Top].bmp", ImageFormat.Bmp);
                             saveImg1 = null;
-
-
                             saveResult1.Save(saveImagePath + "\\" + desiredName + "_[Top]_Output.bmp", ImageFormat.Bmp);
                             saveResult1 = null;
                             Console.WriteLine(1);
@@ -157,21 +179,19 @@ namespace Frism
                         ));
                         img1 = null;
 
-                    Task.Factory.StartNew((Action)(() =>
-                    {
-                        //if (imgResult2 == null) Console.WriteLine("22222222222222222");
-                        saveImg2.Save(saveImagePath + "\\" + desiredName + "_[1].bmp", ImageFormat.Bmp);
-                        saveImg2 = null;
-                        saveResult2.Save(saveImagePath + "\\" + desiredName + "_[1]_Output.bmp", ImageFormat.Bmp);
-                        saveResult2 = null;
-                        Console.WriteLine(2);
-                    }
+                        Task.Factory.StartNew((Action)(() =>
+                        {
+                            saveImg2.Save(saveImagePath + "\\" + desiredName + "_[1].bmp", ImageFormat.Bmp);
+                            saveImg2 = null;
+                            saveResult2.Save(saveImagePath + "\\" + desiredName + "_[1]_Output.bmp", ImageFormat.Bmp);
+                            saveResult2 = null;
+                            Console.WriteLine(2);
+                        }
                         ));
                         img2 = null;
 
                         Task.Factory.StartNew((Action)(() =>
                         {
-                            //if (imgResult2 == null) Console.WriteLine("22222222222222222");
                             saveImg3.Save(saveImagePath + "\\" + desiredName + "_[2].bmp", ImageFormat.Bmp);
                             saveImg3 = null;
                             saveResult3.Save(saveImagePath + "\\" + desiredName + "_[2]_Output.bmp", ImageFormat.Bmp);
@@ -180,11 +200,9 @@ namespace Frism
                         }
                         ));
                         img3 = null;
-                        //if (imgResult3 == null) Console.WriteLine("3333333333333333");
 
                         Task.Factory.StartNew((Action)(() =>
                         {
-                            //if (imgResult2 == null) Console.WriteLine("22222222222222222");
                             saveImg4.Save(saveImagePath + "\\" + desiredName + "_[3].bmp", ImageFormat.Bmp);
                             saveImg4 = null;
                             saveResult4.Save(saveImagePath + "\\" + desiredName + "_[3]_Output.bmp", ImageFormat.Bmp);
@@ -192,46 +210,30 @@ namespace Frism
                             Console.WriteLine(4);
                         }
                         ));
-                        //if (imgResult4 == null) Console.WriteLine("4444444444444444");
-
                         img4 = null;
-
                         desiredName = null;
+                    }
 
-
-
-                            //Thread.Sleep(10);
-
-                        }
-
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex.Message + " Saving");
-                        }
-                    
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex.Message + " Saving");
+                    }
                 }
             }
         }
 
         public static void SendShowCameraSignal()
         {
-            
             lock (lockShowCameraSignalObject)
             {
                 checkCameraSignal++;
             }
-
-            
-
             if(checkCameraSignal > 3)
             {
-                //Console.WriteLine("Yellowwwwwwwwww");
                 checkCameraSignal = 0;
                 m_bCam1Insp = true;
                 useShowSigClass.ShowCameraSignal();
             }
-            
-
         }
 
         public static void SendEndShowCameraSignal()
@@ -241,48 +243,28 @@ namespace Frism
             {
                 checkEndCameraSignal++;
             }
-
-
-
             if (checkEndCameraSignal > 3)
             {
-                //Thread.Sleep(500);
-                //Console.WriteLine("Grayyyyyyyyyy");
                 checkEndCameraSignal = 0;
                 m_bCam1Insp = false;
                 Task.Delay(100).ContinueWith(_ =>
                 {
                     useShowSigClass.ShowEndCameraSignal();
                 });
-                
             }
-
-
         }
-
-
 
         public static bool CheckImage()
         {
-
-
             if (img1 != null && img2 != null && img3 != null && img4 != null )
             {
-
                 return true;
             }
-            
-
             else
             {
                 return false;
-
             }
-
-
         }
-
-
 
         public static void SavingForTrain()
         {
@@ -297,19 +279,10 @@ namespace Frism
                         {
                             desiredName = String.Format(DateTime.Now.ToString("HHmmssfff"));
                         }
-
-                        //string pathName = String.Format(DateTime.Now.ToString("HHmmssfff"));
-                       // string path = System.IO.Path.Combine(saveFolderPath, pathName);
-
-                        //Directory.CreateDirectory(path);
-                        //saveImagePath = path;
-
                         img1.Save(saveImagePathTrainingTop + "\\" + desiredName + "_[Top].bmp", ImageFormat.Bmp);
                         img2.Save(saveImagePathTraining1 + "\\" + desiredName + "_[1].bmp", ImageFormat.Bmp);
                         img3.Save(saveImagePathTraining2 + "\\" + desiredName + "_[2].bmp", ImageFormat.Bmp);
                         img4.Save(saveImagePathTraining3 + "\\" + desiredName + "_[3].bmp", ImageFormat.Bmp);
-
-
                         desiredName = null;
                         img1 = null;
                         img2 = null;
@@ -324,7 +297,6 @@ namespace Frism
             }
         }
 
-
         public static void SaveAllImages()
         {
             lock (lockObject)
@@ -333,10 +305,8 @@ namespace Frism
                 {
                     checkFolderPath = true;
                     checkCnt++;
-
                     if (Program.saveFolderPath == null)
                     {
-
                         Program.saveFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection";
                         System.Windows.Forms.MessageBox.Show("Temporary Path has been Assigned. Please Select a Folder First. Path: " + Program.saveFolderPath);
 
@@ -346,24 +316,16 @@ namespace Frism
                         }
                     }
 
-
-
-                    //desiredName = String.Format(DateTime.Now.ToString("HHmmssfff"));
-
-
                     string pathName = String.Format(DateTime.Now.ToString("HHmmssfff"));
                     string path = System.IO.Path.Combine(saveFolderPath, pathName);
-
                     Directory.CreateDirectory(path);
                     saveImagePath = path;
                     imagePathTop.Enqueue(saveImagePath);
                     imagePath1.Enqueue(saveImagePath);
                     imagePath2.Enqueue(saveImagePath);
                     imagePath3.Enqueue(saveImagePath);
-                    //Console.WriteLine("Cnt Number = === : " + checkCnt);
                 }
             }
-            
         }
 
 
@@ -372,29 +334,23 @@ namespace Frism
             Task.Factory.StartNew((Action)(() =>
             {
                 SaveAllImages();
-
                 if (imagePathTop.Count() > 0)
                 {
                     string filePath = imagePathTop.Dequeue();
                     string fileName = filePath.Substring(filePath.Length - 10, 9);
                     img.Save(saveImagePath + "\\" + fileName + "_[Top].bmp", ImageFormat.Bmp);
                     resultImg.Save(saveImagePath + "\\" + fileName + "_[Top]_Result.bmp", ImageFormat.Bmp);
-                    //Console.WriteLine(1);
                 }
                 lock (lockThreadCntObject)
                 {
                     checkThreadCnt++;
                 }
-
                 if (checkThreadCnt > 3)
                 {
                     checkThreadCnt = 0;
                     checkFolderPath = false;
                 }
             }));
-
-            //img1 = img;
-            //imgResult1 = resultImg;
         }
 
         public static void SaveImg2( Bitmap img, Bitmap resultImg)
@@ -402,17 +358,13 @@ namespace Frism
             Task.Factory.StartNew((Action)(() =>
             {
                 SaveAllImages();
-
                 if (imagePath1.Count() > 0)
                 {
-
                     string filePath = imagePath1.Dequeue();
                     string fileName = filePath.Substring(filePath.Length - 10, 9);
                     img.Save(saveImagePath + "\\" + fileName + "_[1].bmp", ImageFormat.Bmp);
                     resultImg.Save(saveImagePath + "\\" + fileName + "_[1]_Result.bmp", ImageFormat.Bmp);
-                    //Console.WriteLine(2);
                 }
-                //Thread.Sleep(100);
                 lock (lockThreadCntObject)
                 {
                     checkThreadCnt++;
@@ -423,8 +375,6 @@ namespace Frism
                     checkFolderPath = false;
                 }
             }));
-            //img2 = img;
-            //imgResult2 = resultImg;
         }
 
 
@@ -456,76 +406,53 @@ namespace Frism
                 }
 
             }));
-
-            //img3 = img;
-            //imgResult3 = resultImg;
         }
         public static void SaveImg4(Bitmap img, Bitmap resultImg)
         {
             Task.Factory.StartNew((Action)(() =>
             {
                 SaveAllImages();
-
                 if (imagePath3.Count() > 0)
                 {
-
                     string filePath = imagePath3.Dequeue();
                     string fileName = filePath.Substring(filePath.Length - 10, 9);
                     img.Save(saveImagePath + "\\" + fileName + "_[3].bmp", ImageFormat.Bmp);
                     resultImg.Save(saveImagePath + "\\" + fileName + "_[3]_Result.bmp", ImageFormat.Bmp);
-                    //Console.WriteLine(4);
-
                 }
                 lock (lockThreadCntObject)
                 {
                     checkThreadCnt++;
                 }
-
                 if (checkThreadCnt > 3)
                 {
                     checkThreadCnt = 0;
                     checkFolderPath = false;
                 }
-
             }));
-            // imgResult4 = resultImg;
-            // img4 = img;
         }
-
 
         public static void ChangeNGRate()
         {
-
-            
-
             if (NGCallCnt >= 4)
             {
-                
                 if (NGTop != true && NG1 != true && NG2 != true && NG3 != true)
                 {
-                    
                     Logger.Info("OK");
                     useNGClass.IncreaseOK();
                     SaveIOSig2Queue(true);
                 }
                 else
                 {
-                    
                     Logger.Info("NG");
                     useNGClass.IncreaseNG();
                     SaveIOSig2Queue(false);
                 }
                 NGCallCnt = 0;
-
             }
-
         }
-
 
         public static void ChangeTime()
         {
-            //Console.WriteLine("want :::::::::::::" + TimeCallCnt);
-
             if (TimeCallCnt >= 4)
             {
                 Task.Factory.StartNew((Action)(() =>
@@ -542,7 +469,6 @@ namespace Frism
                     if (maxProcessTime < processTime2) maxProcessTime = processTime2;
                     if (maxProcessTime < processTime3) maxProcessTime = processTime3;
 
-
                     useCntTimeClass.IncreaseInspTime(maxInspTime);
                     useCntTimeClass.IncreaseProcessTime(maxProcessTime);
                     maxProcessTime = 0;
@@ -552,17 +478,9 @@ namespace Frism
                 {
                     Logger.Error(ex.Message + " ChangeTime");
                 }
-
-               
-
-
-                 
                 }));
-                
             }
         }
-
-
 
         public static void SetClass(CntNGClass classInfo)
         {
@@ -581,33 +499,24 @@ namespace Frism
             {
                 Logger.Error(ex.Message + " GetNGTop");
             }
-            
-
-
         }
 
         public static void GetNG1(bool NGResult)
         {
-
             try
             {
                 NG1 = NGResult;
-                NGCallCnt++;
+                NGCallCnt++; 
                 ChangeNGRate();
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message + " GetNG1");
             }
-         
-
-
         }
 
         public static void GetNG2(bool NGResult)
         {
-            
-
             try
             {
                 NG2 = NGResult;
@@ -618,12 +527,10 @@ namespace Frism
             {
                 Logger.Error(ex.Message + " GetNG2");
             }
-
         }
 
         public static void GetNG3(bool NGResult)
         {
-
             try
             {
                 NG3 = NGResult;
@@ -634,48 +541,34 @@ namespace Frism
             {
                 Logger.Error(ex.Message + " GetNG3");
             }
-
-
-
         }
 
         public static void GetTimeTop(long elpsTime, long processTime)
         {
-
-            
             processTimeTop = processTime;
             elpsTimeTop = elpsTime;
             TimeCallCnt++;
-            
-            
             ChangeTime();
-
         }
 
         public static void GetTime1(long elpsTime, long processTime)
         {
-           
             processTime1 = processTime;
             elpsTime1 = elpsTime;
             TimeCallCnt++;
             ChangeTime();
-
         }
 
         public static void GetTime2(long elpsTime, long processTime)
         {
-            
             processTime2 = processTime;
             elpsTime2 = elpsTime;
             TimeCallCnt++;
             ChangeTime();
-
-
         }
 
         public static void GetTime3(long elpsTime, long processTime)
         {
-            
             processTime3 = processTime;
             elpsTime3 = elpsTime;
             TimeCallCnt++;
@@ -702,21 +595,13 @@ namespace Frism
             tSignal.Start();
         }
 
-
-
-
         public static void IOBlowSig()
         {
-
             string deviceDescription = "PCI-1730,BID#0";
-            //string profilePath = "C:\\workspace\\embedded\\iodev2.xml";
             string profilePath = "D:\\profile_i\\dev2.xml";
             int startPort = 0;
             int portCount = 1;
             ErrorCode errorCode = ErrorCode.Success;
-            //Console.WriteLine(errorCode);
-
-            
 
             InstantDiCtrl instantDiCtrl = new InstantDiCtrl();
             try
@@ -732,83 +617,33 @@ namespace Frism
 
                 byte[] buffer = new byte[64];
                 bool bSensorFlag = false;
-                bool temp = true;
+                
                 while (bContinueBlowSignal)
                 {
-                    //Console.WriteLine(qSaveBlowSignal.Count);
-                    //Console.WriteLine(qSaveBlowSignal.Take());
-                    
-
-                        errorCode = instantDiCtrl.Read(startPort, portCount, buffer);
-                        if (BioFailed(errorCode))
-                        {
-                            throw new Exception();
-                        }
-
-                        int intbyte = buffer[0];
-                    //Console.WriteLine(" DI port {0} status : 0x{1:x}\n", startPort , buffer[0]);
-                    //Console.WriteLine("")
-                    if (buffer[0] > 0)
+                    errorCode = instantDiCtrl.Read(startPort, portCount, buffer);
+                    if (BioFailed(errorCode))
                     {
-                        if (bSensorFlag == false)
+                        throw new Exception();
+                    }
+                    int intbyte = buffer[0];
+                    
+                    if(buffer[0] > 0)
+                    {
+                        while (true)
                         {
-                            //Console.WriteLine("qBlowSize:{0}", qSaveBlowSignal.Count);
-                            
-                            if (qSaveBlowSignal.Count > 0)
+                            if (buffer[0] == 0)
                             {
-                                
-
-
-                                temp = qSaveBlowSignal.Take();
-                                bSensorFlag = true;
-
-                                //Console.WriteLine("temp value : " + temp);
-                                if (!temp)
-                                {
-
-
-
-                                    Console.WriteLine("NG Blow\n");
-                                    //useShowSigClass.ShowBlowSignal();
-
-                                    watch.Start();
-
-                                    blow(100);
-                                    watch.Stop();
-
-                                    if(watch.ElapsedMilliseconds > 120)
-                                    {
-                                        Console.WriteLine(watch.ElapsedMilliseconds + " ms");
-                                    }
-                                    
-
-
-                                    //Task.Delay(100).ContinueWith(_ =>
-                                    //{
-                                    //useShowSigClass.ShowEndBlowSignal();
-                                    //});
-
-
-
-                                }
+                                blowDelegateClass.StartBlowing();
+                                break;
                             }
-                            
                         }
-                        else
-                        {
-                            bSensorFlag = false;
-                        }
-
+                        
                     }
 
 
                     
-                    
 
-                        Thread.Sleep(5);
-                    
-                    
-
+                    Thread.Sleep(5);
                 }
             }
             catch (Exception e)
@@ -831,7 +666,6 @@ namespace Frism
             return err < ErrorCode.Success && err >= ErrorCode.ErrorHandleNotValid;
         }
 
-
         public static void ErrorBlow()
         {
             lock (lockBlowObject)
@@ -844,22 +678,37 @@ namespace Frism
         }
 
 
-        public static void blow(int nDelay)
+        public static void setBlowReady()
         {
-            string deviceDescription = "PCI-1730,BID#0";
-            string profilePath = "D:\\profile_i\\dev2.xml";
+            bool temp = true;
 
-            int startPort = 0;
-            int portCount = 1;
+            
+            if (qSaveBlowSignal.Count > 0)
+            {
+                temp = qSaveBlowSignal.Take();
+                if (!temp)
+                {
+                    Console.WriteLine("NG Blow\n");
+                    Task.Factory.StartNew((Action)(() =>
+                    {
+                        blow(100);
+                    }));
+                }
 
-            Console.WriteLine("BLOWWWWWWWWWWWW");
-            ErrorCode errorCode = ErrorCode.Success;
+            }
 
 
-            InstantDoCtrl instantDoCtrl = new InstantDoCtrl();
 
+        }
+
+
+        public static void setBlowDevice()
+        {
             try
             {
+                errorCode = ErrorCode.Success;
+
+                instantDoCtrl = new InstantDoCtrl();
                 instantDoCtrl.SelectedDevice = new DeviceInformation(deviceDescription);
                 errorCode = instantDoCtrl.LoadProfile(profilePath);
                 if (BioFailed(errorCode))
@@ -867,8 +716,29 @@ namespace Frism
                     throw new Exception();
                 }
 
-                byte[] bufferForWriting = new byte[64];
+                blowDelegateClass = new BlowDelegateClass();
 
+
+                blowDelegateClass.blowEvent += setBlowReady;
+
+
+
+            }
+            catch(Exception exception)
+            {
+                Logger.Error(exception.Message + " _Blow");
+            }
+
+        }
+
+        public static void blow(int nDelay)
+        {
+
+
+            Console.WriteLine("BLOWWWWWWWWWWWW");
+            bufferForWriting = new byte[64];
+            try
+            {
                 for (int j = 0; j < 2; j++)
                 {
                     for (int i = 0; i < portCount; ++i)
@@ -878,30 +748,20 @@ namespace Frism
                             data = "0x01";
                         else
                             data = "0x00";
-
-
                         bufferForWriting[i] = byte.Parse(data.Contains("0x") ? data.Remove(0, 2) : data, System.Globalization.NumberStyles.HexNumber);
-
                     }
-
                     errorCode = instantDoCtrl.Write(startPort, portCount, bufferForWriting);
-                    
                     if (BioFailed(errorCode))
                     {
                         throw new Exception();
                     }
-
-                    //Console.WriteLine("DO output completed !");
-
                     if (j == 0)
                     {
                         //Console.WriteLine("sleep!");
                         Thread.Sleep(nDelay);
                     }
                 }
-
             }
-
             catch (Exception e)
             {
                 string errStr = BioFailed(errorCode) ? " Some error occurred. And the last error code is " + errorCode.ToString()
@@ -909,7 +769,6 @@ namespace Frism
                 Console.WriteLine(errStr);
                 Logger.Error(e.Message + " _Blow");
             }
-
         }
 
 

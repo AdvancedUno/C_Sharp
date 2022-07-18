@@ -238,12 +238,28 @@ namespace Frism
                 camera.SetMainMode();
                 camera.StartContinuousShotGrabbing();
                 //WindowImage.InitThread();
+                
+
+            }
+
+        }
+
+
+
+
+        public void InitializeDLL()
+        {
+            if (camera.IsOpened())
+            {
+
                 Console.WriteLine("Thead ID : _________ " + Thread.CurrentThread.ManagedThreadId);
                 WindowImage.InferDLL(iMaxThreadCnt, iMaxTileWidth, iMaxTileHeight, iGpuNo, iMinDefectNumTop, fMinPValTop, iMinDefectNumSide, fMinPValSide);
 
             }
 
         }
+
+
         public void Trigger()
         {
             // camera.Parameters[PLCamera.TriggerSoftware].Execute();

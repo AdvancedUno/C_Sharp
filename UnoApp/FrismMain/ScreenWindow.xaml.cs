@@ -73,6 +73,7 @@ namespace Frism
 
         private bool m_bStopped = false;
         private bool m_bInferFlag = false;
+        public bool m_bInferReadyFlag = false;
 
         
 
@@ -333,7 +334,7 @@ namespace Frism
 
             try
             {
-                Console.WriteLine("ThreadID : __" + iThreadID);
+                Console.WriteLine("ThreadID  InferDLL : __" + iThreadID);
 
                 InitInferMultiMaxTile(iThreadID, maxTileWidth, maxTileHeight);
                 SetInitImageSize(iThreadID, maxTileWidth, maxTileHeight);
@@ -375,7 +376,7 @@ namespace Frism
                     //Console.WriteLine("Error Code :  " + errorCode);
                     src1.Dispose();
                 }
-                Console.WriteLine("Thead ID : _________ " + Thread.CurrentThread.ManagedThreadId);
+                
 
 
 
@@ -399,8 +400,10 @@ namespace Frism
                     return;
                 }
                 bCheckContinueInsp = false;
-
                 m_bStopped = false;
+                m_bInferReadyFlag = true;
+
+
                 while (true)
                 {
 
@@ -420,6 +423,7 @@ namespace Frism
 
 
                 }
+                m_bInferReadyFlag = false;
 
 
             }
@@ -450,7 +454,7 @@ namespace Frism
 
                 if (camera != null)
                 {
-                    Console.WriteLine("Thead ID : _________ " + Thread.CurrentThread.ManagedThreadId);
+                    Console.WriteLine("Thead ID OnImageReady : _________ " + Thread.CurrentThread.ManagedThreadId);
 
 
 
@@ -475,7 +479,7 @@ namespace Frism
 
 
             timeProcess.Start(); ///// process time 시작
-            Console.WriteLine("Thead ID : _________ " + Thread.CurrentThread.ManagedThreadId);
+            Console.WriteLine("Thead ID InferImage() : _________ " + Thread.CurrentThread.ManagedThreadId);
             m_bInferFlag = false;
             int label = 1; // fixed & unsed
             int iNG = 0;
@@ -525,7 +529,7 @@ namespace Frism
 
                             int errorCode = 0;
 
-                            Console.WriteLine("ITHreadID : __ " + iThreadID);
+                            
 
                             //errorCode = InspectMultiGetP_Ptr(iThreadID, mat.CvPtr, outputMat.CvPtr, ref pValue);
                             errorCode = InspectMultiGetP_Select(iThreadID, mat.CvPtr, 2, outputMat.CvPtr, ref pValue);
@@ -541,12 +545,12 @@ namespace Frism
 
                             //if (pValue >= uppperPValue)
                             //{
-                            Console.WriteLine("pvalue : " + pValue);
-                            Console.WriteLine("minDefectSize : " + minDefectSize);
+                            //Console.WriteLine("pvalue : " + pValue);
+                            //Console.WriteLine("minDefectSize : " + minDefectSize);
                             //int defectCount = 0;
                             int defectCount = AnalyzeDefectInfo(outputMat.CvPtr, label, minDefectSize);
 
-                            Console.WriteLine("defectCount : " + defectCount);
+                            //Console.WriteLine("defectCount : " + defectCount);
                             if (defectCount > 0)
                             {
                                 iNG = defectCount;

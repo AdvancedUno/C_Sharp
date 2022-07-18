@@ -49,7 +49,7 @@ namespace Frism
 
             if (basicInfo.Count() >0)
             {
-                MaxThreadCountTxtBox.Text = basicInfo[0];
+                //MaxThreadCountTxtBox.Text = basicInfo[0];
                 MaxTileWidthTxtBox.Text = basicInfo[1];
                 MaxTileHeightTxtBox.Text = basicInfo[2];
                 GpuNumberTxtBox.Text = basicInfo[3];
@@ -90,13 +90,13 @@ namespace Frism
             try
             {
 
-                if (MaxThreadCountTxtBox.Text != null && MaxTileWidthTxtBox.Text != null && MaxTileHeightTxtBox.Text != null && GpuNumberTxtBox.Text != null)
+                if ( MaxTileWidthTxtBox.Text != null && MaxTileHeightTxtBox.Text != null && GpuNumberTxtBox.Text != null)
                 {
-                    dnnSetClass.passDnnSet(Int32.Parse(MaxThreadCountTxtBox.Text), Int32.Parse(MaxTileWidthTxtBox.Text),
+                    dnnSetClass.passDnnSet(4, Int32.Parse(MaxTileWidthTxtBox.Text),
                     Int32.Parse(MaxTileHeightTxtBox.Text), Int32.Parse(GpuNumberTxtBox.Text), Int32.Parse(MinDefectNumTxtBoxTop.Text), 
                     float.Parse(MinPValueTxtBoxTop.Text), Int32.Parse(MinDefectNumTxtBoxSide.Text), float.Parse(MinPValueTxtBoxSide.Text));
                     basicInfo = new List<string>();
-                    basicInfo.Add(MaxThreadCountTxtBox.Text);
+                    basicInfo.Add("4");
                     basicInfo.Add(MaxTileWidthTxtBox.Text);
                     basicInfo.Add(MaxTileHeightTxtBox.Text);
                     basicInfo.Add(GpuNumberTxtBox.Text);

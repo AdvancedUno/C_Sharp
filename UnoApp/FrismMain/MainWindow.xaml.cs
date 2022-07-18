@@ -211,6 +211,7 @@ namespace Frism
                 timeS = new Stopwatch();
 
                 timer = new DispatcherTimer();
+                Program.setBlowDevice();
             }
             catch(Exception e)
             {
@@ -760,14 +761,14 @@ namespace Frism
 
             try
             {
-                
-                
+
+
                 //this.MainWindow = splashScreen;
 
 
 
-                    
 
+                
 
 
                 if (CameraInfoBox.SelectedItem != null)
@@ -894,14 +895,15 @@ namespace Frism
                     }
                     m_bCamOpened = false;
 
+                    
 
                     //StartLED(LEDVal);
 
 
-                    Thread t1 = new Thread(new ThreadStart(FirstView.ContinueGrab));
-                    Thread t2 = new Thread(new ThreadStart(SecondView.ContinueGrab));
-                    Thread t3 = new Thread(new ThreadStart(ThirdView.ContinueGrab));
-                    Thread t4 = new Thread(new ThreadStart(FourthView.ContinueGrab));
+                    Thread t1 = new Thread(new ThreadStart(FirstView.InitializeDLL));
+                    Thread t2 = new Thread(new ThreadStart(SecondView.InitializeDLL));
+                    Thread t3 = new Thread(new ThreadStart(ThirdView.InitializeDLL));
+                    Thread t4 = new Thread(new ThreadStart(FourthView.InitializeDLL));
 
                     t1.Start();
                     t2.Start();
@@ -910,15 +912,26 @@ namespace Frism
 
 
 
+
+                    
+
                     
 
 
                     ContinueButton.IsEnabled = false;
                     SnapShotButton.IsEnabled = true;
 
+                    while (true)
+                    {
+                        Thread.Sleep(2);
 
+                        if (FirstView.WindowImage.m_bInferReadyFlag && SecondView.WindowImage.m_bInferReadyFlag
+                            && ThirdView.WindowImage.m_bInferReadyFlag && FourthView.WindowImage.m_bInferReadyFlag)
+                        {
+                            break;
+                        }
+                    }
 
-                    Thread.Sleep(500);
 
                     for (int i = 0; i < 3; i++)
                     {
@@ -1213,6 +1226,12 @@ namespace Frism
         {
         
             StartLED(LEDVal);
+
+
+            FirstView.ContinueGrab();
+            SecondView.ContinueGrab();
+            ThirdView.ContinueGrab();
+            FourthView.ContinueGrab();
 
 
 
