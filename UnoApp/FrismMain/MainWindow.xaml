@@ -38,24 +38,27 @@
                 <TextBlock x:Name="NGTxt" Width="131" Background="Red" TextAlignment="Center" Text="NG" FontSize="30" FontWeight="Bold" Grid.Row="0" HorizontalAlignment="Center" Margin="1372,0,290,31.5"/>
                 <TextBlock x:Name="OKTxt" Width="131" Background="Green" TextAlignment="Center" Text="OK" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Margin="1372,43,290,14" Grid.RowSpan="2"/>
 
-                <TextBlock x:Name="NGNumTxt" FontSize="30" Text="0 %  [0]"  Grid.Row="0" HorizontalAlignment="Center" Margin="1512,-4,143,35.5" Width="138" TextAlignment="Center"/>
-                <TextBlock x:Name="OKNumTxt" FontSize="30" Text="0 %  [0]" HorizontalAlignment="Center" Margin="1512,43,141,14" Width="140" TextAlignment="Center" Grid.RowSpan="2"/>
+                <TextBlock x:Name="NGNumTxt" FontSize="30" Text="0 %  [0]"  Grid.Row="0" HorizontalAlignment="Center" Margin="1512,-4,54,36" Width="227" TextAlignment="Center"/>
+                <TextBlock x:Name="OKNumTxt" FontSize="30" Text="0 %  [0]" HorizontalAlignment="Center" Margin="1512,43,54,14" Width="227" TextAlignment="Center" Grid.RowSpan="2"/>
 
-                <Button Content="리셋" FontSize="18" x:Name="ResetBtn" Click="ResetBtn_Click" Grid.Row="0" Width="91" Margin="0,-1,0,13" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="86" Grid.RowSpan="2" RenderTransformOrigin="0.848,0.477"/>
+                <Button Content="리셋" FontSize="18" x:Name="ResetBtn" Click="ResetBtn_Click" Grid.Row="0" Width="91" Margin="0,0,-42,18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="75" Grid.RowSpan="2" RenderTransformOrigin="0.848,0.477"/>
 
 
                 <TextBlock Grid.Row="0" x:Name="CameraSignalTxt" Width="130" Background="Gray" TextAlignment="Center" Text="카메라 촬영" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="1194,28,469,19.5" Height="25" LineHeight="6" />
                 <TextBlock x:Name="BlowSignalTxt" Width="130" Background="Gray" TextAlignment="Center" Text="공압 ON" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,18" Height="23" Grid.RowSpan="2" />
 
-                <Button Style="{StaticResource StyleButton}" x:Name="SetCamerasButton" Content="초기화"  Click="SetCamerasButton_Click" Margin="28,43,1500,13" Grid.RowSpan="2"/>
+                <Button Style="{StaticResource StyleButton}" x:Name="SetCamerasButton" Content="초기화"  Click="SetCamerasButton_Click" Margin="28,43,1500,18" Grid.RowSpan="2"/>
 
-                <Button Style="{StaticResource StyleButton}" x:Name="StopButton" Content="Stop" Click="StopButton_Click" IsEnabled="False" Margin="293,43,1450,13" Grid.RowSpan="2"/>
+                <Button Style="{StaticResource StyleButton}" x:Name="StopButton" Content="Stop" Click="StopButton_Click" IsEnabled="False" Margin="293,43,1450,18" Grid.RowSpan="2"/>
 
-                <Button Style="{StaticResource StyleButton}" x:Name="ContinueButton" Content="검사시작" Click="ContinueButton_Click" IsEnabled="False" Margin="343,43,1386,13" Grid.RowSpan="2"/>
-                <Button Style="{StaticResource StyleButton}" x:Name="HistoryButton" Content="다시보기" Click="HistoryButton_Click"  VerticalAlignment="Center" Height="42" Margin="407,43,1319,13" Grid.RowSpan="2"/>
-                <Button Content="검사 설정" x:Name="DnnOptionBtn" Click="DnnOptionBtn_Click" Margin="474,43,1246,13" Grid.RowSpan="2"/>
+                <Button Style="{StaticResource StyleButton}" x:Name="ContinueButton" Content="검사시작" Click="ContinueButton_Click" IsEnabled="False" Margin="343,43,1386,18" Grid.RowSpan="2"/>
+                <Button Style="{StaticResource StyleButton}" x:Name="HistoryButton" Content="다시보기" Click="HistoryButton_Click"  VerticalAlignment="Center" Height="37" Margin="407,43,1319,18" Grid.RowSpan="2"/>
+                <Button Content="검사 설정" x:Name="DnnOptionBtn" Click="DnnOptionBtn_Click" Margin="474,43,1246,18" Grid.RowSpan="2"/>
 
                 <TextBlock x:Name="textInitial" Width="130" Background="Gray" TextAlignment="Center" Text="초기화" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,48.5" Height="22" />
+
+                <TextBlock Name="gpuTemptxt"  Width="159" Background="White" TextAlignment="Center" FontSize="13" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="588,0,0,0" Height="21" Text="{Binding showGpuTemp, UpdateSourceTrigger=PropertyChanged}"/>
+
 
 
 

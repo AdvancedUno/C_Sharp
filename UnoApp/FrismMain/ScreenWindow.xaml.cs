@@ -521,20 +521,12 @@ namespace Frism
                     {
                         if (Program.bInspectBtn != false)
                         {
-
-
                             timeInsp.Start();
-
                             float pValue = new float();
-
                             int errorCode = 0;
-
-                            
-
-                            //errorCode = InspectMultiGetP_Ptr(iThreadID, mat.CvPtr, outputMat.CvPtr, ref pValue);
                             errorCode = InspectMultiGetP_Select(iThreadID, mat.CvPtr, 2, outputMat.CvPtr, ref pValue);
 
-                            timeInsp.Stop();
+                            
 
                             //Cv2.ImWrite("image.bmp", outputMat);
 
@@ -550,6 +542,8 @@ namespace Frism
                             //int defectCount = 0;
                             int defectCount = AnalyzeDefectInfo(outputMat.CvPtr, label, minDefectSize);
 
+
+                            timeInsp.Stop();
                             //Console.WriteLine("defectCount : " + defectCount);
                             if (defectCount > 0)
                             {
@@ -628,8 +622,12 @@ namespace Frism
                 ImageSource = ToBitmapImage(bRoiImage);
 
                 timeProcess.Stop();
+
+                Console.WriteLine(timeProcess.ElapsedMilliseconds);
+
                 //Task.Factory.StartNew((Action)(() =>
                 //{
+
 
 
 
@@ -666,6 +664,11 @@ namespace Frism
 
 
             }
+            else
+            {
+                timeProcess.Stop();
+            }
+            
         }
 
 

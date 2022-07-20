@@ -14,6 +14,8 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using NvAPIWrapper.GPU;
+using System.Management;
 
 namespace Frism
 {
@@ -112,7 +114,7 @@ namespace Frism
 
 
 
-    public partial class MainWindow:Window
+    public partial class MainWindow: Window, INotifyPropertyChanged
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -160,6 +162,18 @@ namespace Frism
         private int avgInspCnt = 0;
         private int avgProcessCnt = 0;
 
+        private string sGpuTemp;
+
+        public string showGpuTemp
+        {
+            get { return sGpuTemp; }
+            set
+            {
+                sGpuTemp = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         private bool bCheckInspRun = false;
 
@@ -196,6 +210,10 @@ namespace Frism
 
         private int m_iCamOpenedCheck = 0;
 
+
+        private bool bStartCheckingGPUTemp = false;
+
+
         public object lockCheckCam = new object();
         public void InitVariables()
         {
@@ -212,6 +230,8 @@ namespace Frism
 
                 timer = new DispatcherTimer();
                 Program.setBlowDevice();
+
+
             }
             catch(Exception e)
             {
@@ -231,7 +251,7 @@ namespace Frism
 
             InitVariables();
 
-            DataContext = this;
+            this.DataContext = this;
 
             UpdateDeviceList();
             UpdateCameraList();
@@ -305,9 +325,25 @@ namespace Frism
             }
 
 
+            Thread gpuTempCheckThread = new Thread(new ThreadStart(StartCheckingGPUTemp));
+            
+            gpuTempCheckThread.Start();
+            
+            bStartCheckingGPUTemp = true;
+            //StartCheckingGPUTemp();
 
 
         }
+
+        #region PropertyChangedEventHandler 연동
+        /////////////// Property Update Fnc /////////////
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
 
         public void UpdateDeviceList()
         {
@@ -651,6 +687,7 @@ namespace Frism
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
+            bStartCheckingGPUTemp = false;
             
             if (bCheckInspRun)
             {
@@ -1504,6 +1541,11 @@ namespace Frism
 
         }
 
+        
+        
+        
+
+
         private void ResetBtn_Click(object sender, RoutedEventArgs e)
         {
 
@@ -1557,5 +1599,34 @@ namespace Frism
         }
 
 
+        private void StartCheckingGPUTemp()
+        {
+            PhysicalGPU[] gpus = PhysicalGPU.GetPhysicalGPUs();
+
+
+           while (true)
+           {
+
+                Thread.Sleep(5);
+                if (bStartCheckingGPUTemp)
+                {
+                    foreach (GPUThermalSensor sensor in gpus[0].ThermalInformation.ThermalSensors)
+                    {
+                        showGpuTemp = String.Format("GPU 온도: {0} C", sensor.CurrentTemperature);
+                    }
+
+
+
+                  
+                }
+
+            }
+
+
+        }
+
+
     }
+
+    
 }
