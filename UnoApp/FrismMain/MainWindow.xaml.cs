@@ -173,6 +173,18 @@ namespace Frism
                 OnPropertyChanged();
             }
         }
+        
+        private string brushGpuBackgroundColor = "Red";
+
+        public string showBrushGpuBackgroundColor
+        {
+            get { return brushGpuBackgroundColor; }
+            set
+            {
+                brushGpuBackgroundColor = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private bool bCheckInspRun = false;
@@ -207,6 +219,8 @@ namespace Frism
 
         List<ICameraInfo> allDeviceInfos = SelectCameras.selectedCameras;
 
+
+        
 
         private int m_iCamOpenedCheck = 0;
 
@@ -1602,9 +1616,9 @@ namespace Frism
         private void StartCheckingGPUTemp()
         {
             PhysicalGPU[] gpus = PhysicalGPU.GetPhysicalGPUs();
+            
 
-
-           while (true)
+            while (true)
            {
 
                 Thread.Sleep(5);
@@ -1613,6 +1627,16 @@ namespace Frism
                     foreach (GPUThermalSensor sensor in gpus[0].ThermalInformation.ThermalSensors)
                     {
                         showGpuTemp = String.Format("GPU 온도: {0} C", sensor.CurrentTemperature);
+                        
+                        if(sensor.CurrentTemperature > 43)
+                        {
+                            showBrushGpuBackgroundColor = "Red";
+                        }
+                        else
+                        {
+                            showBrushGpuBackgroundColor = "Green";
+                        }
+                        
                     }
 
 

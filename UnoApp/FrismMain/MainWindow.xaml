@@ -57,7 +57,7 @@
 
                 <TextBlock x:Name="textInitial" Width="130" Background="Gray" TextAlignment="Center" Text="초기화" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,48.5" Height="22" />
 
-                <TextBlock Name="gpuTemptxt"  Width="159" Background="White" TextAlignment="Center" FontSize="13" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="588,0,0,0" Height="21" Text="{Binding showGpuTemp, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Name="gpuTemptxt"  Width="130" Background="{Binding showBrushGpuBackgroundColor}" TextAlignment="Center" FontWeight="Bold" FontSize="14"   HorizontalAlignment="Left" Margin="840,52,0,0" Height="21" Text="{Binding showGpuTemp, UpdateSourceTrigger=PropertyChanged}" Foreground="White" Grid.RowSpan="2" VerticalAlignment="Top"/>
 
 
 
