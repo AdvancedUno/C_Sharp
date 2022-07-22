@@ -128,6 +128,7 @@ namespace Frism
         {
             get
             {
+                //return true;
                 return IsCreated && camera.IsOpen;
             }
         }

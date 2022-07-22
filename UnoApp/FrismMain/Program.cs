@@ -25,6 +25,22 @@ namespace Frism
         }
     };
 
+    public class Images
+    {
+        public Bitmap ImageTop;
+        public Bitmap ImageSide1;
+        public Bitmap ImageSide2;
+        public Bitmap ImageSide3;
+
+        public Bitmap ResultImageTop;
+        public Bitmap ResultImageSide1;
+        public Bitmap ResultImageSide2;
+        public Bitmap ResultImageSide3;
+
+        public string sSaveFolderPath;
+
+    }
+
 
 
     public class Program
@@ -50,10 +66,32 @@ namespace Frism
         public static Queue<string> imagePath1 = new Queue<string>();
         public static Queue<string> imagePath2 = new Queue<string>();
         public static Queue<string> imagePath3 = new Queue<string>();
+
+
+        public static Queue<bool> makeFolderQueue = new Queue<bool>();
+
+        public static Queue<Bitmap> imageSaveQueueTop = new Queue<Bitmap>();
+        public static Queue<Bitmap> imageSaveQueue1 = new Queue<Bitmap>();
+        public static Queue<Bitmap> imageSaveQueue2 = new Queue<Bitmap>();
+        public static Queue<Bitmap> imageSaveQueue3 = new Queue<Bitmap>();
+
+        public static Queue<Bitmap> imageResultSaveQueueTop = new Queue<Bitmap>();
+        public static Queue<Bitmap> imageResultSaveQueue1 = new Queue<Bitmap>();
+        public static Queue<Bitmap> imageResultSaveQueue2 = new Queue<Bitmap>();
+        public static Queue<Bitmap> imageResultSaveQueue3 = new Queue<Bitmap>();
+
+
+        
+
+
+
+
         public static object lockThreadCntObject = new object();
         public static object lockShowCameraSignalObject = new object();
         public static object lockShowEndCameraSignalObject = new object();
-        public static object lockBlowObject = new object();        
+        public static object lockBlowObject = new object();
+        public static object lockGetTimeObject = new object();
+
         public static int checkThreadCnt = 0;
         public static int NGCallCnt = 0;
         public static int TimeCallCnt = 0;
@@ -113,6 +151,8 @@ namespace Frism
         public static int startPort = 0;
         public static int portCount = 1;
 
+        public static bool bSaveImage = false;
+
         public static ErrorCode errorCode = ErrorCode.Success;
 
         public static InstantDoCtrl instantDoCtrl;
@@ -124,115 +164,121 @@ namespace Frism
         public static BlowDelegateClass blowDelegateClass;
 
 
+        public static bool bSavingStop = false;
 
 
-        public static void Saving()
-        {
-            if (Program.saveFolderPath == null)
-            {
-                Program.saveFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection";
-                System.Windows.Forms.MessageBox.Show("Temporary Path has been Assigned. Please Select a Folder First. Path: " + Program.saveFolderPath);
+
+        //public static void Saving()
+        //{
+        //    if (Program.saveFolderPath == null)
+        //    {
+        //        Program.saveFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection";
+        //        System.Windows.Forms.MessageBox.Show("Temporary Path has been Assigned. Please Select a Folder First. Path: " + Program.saveFolderPath);
 
 
-                if (!Directory.Exists(Program.saveFolderPath))
-                {
-                    Directory.CreateDirectory(Program.saveFolderPath);
-                }
-            }
+        //        if (!Directory.Exists(Program.saveFolderPath))
+        //        {
+        //            Directory.CreateDirectory(Program.saveFolderPath);
+        //        }
+        //    }
 
-            while (checkSet)
-            {
+        //    while (checkSet)
+        //    {
 
-                if (CheckImage())
-                {
-                        Bitmap saveImg1 = img1;
-                        Bitmap saveImg2 = img2;
-                        Bitmap saveImg3 = img3;
-                        Bitmap saveImg4 = img4;
+        //        if (CheckImage())
+        //        {
+        //                Bitmap saveImg1 = img1;
+        //                Bitmap saveImg2 = img2;
+        //                Bitmap saveImg3 = img3;
+        //                Bitmap saveImg4 = img4;
 
-                        Bitmap saveResult1 = imgResult1;
-                        Bitmap saveResult2 = imgResult2;
-                        Bitmap saveResult3 = imgResult3;
-                        Bitmap saveResult4 = imgResult4;
-                    try
-                    {
+        //                Bitmap saveResult1 = imgResult1;
+        //                Bitmap saveResult2 = imgResult2;
+        //                Bitmap saveResult3 = imgResult3;
+        //                Bitmap saveResult4 = imgResult4;
+        //            try
+        //            {
 
-                        if (desiredName == null)
-                        {
-                            desiredName = String.Format(DateTime.Now.ToString("HHmmssfff"));
-                        }
+        //                if (desiredName == null)
+        //                {
+        //                    desiredName = String.Format(DateTime.Now.ToString("HHmmssfff"));
+        //                }
 
-                        string pathName = String.Format(DateTime.Now.ToString("HHmmssfff"));
-                        string path = System.IO.Path.Combine(saveFolderPath, pathName);
+        //                string pathName = String.Format(DateTime.Now.ToString("HHmmssfff"));
+        //                string path = System.IO.Path.Combine(saveFolderPath, pathName);
 
-                        Directory.CreateDirectory(path);
-                        saveImagePath = path;
+        //                Directory.CreateDirectory(path);
+        //                saveImagePath = path;
 
-                        Task.Factory.StartNew((Action)(() =>
-                        {
-                            saveImg1.Save(saveImagePath + "\\" + desiredName + "_[Top].bmp", ImageFormat.Bmp);
-                            saveImg1 = null;
-                            saveResult1.Save(saveImagePath + "\\" + desiredName + "_[Top]_Output.bmp", ImageFormat.Bmp);
-                            saveResult1 = null;
-                            Console.WriteLine(1);
-                        }
-                        ));
-                        img1 = null;
+        //                Task.Factory.StartNew((Action)(() =>
+        //                {
+        //                    saveImg1.Save(saveImagePath + "\\" + desiredName + "_[Top].bmp", ImageFormat.Bmp);
+        //                    saveImg1 = null;
+        //                    saveResult1.Save(saveImagePath + "\\" + desiredName + "_[Top]_Output.bmp", ImageFormat.Bmp);
+        //                    saveResult1 = null;
+        //                    Console.WriteLine(1);
+        //                }
+        //                ));
+        //                img1 = null;
 
-                        Task.Factory.StartNew((Action)(() =>
-                        {
-                            saveImg2.Save(saveImagePath + "\\" + desiredName + "_[1].bmp", ImageFormat.Bmp);
-                            saveImg2 = null;
-                            saveResult2.Save(saveImagePath + "\\" + desiredName + "_[1]_Output.bmp", ImageFormat.Bmp);
-                            saveResult2 = null;
-                            Console.WriteLine(2);
-                        }
-                        ));
-                        img2 = null;
+        //                Task.Factory.StartNew((Action)(() =>
+        //                {
+        //                    saveImg2.Save(saveImagePath + "\\" + desiredName + "_[1].bmp", ImageFormat.Bmp);
+        //                    saveImg2 = null;
+        //                    saveResult2.Save(saveImagePath + "\\" + desiredName + "_[1]_Output.bmp", ImageFormat.Bmp);
+        //                    saveResult2 = null;
+        //                    Console.WriteLine(2);
+        //                }
+        //                ));
+        //                img2 = null;
 
-                        Task.Factory.StartNew((Action)(() =>
-                        {
-                            saveImg3.Save(saveImagePath + "\\" + desiredName + "_[2].bmp", ImageFormat.Bmp);
-                            saveImg3 = null;
-                            saveResult3.Save(saveImagePath + "\\" + desiredName + "_[2]_Output.bmp", ImageFormat.Bmp);
-                            saveResult3 = null;
-                            Console.WriteLine(3);
-                        }
-                        ));
-                        img3 = null;
+        //                Task.Factory.StartNew((Action)(() =>
+        //                {
+        //                    saveImg3.Save(saveImagePath + "\\" + desiredName + "_[2].bmp", ImageFormat.Bmp);
+        //                    saveImg3 = null;
+        //                    saveResult3.Save(saveImagePath + "\\" + desiredName + "_[2]_Output.bmp", ImageFormat.Bmp);
+        //                    saveResult3 = null;
+        //                    Console.WriteLine(3);
+        //                }
+        //                ));
+        //                img3 = null;
 
-                        Task.Factory.StartNew((Action)(() =>
-                        {
-                            saveImg4.Save(saveImagePath + "\\" + desiredName + "_[3].bmp", ImageFormat.Bmp);
-                            saveImg4 = null;
-                            saveResult4.Save(saveImagePath + "\\" + desiredName + "_[3]_Output.bmp", ImageFormat.Bmp);
-                            saveResult4 = null;
-                            Console.WriteLine(4);
-                        }
-                        ));
-                        img4 = null;
-                        desiredName = null;
-                    }
+        //                Task.Factory.StartNew((Action)(() =>
+        //                {
+        //                    saveImg4.Save(saveImagePath + "\\" + desiredName + "_[3].bmp", ImageFormat.Bmp);
+        //                    saveImg4 = null;
+        //                    saveResult4.Save(saveImagePath + "\\" + desiredName + "_[3]_Output.bmp", ImageFormat.Bmp);
+        //                    saveResult4 = null;
+        //                    Console.WriteLine(4);
+        //                }
+        //                ));
+        //                img4 = null;
+        //                desiredName = null;
+        //            }
 
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex.Message + " Saving");
-                    }
-                }
-            }
-        }
+        //            catch (Exception ex)
+        //            {
+        //                Logger.Error(ex.Message + " Saving");
+        //            }
+        //        }
+        //    }
+        //}
 
         public static void SendShowCameraSignal()
         {
-            lock (lockShowCameraSignalObject)
-            {
+            //lock (lockShowCameraSignalObject)
+            //{
                 checkCameraSignal++;
-            }
+            //}
             if(checkCameraSignal > 3)
             {
                 checkCameraSignal = 0;
                 m_bCam1Insp = true;
-                useShowSigClass.ShowCameraSignal();
+                Task.Delay(100).ContinueWith(_ =>
+                {
+                    useShowSigClass.ShowCameraSignal();
+                });
+                
             }
         }
 
@@ -266,169 +312,312 @@ namespace Frism
             }
         }
 
-        public static void SavingForTrain()
-        {
-            while (checkSet)
-            {
+        //public static void SavingForTrain()
+        //{
+        //    while (checkSet)
+        //    {
+        //        if ((img1 != null && img2 != null) && (img3 != null && img4 != null))
+        //        {
+        //            try
+        //            {
+        //                if (desiredName == null)
+        //                {
+        //                    desiredName = String.Format(DateTime.Now.ToString("HHmmssfff"));
+        //                }
+        //                img1.Save(saveImagePathTrainingTop + "\\" + desiredName + "_[Top].bmp", ImageFormat.Bmp);
+        //                img2.Save(saveImagePathTraining1 + "\\" + desiredName + "_[1].bmp", ImageFormat.Bmp);
+        //                img3.Save(saveImagePathTraining2 + "\\" + desiredName + "_[2].bmp", ImageFormat.Bmp);
+        //                img4.Save(saveImagePathTraining3 + "\\" + desiredName + "_[3].bmp", ImageFormat.Bmp);
+        //                desiredName = null;
+        //                img1 = null;
+        //                img2 = null;
+        //                img3 = null;
+        //                img4 = null;
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                Logger.Error(ex.Message + " SavingForTrain");
+        //            }
+        //        }
+        //    }
+        //}
 
-                if ((img1 != null && img2 != null) && (img3 != null && img4 != null))
+        public static void SaveImageStart()
+        {
+
+            makeFolderQueue.Enqueue(true);
+            //bSaveImage = true;
+            //lock (lockThreadCntObject)
+            //{
+            //checkThreadCnt++;
+
+            //}
+            // if (checkThreadCnt > 3)
+            //{
+            //checkThreadCnt = 0;
+            //bSaveImage = true;
+            //}
+        }
+
+
+
+
+        public static void SaveAllImagesThread()
+        {
+
+            while (true)
+            {
+                
+                if (bSavingStop)
                 {
-                    try
-                    {
-                        if (desiredName == null)
-                        {
-                            desiredName = String.Format(DateTime.Now.ToString("HHmmssfff"));
-                        }
-                        img1.Save(saveImagePathTrainingTop + "\\" + desiredName + "_[Top].bmp", ImageFormat.Bmp);
-                        img2.Save(saveImagePathTraining1 + "\\" + desiredName + "_[1].bmp", ImageFormat.Bmp);
-                        img3.Save(saveImagePathTraining2 + "\\" + desiredName + "_[2].bmp", ImageFormat.Bmp);
-                        img4.Save(saveImagePathTraining3 + "\\" + desiredName + "_[3].bmp", ImageFormat.Bmp);
-                        desiredName = null;
-                        img1 = null;
-                        img2 = null;
-                        img3 = null;
-                        img4 = null;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex.Message + " SavingForTrain");
-                    }
+                    break;
                 }
+
+
+                if (makeFolderQueue.Count()>0 && makeFolderQueue.Dequeue())
+                {
+                    //bSaveImage = false;
+                    //if (!checkFolderPath)
+                    //{
+                    //    checkFolderPath = true;
+                        if (Program.saveFolderPath == null)
+                        {
+                            Program.saveFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection";
+                            //System.Windows.Forms.MessageBox.Show("Temporary Path has been Assigned. Please Select a Folder First. Path: " + Program.saveFolderPath);
+
+                            if (!Directory.Exists(Program.saveFolderPath))
+                            {
+                                Directory.CreateDirectory(Program.saveFolderPath);
+                            }
+                        }
+
+                        string pathName = String.Format(DateTime.Now.ToString("HHmmssfff"));
+                        string path = System.IO.Path.Combine(saveFolderPath, pathName);
+                        Directory.CreateDirectory(path);
+                        saveImagePath = path;
+                        imagePathTop.Enqueue(saveImagePath);
+                        imagePath1.Enqueue(saveImagePath);
+                        imagePath2.Enqueue(saveImagePath);
+                        imagePath3.Enqueue(saveImagePath);
+                }
+               
+                
+                Thread.Sleep(1);
+
+
+
+                //}
+            }
+
+
+        }
+
+
+        public static void SaveImageThreadTop()
+        {
+            while (true)
+            {
+                if (bSavingStop)
+                {
+                    break;
+                }
+
+                if (imagePathTop.Count() > 0 && imageSaveQueueTop.Count() > 0)
+                {
+                    string filePath = imagePathTop.Dequeue();
+                    string fileName = filePath.Substring(filePath.Length - 9, 9);
+                    imageSaveQueueTop.Dequeue().Save(filePath + "\\" + fileName + "_[Top].bmp", ImageFormat.Bmp);
+                    imageResultSaveQueueTop.Dequeue().Save(filePath + "\\" + fileName + "_[Top]_Result.bmp", ImageFormat.Bmp);
+                }
+                Thread.Sleep(5);
             }
         }
 
-        public static void SaveAllImages()
+        public static void SaveImageThread1()
         {
-            lock (lockObject)
+            while (true)
             {
-                if (!checkFolderPath)
+                if (bSavingStop)
                 {
-                    checkFolderPath = true;
-                    checkCnt++;
-                    if (Program.saveFolderPath == null)
-                    {
-                        Program.saveFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection";
-                        System.Windows.Forms.MessageBox.Show("Temporary Path has been Assigned. Please Select a Folder First. Path: " + Program.saveFolderPath);
-
-                        if (!Directory.Exists(Program.saveFolderPath))
-                        {
-                            Directory.CreateDirectory(Program.saveFolderPath);
-                        }
-                    }
-
-                    string pathName = String.Format(DateTime.Now.ToString("HHmmssfff"));
-                    string path = System.IO.Path.Combine(saveFolderPath, pathName);
-                    Directory.CreateDirectory(path);
-                    saveImagePath = path;
-                    imagePathTop.Enqueue(saveImagePath);
-                    imagePath1.Enqueue(saveImagePath);
-                    imagePath2.Enqueue(saveImagePath);
-                    imagePath3.Enqueue(saveImagePath);
+                    break;
                 }
+
+                if (imagePath1.Count() > 0 && imageSaveQueue1.Count() > 0)
+                {
+                    string filePath = imagePath1.Dequeue();
+                    string fileName = filePath.Substring(filePath.Length - 9, 9);
+                    imageSaveQueue1.Dequeue().Save(filePath + "\\" + fileName + "_[1].bmp", ImageFormat.Bmp);
+                    imageResultSaveQueue1.Dequeue().Save(filePath + "\\" + fileName + "_[1]_Result.bmp", ImageFormat.Bmp);
+                }
+                Thread.Sleep(5);
+
             }
         }
+
+
+        public static void SaveImageThread2()
+        {
+            while (true)
+            {
+                if (bSavingStop)
+                {
+                    break;
+                }
+
+                if (imagePath2.Count() > 0 && imageSaveQueue2.Count() > 0)
+                {
+                    string filePath = imagePath2.Dequeue();
+                    string fileName = filePath.Substring(filePath.Length - 9, 9);
+                    imageSaveQueue2.Dequeue().Save(filePath + "\\" + fileName + "_[2].bmp", ImageFormat.Bmp);
+                    imageResultSaveQueue2.Dequeue().Save(filePath + "\\" + fileName + "_[2]_Result.bmp", ImageFormat.Bmp);
+                }
+                Thread.Sleep(5);
+
+            }
+        }
+
+
+        public static void SaveImageThread3()
+        {
+            while (true)
+            {
+                if (bSavingStop)
+                {
+                    Console.WriteLine("StopSaveing3");
+                    break;
+                }
+
+                if (imagePath3.Count() > 0 && imageSaveQueue3.Count() > 0)
+                {
+
+                   
+                    string filePath = imagePath3.Dequeue();
+                    Console.WriteLine(filePath);
+                    string fileName = filePath.Substring(filePath.Length - 9, 9);
+                    imageSaveQueue3.Dequeue().Save(filePath + "\\" + fileName + "_[3].bmp", ImageFormat.Bmp);
+                    imageResultSaveQueue3.Dequeue().Save(filePath + "\\" + fileName + "_[3]_Result.bmp", ImageFormat.Bmp);
+                }
+                Thread.Sleep(5);
+
+            }
+        }
+
+
+
+
 
 
         public static void SaveImg1(Bitmap img, Bitmap resultImg)
         {
-            Task.Factory.StartNew((Action)(() =>
-            {
-                SaveAllImages();
-                if (imagePathTop.Count() > 0)
-                {
-                    string filePath = imagePathTop.Dequeue();
-                    string fileName = filePath.Substring(filePath.Length - 10, 9);
-                    img.Save(saveImagePath + "\\" + fileName + "_[Top].bmp", ImageFormat.Bmp);
-                    resultImg.Save(saveImagePath + "\\" + fileName + "_[Top]_Result.bmp", ImageFormat.Bmp);
-                }
-                lock (lockThreadCntObject)
-                {
-                    checkThreadCnt++;
-                }
-                if (checkThreadCnt > 3)
-                {
-                    checkThreadCnt = 0;
-                    checkFolderPath = false;
-                }
-            }));
+
+            imageSaveQueueTop.Enqueue(img);
+            imageResultSaveQueueTop.Enqueue(resultImg);
+
+            //Task.Factory.StartNew((Action)(() =>
+            //{
+            //SaveAllImages();
+
+            //if (imagePathTop.Count() > 0)
+            //{
+            //    string filePath = imagePathTop.Dequeue();
+            //    string fileName = filePath.Substring(filePath.Length - 10, 9);
+            //    img.Save(saveImagePath + "\\" + fileName + "_[Top].bmp", ImageFormat.Bmp);
+            //    resultImg.Save(saveImagePath + "\\" + fileName + "_[Top]_Result.bmp", ImageFormat.Bmp);
+            //}
+            //lock (lockThreadCntObject)
+            //{
+            //    checkThreadCnt++;
+            //}
+            //if (checkThreadCnt > 3)
+            //{
+            //    checkThreadCnt = 0;
+            //    checkFolderPath = false;
+            //}
+            //}));
         }
 
         public static void SaveImg2( Bitmap img, Bitmap resultImg)
         {
-            Task.Factory.StartNew((Action)(() =>
-            {
-                SaveAllImages();
-                if (imagePath1.Count() > 0)
-                {
-                    string filePath = imagePath1.Dequeue();
-                    string fileName = filePath.Substring(filePath.Length - 10, 9);
-                    img.Save(saveImagePath + "\\" + fileName + "_[1].bmp", ImageFormat.Bmp);
-                    resultImg.Save(saveImagePath + "\\" + fileName + "_[1]_Result.bmp", ImageFormat.Bmp);
-                }
-                lock (lockThreadCntObject)
-                {
-                    checkThreadCnt++;
-                }
-                if (checkThreadCnt > 3)
-                {
-                    checkThreadCnt = 0;
-                    checkFolderPath = false;
-                }
-            }));
+            imageSaveQueue1.Enqueue(img);
+            imageResultSaveQueue1.Enqueue(resultImg);
+            //Task.Factory.StartNew((Action)(() =>
+            //{
+            //    SaveAllImages();
+            //if (imagePath1.Count() > 0)
+            //{
+            //    string filePath = imagePath1.Dequeue();
+            //    string fileName = filePath.Substring(filePath.Length - 10, 9);
+            //    img.Save(saveImagePath + "\\" + fileName + "_[1].bmp", ImageFormat.Bmp);
+            //    resultImg.Save(saveImagePath + "\\" + fileName + "_[1]_Result.bmp", ImageFormat.Bmp);
+            //}
+            //lock (lockThreadCntObject)
+            //{
+            //    checkThreadCnt++;
+            //}
+            //if (checkThreadCnt > 3)
+            //{
+            //    checkThreadCnt = 0;
+            //    checkFolderPath = false;
+            //}
+            //}));
         }
 
 
         public static void SaveImg3( Bitmap img, Bitmap resultImg)
         {
-            Task.Factory.StartNew((Action)(() =>
-            {
-                SaveAllImages();
+            imageSaveQueue2.Enqueue(img);
+            imageResultSaveQueue2.Enqueue(resultImg);
+            //Task.Factory.StartNew((Action)(() =>
+            //{
+            //    SaveAllImages();
 
-                if (imagePath2.Count() > 0)
-                {
+            //if (imagePath2.Count() > 0)
+            //{
 
-                    string filePath = imagePath2.Dequeue();
-                    string fileName = filePath.Substring(filePath.Length - 10, 9);
-                    img.Save(saveImagePath + "\\" + fileName + "_[2].bmp", ImageFormat.Bmp);
-                    resultImg.Save(saveImagePath + "\\" + fileName + "_[2]_Result.bmp", ImageFormat.Bmp);
-                    //Console.WriteLine(3);
+            //    string filePath = imagePath2.Dequeue();
+            //    string fileName = filePath.Substring(filePath.Length - 10, 9);
+            //    img.Save(saveImagePath + "\\" + fileName + "_[2].bmp", ImageFormat.Bmp);
+            //    resultImg.Save(saveImagePath + "\\" + fileName + "_[2]_Result.bmp", ImageFormat.Bmp);
+            //    //Console.WriteLine(3);
 
-                }
-                lock (lockThreadCntObject)
-                {
-                    checkThreadCnt++;
-                }
+            //}
+            //lock (lockThreadCntObject)
+            //{
+            //    checkThreadCnt++;
+            //}
 
-                if (checkThreadCnt > 3)
-                {
-                    checkThreadCnt = 0;
-                    checkFolderPath = false;
-                }
+            //if (checkThreadCnt > 3)
+            //{
+            //    checkThreadCnt = 0;
+            //    checkFolderPath = false;
+            //}
 
-            }));
+            //}));
         }
         public static void SaveImg4(Bitmap img, Bitmap resultImg)
         {
-            Task.Factory.StartNew((Action)(() =>
-            {
-                SaveAllImages();
-                if (imagePath3.Count() > 0)
-                {
-                    string filePath = imagePath3.Dequeue();
-                    string fileName = filePath.Substring(filePath.Length - 10, 9);
-                    img.Save(saveImagePath + "\\" + fileName + "_[3].bmp", ImageFormat.Bmp);
-                    resultImg.Save(saveImagePath + "\\" + fileName + "_[3]_Result.bmp", ImageFormat.Bmp);
-                }
-                lock (lockThreadCntObject)
-                {
-                    checkThreadCnt++;
-                }
-                if (checkThreadCnt > 3)
-                {
-                    checkThreadCnt = 0;
-                    checkFolderPath = false;
-                }
-            }));
+            imageSaveQueue3.Enqueue(img);
+            imageResultSaveQueue3.Enqueue(resultImg);
+            //Task.Factory.StartNew((Action)(() =>
+            //{
+            //    SaveAllImages();
+            //if (imagePath3.Count() > 0)
+            //{
+            //    string filePath = imagePath3.Dequeue();
+            //    string fileName = filePath.Substring(filePath.Length - 10, 9);
+            //    img.Save(saveImagePath + "\\" + fileName + "_[3].bmp", ImageFormat.Bmp);
+            //    resultImg.Save(saveImagePath + "\\" + fileName + "_[3]_Result.bmp", ImageFormat.Bmp);
+            //}
+            //lock (lockThreadCntObject)
+            //{
+            //    checkThreadCnt++;
+            //}
+            //if (checkThreadCnt > 3)
+            //{
+            //    checkThreadCnt = 0;
+            //    checkFolderPath = false;
+            //}
+            //}));
         }
 
         public static void ChangeNGRate()
@@ -437,15 +626,17 @@ namespace Frism
             {
                 if (NGTop != true && NG1 != true && NG2 != true && NG3 != true)
                 {
+                    SaveIOSig2Queue(true);
                     Logger.Info("OK");
                     useNGClass.IncreaseOK();
-                    SaveIOSig2Queue(true);
+                    
                 }
                 else
                 {
+                    SaveIOSig2Queue(false);
                     Logger.Info("NG");
                     useNGClass.IncreaseNG();
-                    SaveIOSig2Queue(false);
+                    
                 }
                 NGCallCnt = 0;
             }
@@ -543,37 +734,15 @@ namespace Frism
             }
         }
 
-        public static void GetTimeTop(long elpsTime, long processTime)
+        public static void GetTime(long elpsTime, long processTime)
         {
-            processTimeTop = processTime;
-            elpsTimeTop = elpsTime;
-            TimeCallCnt++;
-            ChangeTime();
-        }
-
-        public static void GetTime1(long elpsTime, long processTime)
-        {
-            processTime1 = processTime;
-            elpsTime1 = elpsTime;
-            TimeCallCnt++;
-            ChangeTime();
-        }
-
-        public static void GetTime2(long elpsTime, long processTime)
-        {
-            processTime2 = processTime;
-            elpsTime2 = elpsTime;
-            TimeCallCnt++;
-            ChangeTime();
-        }
-
-        public static void GetTime3(long elpsTime, long processTime)
-        {
-            processTime3 = processTime;
-            elpsTime3 = elpsTime;
-            TimeCallCnt++;
-            ChangeTime();
-
+            lock (lockGetTimeObject)
+            {
+                processTimeTop = processTime;
+                elpsTimeTop = elpsTime;
+                TimeCallCnt++;
+                ChangeTime();
+            }
         }
 
 
@@ -613,13 +782,14 @@ namespace Frism
                     throw new Exception();
                 }
 
-                Console.WriteLine("Reading ports' status is in progress..., any key to quit!\n");
+                //Console.WriteLine("Reading ports' status is in progress..., any key to quit!\n");
 
                 byte[] buffer = new byte[64];
                 bool bSensorFlag = false;
                 
                 while (bContinueBlowSignal)
                 {
+                    //Console.WriteLine("ReadBuffer");
                     errorCode = instantDiCtrl.Read(startPort, portCount, buffer);
                     if (BioFailed(errorCode))
                     {
@@ -629,10 +799,15 @@ namespace Frism
                     
                     if(buffer[0] > 0)
                     {
+                        
                         while (true)
                         {
+                            //Console.WriteLine("Buffer Value : " + buffer[0]);
+                            errorCode = instantDiCtrl.Read(startPort, portCount, buffer);
                             if (buffer[0] == 0)
                             {
+                               
+                                
                                 blowDelegateClass.StartBlowing();
                                 break;
                             }
@@ -680,19 +855,24 @@ namespace Frism
 
         public static void setBlowReady()
         {
-            bool temp = true;
+            bool temp;
+            int nSleep = 100;
+            //Console.WriteLine("setBlowReady : " + qSaveBlowSignal.Count);
 
-            
             if (qSaveBlowSignal.Count > 0)
             {
                 temp = qSaveBlowSignal.Take();
+                
                 if (!temp)
                 {
                     Console.WriteLine("NG Blow\n");
-                    Task.Factory.StartNew((Action)(() =>
-                    {
-                        blow(100);
-                    }));
+                    blow(nSleep);
+
+                }
+                else
+                {
+                    Console.WriteLine("OK NON Blow\n");
+                    //Thread.Sleep(nSleep);
                 }
 
             }

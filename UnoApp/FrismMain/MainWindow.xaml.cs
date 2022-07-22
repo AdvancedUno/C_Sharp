@@ -87,6 +87,8 @@ namespace Frism
         public event MyEventHandelr showEndCameraSignal;
         public event MyEventHandelr showEndBlowSignal;
 
+
+
         public void ShowCameraSignal()
         {
             showCameraSignal?.Invoke();
@@ -204,6 +206,8 @@ namespace Frism
         private bool bSnapshotMode = false;
 
 
+        private bool bFirstInit = true;
+
 
         public string CamID;
 
@@ -290,10 +294,10 @@ namespace Frism
             timer.Tick += SecondView.GetUnoCamera().GiveImageFile;
             timer.Tick += ThirdView.GetUnoCamera().GiveImageFile;
             timer.Tick += FourthView.GetUnoCamera().GiveImageFile;
-            timer.Interval = TimeSpan.FromMilliseconds(500);
+            timer.Interval = TimeSpan.FromMilliseconds(150);
 
             timerMain.Tick += timer_Tick;
-            timerMain.Interval = TimeSpan.FromMilliseconds(500);
+            timerMain.Interval = TimeSpan.FromMilliseconds(150);
 
 
             LEDVal.Add("0");
@@ -819,8 +823,8 @@ namespace Frism
 
 
 
-                
 
+                Program.bSavingStop = true;
 
                 if (CameraInfoBox.SelectedItem != null)
                     {
@@ -864,10 +868,8 @@ namespace Frism
 
                     try
                     {
-
                         FirstView.WindowImage.SetSavePath(Program.saveImagePath, 100);
                         SecondView.WindowImage.SetSavePath(Program.saveImagePath, 120);
-
                         ThirdView.WindowImage.SetSavePath(Program.saveImagePath, 240);
                         FourthView.WindowImage.SetSavePath(Program.saveImagePath, 0);
                     }
@@ -945,10 +947,25 @@ namespace Frism
 
                     }
                     m_bCamOpened = false;
+                    Program.bSavingStop = false;
 
-                    
 
                     //StartLED(LEDVal);
+                    Thread tSaveImageThread = new Thread(new ThreadStart(Program.SaveAllImagesThread));
+                    tSaveImageThread.Start();
+                    Thread.Sleep(10);
+
+                    Thread tSaveTopThread = new Thread(new ThreadStart(Program.SaveImageThreadTop));
+                    Thread tSaveFirstThread = new Thread(new ThreadStart(Program.SaveImageThread1));
+                    Thread tSaveSecondThread = new Thread(new ThreadStart(Program.SaveImageThread2));
+                    Thread tSaveThirdThread = new Thread(new ThreadStart(Program.SaveImageThread3));
+
+                    tSaveTopThread.Start();
+                    tSaveFirstThread.Start();
+                    tSaveSecondThread.Start();
+                    tSaveThirdThread.Start();
+
+                    Thread.Sleep(10);
 
 
                     Thread t1 = new Thread(new ThreadStart(FirstView.InitializeDLL));
@@ -961,12 +978,12 @@ namespace Frism
                     t4.Start();
                     t3.Start();
 
+                    bFirstInit = true;
 
 
 
-                    
+                  
 
-                    
 
 
                     ContinueButton.IsEnabled = false;
@@ -982,7 +999,7 @@ namespace Frism
                             break;
                         }
                     }
-
+                   
 
                     for (int i = 0; i < 3; i++)
                     {
@@ -1289,15 +1306,7 @@ namespace Frism
             try
             {
                 ////FirstView.camera.ChangeFilePath(@"D:\aaaaa");
-                //Thread t1 = new Thread(new ThreadStart(FirstView.ContinueGrab));
-                //Thread t2 = new Thread(new ThreadStart(SecondView.ContinueGrab));
-                //Thread t3 = new Thread(new ThreadStart(ThirdView.ContinueGrab));
-                //Thread t4 = new Thread(new ThreadStart(FourthView.ContinueGrab));
-
-                //t1.Start();
-                //t2.Start();
-                //t4.Start();
-                //t3.Start();
+                
 
 
                 //Program.StartIOSig();
@@ -1574,6 +1583,17 @@ namespace Frism
             Program.imagePath2.Clear();
             Program.imagePath3.Clear();
 
+            if(Program.qSaveBlowSignal != null)
+            {
+                while (Program.qSaveBlowSignal.Count > 0)
+                {
+                    Program.qSaveBlowSignal.Take();
+                }
+            }
+       
+            
+
+
             FirstView.Cam1.Text = "Ready";
             FirstView.WindowImage.ImageSource = null;
             FirstView.CamBorder1.Background = System.Windows.Media.Brushes.Gray;
@@ -1628,7 +1648,7 @@ namespace Frism
                     {
                         showGpuTemp = String.Format("GPU 온도: {0} C", sensor.CurrentTemperature);
                         
-                        if(sensor.CurrentTemperature > 43)
+                        if(sensor.CurrentTemperature > 65)
                         {
                             showBrushGpuBackgroundColor = "Red";
                         }

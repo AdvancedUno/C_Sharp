@@ -168,8 +168,8 @@ namespace Frism
                 //////////////////  DNN 설정 정보를 Screen Window 로 전달 및 DNN 설정 세팅 ////////////////////
                 
                 
-                camera.SetCamParameter(PLCamera.TriggerMode, PLCamera.TriggerSource, "On", "Software");
-                //camera.SetCamParameter(PLCamera.TriggerMode, PLCamera.TriggerSource, "On", "Line1");
+                //camera.SetCamParameter(PLCamera.TriggerMode, PLCamera.TriggerSource, "On", "Software");
+                camera.SetCamParameter(PLCamera.TriggerMode, PLCamera.TriggerSource, "On", "Line1");
                 
                 //camera.Parameters[PLCamera.TriggerMode].SetValue(PLCamera.TriggerMode.On);
 

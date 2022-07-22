@@ -284,6 +284,8 @@ namespace Frism
 
             bCheckContinueInsp = true;
 
+            
+
             if (Program.bInspectBtn != true) return;
             
             ///////////////// DNN 설정을 위한 파라미터들이 저장 되어있는지 확인 & 없으면 Base 값으로 세팅 //////////////
@@ -352,6 +354,8 @@ namespace Frism
 
                 Logger.Info(json);
 
+                Console.WriteLine(json);
+
                 Read_OCR_Info(json);
 
                
@@ -364,6 +368,7 @@ namespace Frism
 
                 Mat image = Cv2.ImRead("../../../../test.bmp", ImreadModes.Grayscale);
 
+                
 
                 //Mat src1 = new Mat(new OpenCvSharp.Size(1600, 1200), MatType.CV_8UC1, 255);
                 int errorCode = 0;
@@ -373,12 +378,12 @@ namespace Frism
                     Mat src1 = new Mat(new OpenCvSharp.Size(1600, 1200), MatType.CV_8UC1, 255);
                     //errorCode = InspectMultiGetP_Ptr(iThreadID, src1.CvPtr, src1.CvPtr, ref pValue);
                     errorCode = InspectMultiGetP_Select(iThreadID, image.CvPtr, 2, src1.CvPtr, ref pValue);
-                    //Console.WriteLine("Error Code :  " + errorCode);
+                    Console.WriteLine("Error Code :  " + errorCode);
                     src1.Dispose();
                 }
+
+
                 
-
-
 
 
                 image.Dispose();
@@ -454,9 +459,11 @@ namespace Frism
 
                 if (camera != null)
                 {
+                    if (cameraId == 0)
+                    {
+                        Program.SaveImageStart();
+                    }
                     Console.WriteLine("Thead ID OnImageReady : _________ " + Thread.CurrentThread.ManagedThreadId);
-
-
 
                     m_bInferFlag = true;
 
@@ -476,6 +483,8 @@ namespace Frism
         {
             timeProcess.Reset();
             timeInsp.Reset();
+
+
 
 
             timeProcess.Start(); ///// process time 시작
@@ -499,7 +508,6 @@ namespace Frism
 
                 if (iWidth > 0 && iHeight > 0)
                 {
-
                     bRoiImage = newImage.Clone(rRoiArea, newImage.PixelFormat);
                 }
 
@@ -636,22 +644,22 @@ namespace Frism
                 {
                     if (cameraId == 0)
                     {
-                        Program.GetTime1(timeInsp.ElapsedMilliseconds, timeProcess.ElapsedMilliseconds);
+                        Program.GetTime(timeInsp.ElapsedMilliseconds, timeProcess.ElapsedMilliseconds);
                         Program.SaveImg2(image, resultImage);
                     }
                     else if (cameraId == 120)
                     {
-                        Program.GetTime2(timeInsp.ElapsedMilliseconds, timeProcess.ElapsedMilliseconds);
+                        Program.GetTime(timeInsp.ElapsedMilliseconds, timeProcess.ElapsedMilliseconds);
                         Program.SaveImg3(image, resultImage);
                     }
                     else if (cameraId == 100)
                     {
-                        Program.GetTimeTop(timeInsp.ElapsedMilliseconds, timeProcess.ElapsedMilliseconds);
+                        Program.GetTime(timeInsp.ElapsedMilliseconds, timeProcess.ElapsedMilliseconds);
                         Program.SaveImg1(image, resultImage);
                     }
                     else if (cameraId == 240)
                     {
-                        Program.GetTime3(timeInsp.ElapsedMilliseconds, timeProcess.ElapsedMilliseconds);
+                        Program.GetTime(timeInsp.ElapsedMilliseconds, timeProcess.ElapsedMilliseconds);
                         Program.SaveImg4(image, resultImage);
                     }
                 }
@@ -720,8 +728,9 @@ namespace Frism
         {
             Logger.Info("Net Destroy");
             m_bStopped = true;
+            Program.bSavingStop = true;
             //DestoryAllNet();
-            m_bStopped = true;
+
         }
 
 
