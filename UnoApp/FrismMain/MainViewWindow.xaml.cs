@@ -41,8 +41,8 @@ namespace Frism
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public ngClass ngResult = new ngClass();
 
-        public IVisionCamera camera = new FileCamera(@"D:\TB\Image\Top");
-        //private IVisionCamera camera = new UnoCamera();
+        //public IVisionCamera camera = new FileCamera(@"D:\TB\Image\Top");
+        private IVisionCamera camera = new UnoCamera();
         public static Stopwatch timeS = new Stopwatch();
 
 
@@ -255,6 +255,10 @@ namespace Frism
                 Console.WriteLine("Thead ID : _________ " + Thread.CurrentThread.ManagedThreadId);
                 WindowImage.InferDLL(iMaxThreadCnt, iMaxTileWidth, iMaxTileHeight, iGpuNo, iMinDefectNumTop, fMinPValTop, iMinDefectNumSide, fMinPValSide);
 
+            }
+            else
+            {
+                Logger.Info("Cam is not opened + Cannoot infer dll");
             }
 
         }

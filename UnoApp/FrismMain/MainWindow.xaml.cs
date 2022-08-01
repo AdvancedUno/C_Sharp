@@ -605,29 +605,29 @@ namespace Frism
 
             try
             {
-                Action imageGrab = () =>
-                {
+                //Action imageGrab = () =>
+                //{
                     FirstView.StartBtn();
-                };
-                Task.Factory.StartNew(imageGrab);
+                //};
+                //Task.Factory.StartNew(imageGrab);
 
-                Action imageGrab1 = () =>
-                {
+                //Action imageGrab1 = () =>
+                //{
                     SecondView.StartBtn();
-                };
-                Task.Factory.StartNew(imageGrab1);
+                //};
+                //Task.Factory.StartNew(imageGrab1);
 
-                Action imageGrab2 = () =>
-                {
+                //Action imageGrab2 = () =>
+                //{
                     ThirdView.StartBtn();
-                };
-                Task.Factory.StartNew(imageGrab2);
+                //};
+                //Task.Factory.StartNew(imageGrab2);
 
-                Action imageGrab3 = () =>
-                {
+                //Action imageGrab3 = () =>
+                //{
                     FourthView.StartBtn();
-                };
-                Task.Factory.StartNew(imageGrab3);
+                //};
+                //Task.Factory.StartNew(imageGrab3);
 
             }
             catch (Exception exception)
@@ -855,7 +855,7 @@ namespace Frism
                     if (Program.saveFolderPath == null)
                     {
                         Program.saveFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection";
-                        System.Windows.Forms.MessageBox.Show("Temporary Path has been Assigned. Please Select a Folder First. Path: " + Program.saveFolderPath);
+                        //System.Windows.Forms.MessageBox.Show("Temporary Path has been Assigned. Please Select a Folder First. Path: " + Program.saveFolderPath);
 
 
 

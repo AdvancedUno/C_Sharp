@@ -25,7 +25,7 @@ namespace Frism
         }
     };
 
-    public class Images
+    public class SaveImagesClass
     {
         public Bitmap ImageTop;
         public Bitmap ImageSide1;
@@ -81,7 +81,7 @@ namespace Frism
         public static Queue<Bitmap> imageResultSaveQueue3 = new Queue<Bitmap>();
 
 
-        
+        public static Queue<SaveImagesClass> qImageSaveQueue = new Queue<SaveImagesClass>();
 
 
 
@@ -274,10 +274,10 @@ namespace Frism
             {
                 checkCameraSignal = 0;
                 m_bCam1Insp = true;
-                Task.Delay(100).ContinueWith(_ =>
-                {
-                    useShowSigClass.ShowCameraSignal();
-                });
+                //Task.Delay(100).ContinueWith(_ =>
+                //{
+                useShowSigClass.ShowCameraSignal();
+                //});
                 
             }
         }
@@ -293,10 +293,10 @@ namespace Frism
             {
                 checkEndCameraSignal = 0;
                 m_bCam1Insp = false;
-                Task.Delay(100).ContinueWith(_ =>
-                {
+                //Task.Delay(100).ContinueWith(_ =>
+                //{
                     useShowSigClass.ShowEndCameraSignal();
-                });
+                //};
             }
         }
 
@@ -379,7 +379,7 @@ namespace Frism
                     //bSaveImage = false;
                     //if (!checkFolderPath)
                     //{
-                    //    checkFolderPath = true;
+                    //checkFolderPath = true;
                         if (Program.saveFolderPath == null)
                         {
                             Program.saveFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection";
@@ -646,8 +646,8 @@ namespace Frism
         {
             if (TimeCallCnt >= 4)
             {
-                Task.Factory.StartNew((Action)(() =>
-                {
+                //Task.Factory.StartNew((Action)(() =>
+                //{
                 try
                 {
                     if (maxInspTime < elpsTimeTop) maxInspTime = elpsTimeTop; 
@@ -669,7 +669,7 @@ namespace Frism
                 {
                     Logger.Error(ex.Message + " ChangeTime");
                 }
-                }));
+                //}));
             }
         }
 

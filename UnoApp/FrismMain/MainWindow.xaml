@@ -38,8 +38,8 @@
                 <TextBlock x:Name="NGTxt" Width="131" Background="Red" TextAlignment="Center" Text="NG" FontSize="30" FontWeight="Bold" Grid.Row="0" HorizontalAlignment="Center" Margin="1372,0,290,31.5"/>
                 <TextBlock x:Name="OKTxt" Width="131" Background="Green" TextAlignment="Center" Text="OK" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Margin="1372,43,290,14" Grid.RowSpan="2"/>
 
-                <TextBlock x:Name="NGNumTxt" FontSize="30" Text="0 %  [0]"  Grid.Row="0" HorizontalAlignment="Center" Margin="1512,-4,54,36" Width="227" TextAlignment="Center"/>
-                <TextBlock x:Name="OKNumTxt" FontSize="30" Text="0 %  [0]" HorizontalAlignment="Center" Margin="1512,43,54,14" Width="227" TextAlignment="Center" Grid.RowSpan="2"/>
+                <TextBlock x:Name="NGNumTxt" FontSize="30" Text="0 %  [0]"  Grid.Row="0" HorizontalAlignment="Center" Margin="1512,-4,54,36" Width="227" TextAlignment="Left"/>
+                <TextBlock x:Name="OKNumTxt" FontSize="30" Text="0 %  [0]" HorizontalAlignment="Center" Margin="1512,43,54,14" Width="227" TextAlignment="Left" Grid.RowSpan="2"/>
 
                 <Button Content="리셋" FontSize="18" x:Name="ResetBtn" Click="ResetBtn_Click" Grid.Row="0" Width="91" Margin="0,0,-42,18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="75" Grid.RowSpan="2" RenderTransformOrigin="0.848,0.477"/>
 

@@ -307,9 +307,6 @@ namespace Frism
                     uppperPValue = fUppperPValueTop;
                     Logger.Info(minDefectSize + " + " + uppperPValue);
                 }
-                
-
-
             }
             else
             {
@@ -318,7 +315,6 @@ namespace Frism
                 maxTileHeight = 600;
                 gpuNo = 0;
             }
-       
 
            
             if (sDnnPath == "0" || sDnnPath == null)
@@ -328,11 +324,9 @@ namespace Frism
             }
             else
             {
-               
                 sDnnPath = sDnnPath.Replace('\\', '/');
                 Logger.Info(sDnnPath);
             }
-
 
             try
             {
@@ -341,18 +335,25 @@ namespace Frism
                 InitInferMultiMaxTile(iThreadID, maxTileWidth, maxTileHeight);
                 SetInitImageSize(iThreadID, maxTileWidth, maxTileHeight);
                 InitInferenceMulti(iThreadID, sDnnPath);
-
                
                 int retCode = InitInferenceMultiGPU(iThreadID, gpuNo);
 
-               
+                if(retCode > 0)
+                {
+                    Logger.Error("InitInferenceMultiGPU Error" + retCode);
+                    Console.WriteLine("InitInferenceMultiGPU Error" + retCode);
+                }
 
                 IntPtr jsonInt = getClassJsonMulti(iThreadID);
                 
-
                 string json = Marshal.PtrToStringUni(jsonInt);
 
                 Logger.Info(json);
+
+                if(json.Length < 1)
+                {
+                    MessageBox.Show("클라스 정보를 확인 할 수 없습니다");
+                }
 
                 Console.WriteLine(json);
 
@@ -372,23 +373,29 @@ namespace Frism
 
                 //Mat src1 = new Mat(new OpenCvSharp.Size(1600, 1200), MatType.CV_8UC1, 255);
                 int errorCode = 0;
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     
                     Mat src1 = new Mat(new OpenCvSharp.Size(1600, 1200), MatType.CV_8UC1, 255);
                     //errorCode = InspectMultiGetP_Ptr(iThreadID, src1.CvPtr, src1.CvPtr, ref pValue);
                     errorCode = InspectMultiGetP_Select(iThreadID, image.CvPtr, 2, src1.CvPtr, ref pValue);
-                    Console.WriteLine("Error Code :  " + errorCode);
+                    if (errorCode > 0)
+                    {
+                        ;
+                        Logger.Error("error Code : " + errorCode);
+                        break;
+                    }
+
+
+
+                    //Console.WriteLine("Error Code :  " + errorCode);
                     src1.Dispose();
                 }
 
-
-                
-
+                Logger.Info(2);
 
                 image.Dispose();
-
-                
+    
                 if (errorCode > 0)
                 {
                     Program.ErrorBlow();
@@ -404,33 +411,27 @@ namespace Frism
 
                     return;
                 }
+
                 bCheckContinueInsp = false;
                 m_bStopped = false;
                 m_bInferReadyFlag = true;
 
-
+                Logger.Info("Ready to process");
                 while (true)
                 {
-
                     Thread.Sleep(1);
 
                     if (m_bStopped)
                     {
-                        //Console.WriteLine("bbbbbb");
                         break;
                     }
 
                     if (m_bInferFlag)
                     {
-                        //Console.WriteLine("aaaaaaaa");
                         InferImage();
                     }
-
-
                 }
                 m_bInferReadyFlag = false;
-
-
             }
             catch(Exception exception)
             {
@@ -441,16 +442,9 @@ namespace Frism
 
         #endregion
 
-
-       
-
         #region  "OnImageReady" - 이미지 받아오기 및 후 처리
         private void OnImageReady(Object sender, EventArgs e)
         {
-
-            
-            
-
             try
                 {
                 //Thread cur_thread = Thread.CurrentThread;
@@ -459,23 +453,19 @@ namespace Frism
 
                 if (camera != null)
                 {
-                    if (cameraId == 0)
+                    if (cameraId == 240)
                     {
                         Program.SaveImageStart();
                     }
                     Console.WriteLine("Thead ID OnImageReady : _________ " + Thread.CurrentThread.ManagedThreadId);
 
                     m_bInferFlag = true;
-
-                    //}));
                 }
-                
             }
                 catch (Exception exception)
                 {
                     Logger.Error(exception.Message + "ScreenWindow");
                 }
-            
         }
 
 
@@ -532,9 +522,10 @@ namespace Frism
                             timeInsp.Start();
                             float pValue = new float();
                             int errorCode = 0;
+                            Logger.Info("InspectMultiGetP_Select Cam  -- 1");
                             errorCode = InspectMultiGetP_Select(iThreadID, mat.CvPtr, 2, outputMat.CvPtr, ref pValue);
+                            Logger.Info("InspectMultiGetP_Select Cam  -- 2");
 
-                            
 
                             //Cv2.ImWrite("image.bmp", outputMat);
 
@@ -550,7 +541,7 @@ namespace Frism
                             //int defectCount = 0;
                             int defectCount = AnalyzeDefectInfo(outputMat.CvPtr, label, minDefectSize);
 
-
+                            Logger.Info("AnalyzeDefectInfo Cam  -- 3");
                             timeInsp.Stop();
                             //Console.WriteLine("defectCount : " + defectCount);
                             if (defectCount > 0)
@@ -596,6 +587,9 @@ namespace Frism
                                 Console.WriteLine(checkNG);
                                 Program.GetNG3(checkNG);
                             }
+
+                            Logger.Info("AnalyzeDefectInfo Cam  -- 4");
+
                             resultImage = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(outputMat.Clone());
                             outputMat.Release();
                             mat.Release();
@@ -614,6 +608,10 @@ namespace Frism
                 }
 
             }
+            else {
+                Console.WriteLine("NoImageggggggggggggggggggggggggggggg");
+            }
+
 
             if (newImage != null)
             {
@@ -631,13 +629,10 @@ namespace Frism
 
                 timeProcess.Stop();
 
-                Console.WriteLine(timeProcess.ElapsedMilliseconds);
+                //Console.WriteLine(timeProcess.ElapsedMilliseconds);
 
                 //Task.Factory.StartNew((Action)(() =>
                 //{
-
-
-
 
 
                 if (camera.GetMainMode())
@@ -672,11 +667,7 @@ namespace Frism
 
 
             }
-            else
-            {
-                timeProcess.Stop();
-            }
-            
+
         }
 
 
