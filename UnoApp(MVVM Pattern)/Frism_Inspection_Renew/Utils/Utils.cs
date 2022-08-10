@@ -77,9 +77,9 @@ namespace Frism_Inspection_Renew.Utils
         public static Bitmap imgResult3 = null;
         public static Bitmap imgResult4 = null;
 
-        public static CntNGClass useNGClass = null;
-        public static CntTime useCntTimeClass = null;
-        public static ShowSignal useShowSigClass = null;
+        //public static CntNGClass useNGClass = null;
+       // public static CntTime useCntTimeClass = null;
+       // public static ShowSignal useShowSigClass = null;
 
         public static int checkCameraSignal = 0;
         public static int checkEndCameraSignal = 0;
@@ -219,7 +219,7 @@ namespace Frism_Inspection_Renew.Utils
                 //Console.WriteLine("Yellowwwwwwwwww");
                 checkCameraSignal = 0;
                 m_bCam1Insp = true;
-                useShowSigClass.ShowCameraSignal();
+               // useShowSigClass.ShowCameraSignal();
             }
 
 
@@ -243,7 +243,7 @@ namespace Frism_Inspection_Renew.Utils
                 m_bCam1Insp = false;
                 Task.Delay(100).ContinueWith(_ =>
                 {
-                    useShowSigClass.ShowEndCameraSignal();
+                    //useShowSigClass.ShowEndCameraSignal();
                 });
 
             }
@@ -496,14 +496,14 @@ namespace Frism_Inspection_Renew.Utils
                 {
 
                     Logger.Info("OK");
-                    useNGClass.IncreaseOK();
+                   // useNGClass.IncreaseOK();
                     SaveIOSig2Queue(true);
                 }
                 else
                 {
 
                     Logger.Info("NG");
-                    useNGClass.IncreaseNG();
+                    //useNGClass.IncreaseNG();
                     SaveIOSig2Queue(false);
                 }
                 NGCallCnt = 0;
@@ -534,8 +534,8 @@ namespace Frism_Inspection_Renew.Utils
                         if (maxProcessTime < processTime3) maxProcessTime = processTime3;
 
 
-                        useCntTimeClass.IncreaseInspTime(maxInspTime);
-                        useCntTimeClass.IncreaseProcessTime(maxProcessTime);
+                       // useCntTimeClass.IncreaseInspTime(maxInspTime);
+                       // useCntTimeClass.IncreaseProcessTime(maxProcessTime);
                         maxProcessTime = 0;
                         maxInspTime = 0;
                         TimeCallCnt = 0;
@@ -556,10 +556,10 @@ namespace Frism_Inspection_Renew.Utils
 
 
 
-        public static void SetClass(CntNGClass classInfo)
-        {
-            useNGClass = classInfo;
-        }
+        //public static void SetClass(CntNGClass classInfo)
+        //{
+        //   // useNGClass = classInfo;
+        //}
 
         public static void GetNGTop(bool NGResult)
         {

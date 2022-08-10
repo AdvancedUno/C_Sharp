@@ -22,6 +22,7 @@ namespace Frism_Inspection_Renew.Views
         public HistoryView()
         {
             InitializeComponent();
+            this.DataContext = new MainViewModel();
         }
     }
 }

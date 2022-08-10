@@ -15,8 +15,8 @@
                     <RowDefinition Height="26*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="검사 레시피:" Width="134" HorizontalAlignment="Left" VerticalAlignment="Top" TextAlignment="Center" Height="22" Margin="0,11,0,0"/>
-                <ComboBox  x:Name="CameraInfoBox" SelectionChanged="CameraInfoBox_SelectionChanged" Margin="134,5,1495,37.5" />
-                <Button  x:Name="SelectCameraButton" Content="카메라 설정" Click="SelectCamerasButton_Click" VerticalAlignment="Center" Height="30" Margin="298,5,1221,37.5"  />
+                <ComboBox  x:Name="CameraInfoBox"  Margin="134,5,1495,37.5" />
+                <Button  x:Name="SelectCameraButton" Content="카메라 설정" Command="{Binding SetCameraBtn}" VerticalAlignment="Center" Height="30" Margin="298,5,1221,37.5"  />
 
                 <TextBlock Text="처리 시간:  " FontSize="13" Grid.Row="0" HorizontalAlignment="Center" Margin="623,0,1101,26"/>
                 <TextBlock Text="검사 시간:  " FontSize="13" HorizontalAlignment="Center" Margin="623,25,1101,0" />
@@ -37,19 +37,19 @@
                 <TextBlock x:Name="NGNumTxt" FontSize="30" Text="0 %  [0]"  Grid.Row="0" HorizontalAlignment="Center" Margin="1512,-4,143,35.5" Width="138" TextAlignment="Center"/>
                 <TextBlock x:Name="OKNumTxt" FontSize="30" Text="0 %  [0]" HorizontalAlignment="Center" Margin="1512,43,141,14" Width="140" TextAlignment="Center" Grid.RowSpan="2"/>
 
-                <Button Content="Count Reset" FontSize="18" x:Name="ResetBtn" Click="ResetBtn_Click" Grid.Row="0" Width="138" Margin="0,-1,0,13" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="86" Grid.RowSpan="2"/>
+                <Button Content="Count Reset" FontSize="18" x:Name="CountResetBtn" Command="{Binding InspectCountResetBtn}" Grid.Row="0" Width="138" Margin="0,-1,0,13" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="86" Grid.RowSpan="2"/>
 
 
                 <TextBlock Grid.Row="0" x:Name="CameraSignalTxt" Width="130" Background="Gray" TextAlignment="Center" Text="카메라 촬영" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="1194,28,469,19.5" Height="25" LineHeight="6" />
                 <TextBlock x:Name="BlowSignalTxt" Width="130" Background="Gray" TextAlignment="Center" Text="공압 ON" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,18" Height="23" Grid.RowSpan="2" />
 
-                <Button  x:Name="SetCamerasButton" Content="초기화"  Click="SetCamerasButton_Click" Margin="28,43,1500,13" Grid.RowSpan="2"/>
+                <Button  x:Name="SetCamerasButton" Content="초기화"  Command="{Binding InitializeBtn}" Margin="28,43,1500,13" Grid.RowSpan="2"/>
 
-                <Button  x:Name="StopButton" Content="Stop" Click="StopButton_Click" IsEnabled="False" Margin="293,43,1450,13" Grid.RowSpan="2"/>
+                <Button  x:Name="StopButton" Content="Stop" Command="{Binding StopInspectBtn}" IsEnabled="False" Margin="293,43,1450,13" Grid.RowSpan="2"/>
 
-                <Button  x:Name="ContinueButton" Content="검사시작" Click="ContinueButton_Click" IsEnabled="False" Margin="343,43,1386,13" Grid.RowSpan="2"/>
-                <Button  x:Name="HistoryButton" Content="다시보기" Click="HistoryButton_Click"  VerticalAlignment="Center" Height="42" Margin="407,43,1319,13" Grid.RowSpan="2"/>
-                <Button Content="검사 설정" x:Name="DnnOptionBtn" Click="DnnOptionBtn_Click" Margin="474,43,1246,13" Grid.RowSpan="2"/>
+                <Button  x:Name="ContinueButton" Content="검사시작" Command="{Binding StartInspectBtn}" IsEnabled="False" Margin="343,43,1386,13" Grid.RowSpan="2"/>
+                <Button  x:Name="HistoryButton" Content="다시보기" Command="{Binding ShowHistoryBtn}"  VerticalAlignment="Center" Height="42" Margin="407,43,1319,13" Grid.RowSpan="2"/>
+                <Button Content="검사 설정" x:Name="DnnOptionBtn" Command="{Binding InspectionSettingBtn}" Margin="474,43,1246,13" Grid.RowSpan="2"/>
 
                 <TextBlock x:Name="textInitial" Width="130" Background="Gray" TextAlignment="Center" Text="초기화" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,48.5" Height="22" />
 
@@ -59,7 +59,7 @@
             </Grid>
         </Viewbox>
 
-        <Button  Grid.Row="0" x:Name="SnapShotButton" Content="Snap Shot" Click="SnapShotButton_Click_1"  Margin="608,56,1239,924" Height="30" IsEnabled="False" Visibility="Hidden"/>
+        <Button  Grid.Row="0" x:Name="SnapShotButton" Content="Snap Shot" Command="{Binding UpdateCommand}"  Margin="608,56,1239,924" Height="30" IsEnabled="False" Visibility="Hidden"/>
 
 
 
@@ -80,7 +80,7 @@
             <Grid HorizontalAlignment="Stretch" Margin="0,10,10,0" Grid.Column="0">
                 <Grid>
                     <TextBlock x:Name="DnnToptxt"/>
-                    <local:Sub_MainView x:Name="FirstView" Loaded="FirstView_Loaded" />
+                    <local:Sub_MainView x:Name="FirstView"  />
                 </Grid>
 
             </Grid>

@@ -26,7 +26,7 @@ namespace Frism_Inspection_Renew.Models
     };
 
 
-    public class CntTime
+    public class CntTimeClass
     {
 
         public delegate void MyEventHandelr(long chechTime);
@@ -105,87 +105,548 @@ namespace Frism_Inspection_Renew.Models
     public class MainModel
     {
 
-        public HistoryView viewHistory;
-        public SetCameraView selectCameras;
-        public LEDWindow ledSource; // = new LEDWindow();
-        public DNNSetting dnnSetWindow;
+        //private HistoryView _viewHistory;
+        //public HistoryView ViewHistory
+        //{
+        //    get
+        //    {
+        //        return _viewHistory;
+        //    }
+        //    set
+        //    {
+        //        _viewHistory = value;
+        //    }
+        //}
+        //private SetCameraView _selectCameras;
+        //public SetCameraView SelectCameras
+        //{
+        //    get
+        //    {
+        //        return _selectCameras;
+        //    }
+        //    set
+        //    {
+        //        _selectCameras = value;
+        //    }
+        //}
+        ////public LEDWindow ledSource; // = new LEDWindow();
+        //private DNNSetting _dnnSetWindow;
+        //public DNNSetting DnnSetWindow
+        //{
+        //    get
+        //    {
+        //        return _dnnSetWindow;
+        //    }
+        //    set
+        //    {
+        //        _dnnSetWindow = value;
+        //    }
+        //}
+        private CntTimeClass _cntTimeDelegate;
+        public CntTimeClass CntTimeDelegate
+        {
+            get
+            {
+                return _cntTimeDelegate;
+            }
+            set
+            {
+                _cntTimeDelegate = value;
+            }
+        }
+
+        private DnnSetClass _dnnSetDelegate;
+        public DnnSetClass DnnSetDelegate
+        {
+            get
+            {
+                return _dnnSetDelegate;
+            }
+            set
+            {
+                _dnnSetDelegate = value;
+            }
+        }
+        private CntNGClass _cntNGClassDelegate;
+        public CntNGClass CntNGDelegate
+        {
+            get
+            {
+                return _cntNGClassDelegate;
+            }
+            set
+            {
+                _cntNGClassDelegate = value;
+            }
+        }
+
+        private ShowSignal _showSigClassDelegate;
+        public ShowSignal ShowSigClassDelegate
+        {
+            get
+            {
+                return _showSigClassDelegate;
+            }
+            set
+            {
+                _showSigClassDelegate = value;
+            }
+        }
+
+        private Sub_MainView _sub_MainView1;
+        public Sub_MainView Sub_MainView1
+        {
+            get
+            {
+                return _sub_MainView1;
+            }
+            set
+            {
+                _sub_MainView1 = value;
+            }
+        }
+
+        private Sub_MainView _sub_MainView2;
+        public Sub_MainView Sub_MainView2
+        {
+            get
+            {
+                return _sub_MainView2;
+            }
+            set
+            {
+                _sub_MainView2 = value;
+            }
+        }
+
+        private Sub_MainView _sub_MainView3;
+        public Sub_MainView Sub_MainView3
+        {
+            get
+            {
+                return _sub_MainView3;
+            }
+            set
+            {
+                _sub_MainView3 = value;
+            }
+        }
+
+        private Sub_MainView _sub_MainView4;
+        public Sub_MainView Sub_MainView4
+        {
+            get
+            {
+                return _sub_MainView4;
+            }
+            set
+            {
+                _sub_MainView4 = value;
+            }
+        }
+
+        private int _iMaxThreadCnt;
+        public int iMaxThreadCnt
+        {
+            get
+            {
+                return _iMaxThreadCnt;
+            }
+            set
+            {
+                _iMaxThreadCnt = value;
+            }
+        }
+
+        private int _iMaxTileWidth;
+        public int iMaxTileWidth
+        {
+            get
+            {
+                return _iMaxTileWidth;
+            }
+            set
+            {
+                _iMaxTileWidth = value;
+            }
+        }
+
+        private int _iMaxTileHeight;
+        public int iMaxTileHeight
+        {
+            get
+            {
+                return _iMaxTileHeight;
+            }
+            set
+            {
+                _iMaxTileHeight = value;
+            }
+        }
+
+        private int _iGpuNo;
+        public int iGpuNo
+        {
+            get
+            {
+                return _iGpuNo;
+            }
+            set
+            {
+                _iGpuNo = value;
+            }
+        }
+
+        private int _iMinDefectNumTop;
+        public int iMinDefectNumTop
+        {
+            get
+            {
+                return _iMinDefectNumTop;
+            }
+            set
+            {
+                _iMinDefectNumTop = value;
+            }
+        }
+
+        private float _fMinPValTop;
+        public float fMinPValTop
+        {
+            get
+            {
+                return _fMinPValTop;
+            }
+            set
+            {
+                _fMinPValTop = value;
+            }
+        }
+
+        private int _iMinDefectNumSide;
+        public int iMinDefectNumSide
+        {
+            get
+            {
+                return _iMinDefectNumSide;
+            }
+            set
+            {
+                _iMinDefectNumSide = value;
+            }
+        }
+
+        private float _fMinPValSide;
+        public float fMinPValSide
+        {
+            get
+            {
+                return _fMinPValSide;
+            }
+            set
+            {
+                _fMinPValSide = value;
+            }
+        }
+
+
+        private int _iNGCnt = 0;
+        public int iNGCnt
+        {
+            get
+            {
+                return _iNGCnt;
+            }
+            set
+            {
+                _iNGCnt = value;
+            }
+        }
+
+        private int _iOKCnt = 0;
+        public int iOKCnt
+        {
+            get
+            {
+                return _iOKCnt;
+            }
+            set
+            {
+                _iOKCnt = value;
+            }
+        }
+
+        private int _iNGYield = 0;
+        public int iNGYield
+        {
+            get
+            {
+                return _iNGYield;
+            }
+            set
+            {
+                _iNGYield = value;
+            }
+        }
+
+        private int _iOKYield = 0;
+        public int iOKYield
+        {
+            get
+            {
+                return _iOKYield;
+            }
+            set
+            {
+                _iOKYield = value;
+            }
+        }
+
+
+        private long _inspTime = 0;
+        public long inspTime
+        {
+            get
+            {
+                return _inspTime;
+            }
+            set
+            {
+                _inspTime = value;
+            }
+        }
+
+        private long _processTime = 0;
+        public long processTime
+        {
+            get
+            {
+                return _processTime;
+            }
+            set
+            {
+                _processTime = value;
+            }
+        }
+
+        private long _avgInspTime = 0;
+        public long AvgInspTime
+        {
+            get
+            {
+                return _avgInspTime;
+            }
+            set
+            {
+                _avgInspTime = value;
+            }
+        }
+
+        private long _avgProcessTime = 0;
+        public long AvgProcessTime
+        {
+            get
+            {
+                return _avgProcessTime;
+            }
+            set
+            {
+                _avgProcessTime = value;
+            }
+        }
+
+        private int _iAvgInspCnt = 0;
+        public int iAvgInspCnt
+        {
+            get
+            {
+                return _iAvgInspCnt;
+            }
+            set
+            {
+                _iAvgInspCnt = value;
+            }
+        }
+
+        private int _iAvgProcessCnt = 0;
+        public int iAvgProcessCnt
+        {
+            get
+            {
+                return _iAvgProcessCnt;
+            }
+            set
+            {
+                _iAvgProcessCnt = value;
+            }
+        }
+
+
+        private bool _bCheckInspRun = false;
+        public bool bCheckInspRun
+        {
+            get
+            {
+                return _bCheckInspRun;
+            }
+            set
+            {
+                _bCheckInspRun = value;
+            }
+        }
+
+        private bool _bClaheBtn = false;
+        public bool bClaheBtn
+        {
+            get
+            {
+                return _bClaheBtn;
+            }
+            set
+            {
+                _bClaheBtn = value;
+            }
+        }
+
+
+        private List<string> _savedInfosList = null;
+        public List<string> SavedInfosList
+        {
+            get
+            {
+                return _savedInfosList;
+            }
+            set
+            {
+                _savedInfosList = value;
+            }
+        }
+
+        
+
+
+        private Dictionary<ICameraInfo, String> _cameraInfosDictionary;
+        public Dictionary<ICameraInfo, String> CameraInfosDictionary
+        {
+            get
+            {
+                return _cameraInfosDictionary;
+            }
+            set
+            {
+                _cameraInfosDictionary = value;
+            }
+        }
+
+        private const int c_maxCamerasToUse = 2;
+
+        private bool bSnapshotMode = false;
+        private string sCamID;
+
+        private List<string> _caminfoList ;
+        public List<string> CaminfoList
+        {
+            get
+            {
+                return _caminfoList;
+            }
+            set
+            {
+                _caminfoList = value;
+            }
+        }
+
+        private List<string> _camExTimeinfoList ;
+        public List<string> CamExTimeinfoList
+        {
+            get
+            {
+                return _camExTimeinfoList;
+            }
+            set
+            {
+                _camExTimeinfoList = value;
+            }
+        }
+
+
+        private List<string> _LEDValList;
+        public List<string> LEDValList
+        {
+            get
+            {
+                return _LEDValList;
+            }
+            set
+            {
+                _LEDValList = value;
+            }
+        }
+
+        private List<string> _dnnFilePathList;
+        public List<string> DnnFilePathList
+        {
+            get
+            {
+                return _dnnFilePathList;
+            }
+            set
+            {
+                _dnnFilePathList = value;
+            }
+        }
+
+        private List<string> _cropInfoList;
+        public List<string> CropInfoList
+        {
+            get
+            {
+                return _cropInfoList;
+            }
+            set
+            {
+                _cropInfoList = value;
+            }
+        }
+
+        private List<ICameraInfo> _allDeviceInfos;
+        public List<ICameraInfo> AllDeviceInfos
+        {
+            get
+            {
+                return _allDeviceInfos;
+            }
+            set
+            {
+                _allDeviceInfos = value;
+            }
+        }
 
         public Thread t5;
 
-        public CntTime cntTime;         // = new CntTime();
-        public DnnSetClass dnnSetClass; // = new DnnSetClass();
-        public CntNGClass cntNGClass;   // = new CntNGClass();
-        public ShowSignal showSigClass;
 
-        private int iMaxThreadCnt { get; set; }
-        private int iMaxTileWidth { get; set; }
-        private int iMaxTileHeight { get; set; }
-        private int iGpuNo { get; set; }
-        private int iMinDefectNumTop { get; set; }
-        private float fMinPValTop { get; set; }
-        private int iMinDefectNumSide { get; set; }
-        private float fMinPValSide { get; set; }
-
-
-        private int iNGCnt = 0;
-        private int iOKCnt = 0;
-
-        private int iNGYield = 0;
-        private int iOKYield = 0;
-
-
-        private long InspTime = 0;
-        private long ProcessTime = 0;
-
-        private long avgInspTime = 0;
-        private long avgProcessTime = 0;
-
-        private int iAvgInspCnt = 0;
-        private int iAvgProcessCnt = 0;
-
-
-        private bool bCheckInspRun = false;
-
-
-        public List<string> SavedInfosList = null;
-
-        private bool bClaheBtn = false;
-
-
-        public Dictionary<ICameraInfo, String> CameraInfosDictionary;
-
-        const int c_maxCamerasToUse = 2;
-
-        private bool bSnapshotMode = false;
-
-
-
-        public string sCamID;
-
-
-
-        public List<string> CaminfoList = new List<string>(4);
-        public List<string> CamExTimeinfoList = new List<string>(4);
-        public List<string> LEDValList = new List<string>(4);
-        public List<string> DnnFilePathList = new List<string>(4);
-        public List<string> CropInfoList = new List<string>(4);
-
-        List<ICameraInfo> allDeviceInfos;
-
-
-        Sub_MainView sub_MainView1;
-        Sub_MainView sub_MainView2;
-        Sub_MainView sub_MainView3;
-        Sub_MainView sub_MainView4;
-
-
-        public MainModel(Sub_MainView sub_MainView1, Sub_MainView sub_MainView2, Sub_MainView sub_MainView3, Sub_MainView sub_MainView4)
+        public MainModel()
         {
-            this.sub_MainView1 = sub_MainView1;
-            this.sub_MainView2 = sub_MainView2;
-            this.sub_MainView3 = sub_MainView3;
-            this.sub_MainView4 = sub_MainView4;
+            InitVariables();
         }
+
+        public void InitVariables()
+        {
+            Sub_MainView1 = new Sub_MainView();
+            Sub_MainView2 = new Sub_MainView();
+            Sub_MainView3 = new Sub_MainView();
+            Sub_MainView4 = new Sub_MainView();
+            CntTimeDelegate = new CntTimeClass();
+            DnnSetDelegate = new DnnSetClass();
+            CntNGDelegate = new CntNGClass();
+            ShowSigClassDelegate = new ShowSignal();
+            CaminfoList = new List<string>(4);
+            CamExTimeinfoList = new List<string>(4);
+            LEDValList = new List<string>(4);
+            DnnFilePathList = new List<string>(4);
+            CropInfoList = new List<string>(4);
+            
+    }
 
 
     }

@@ -22,6 +22,7 @@ namespace Frism_Inspection_Renew.Views
         public SplashWindow()
         {
             InitializeComponent();
+            this.DataContext = new MainViewModel();
         }
     }
 }
