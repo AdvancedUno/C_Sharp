@@ -1,5 +1,4 @@
-﻿using Frism_Inspection_Renew.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,17 +20,9 @@ namespace Frism_Inspection_Renew.Views
     /// </summary>
     public partial class ScreenView : UserControl
     {
-        private ScreenViewModel _screenViewModel = new ScreenViewModel();
-        public ScreenViewModel ScreenViewModel
-        {
-            get { return _screenViewModel; }
-            set { _screenViewModel = value; }
-        }
-
         public ScreenView()
         {
             InitializeComponent();
-            this.DataContext = ScreenViewModel;
         }
     }
 }

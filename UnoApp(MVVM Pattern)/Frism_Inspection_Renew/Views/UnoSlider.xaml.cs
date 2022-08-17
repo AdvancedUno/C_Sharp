@@ -23,7 +23,6 @@ namespace Frism_Inspection_Renew.Views
         public UnoSlider()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
         }
     }
 }

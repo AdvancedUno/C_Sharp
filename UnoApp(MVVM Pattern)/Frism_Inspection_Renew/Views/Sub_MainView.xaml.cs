@@ -1,5 +1,4 @@
-﻿using Frism_Inspection_Renew.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,17 +20,9 @@ namespace Frism_Inspection_Renew.Views
     /// </summary>
     public partial class Sub_MainView : UserControl
     {
-        private Sub_MainViewModel _subMainViewModel = new Sub_MainViewModel();
-        public Sub_MainViewModel SubMainViewModel
-        {
-            get { return _subMainViewModel; }
-            set { _subMainViewModel = value; }
-        }
-
         public Sub_MainView()
         {
             InitializeComponent();
-            this.DataContext = SubMainViewModel;
         }
     }
 }

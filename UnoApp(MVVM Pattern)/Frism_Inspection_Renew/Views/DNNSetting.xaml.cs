@@ -22,7 +22,6 @@ namespace Frism_Inspection_Renew.Views
         public DNNSetting()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

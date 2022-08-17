@@ -22,7 +22,6 @@ namespace Frism_Inspection_Renew.Views
         public SetCameraView()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
         }
     }
 }
