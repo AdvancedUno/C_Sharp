@@ -1,0 +1,36 @@
+﻿<Window x:Class="Frism_Inspection_Renew.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels ="clr-namespace:Frism_Inspection_Renew.ViewModels"
+        xmlns:views ="clr-namespace:Frism_Inspection_Renew.Views"
+        xmlns:local="clr-namespace:Frism_Inspection_Renew"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="1080" Width="1920">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+
+        <ContentControl Content="{Binding CurrentViewModel}" Grid.Column="1">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
+                    <views:MainView/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:SetCameraViewModel}">
+                    <views:SetCameraView/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
+                    <views:LoginView/>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
+
+    </Grid>
+
+    
+    
+</Window>
