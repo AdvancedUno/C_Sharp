@@ -17,11 +17,12 @@ namespace Frism_Inspection_Renew.Views
     /// <summary>
     /// SetCameraView.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class SetCameraView : Window
+    public partial class SetCameraView : UserControl
     {
         public SetCameraView()
         {
             InitializeComponent();
+            //this.DataContext = new MainViewModel();
         }
     }
 }

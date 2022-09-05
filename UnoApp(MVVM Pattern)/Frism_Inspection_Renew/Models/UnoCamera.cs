@@ -1,4 +1,5 @@
 ﻿using Basler.Pylon;
+using Frism_Inspection_Renew.Events;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,12 +8,21 @@ using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
+
+
+
+
 namespace Frism_Inspection_Renew.Models
 {
     public class UnoCamera : IVisionCamera
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly double RENDERFPS = 10;
+
+        private ImageFromCameraModel _returnImageFromCamera;
+        public ImageFromCameraModel ReturnImageFromCamera { get => _returnImageFromCamera; set => _returnImageFromCamera = value; }
+
 
         private Object monitor = new Object();
 
@@ -44,7 +54,7 @@ namespace Frism_Inspection_Renew.Models
         public event EventHandler<EventArgs> GuiCameraGrabStarted;
         public event EventHandler<EventArgs> GuiCameraGrabStopped;
         public event EventHandler<EventArgs> GuiCameraConnectionToCameraLost;
-        public event EventHandler<EventArgs> GuiCameraFrameReadyForDisplay;
+        public event EventHandler<ImageCapturedEventArgs> GuiCameraFrameReadyForDisplay;
 
         /////////////// Update Camera Infos /////////////
         public Dictionary<ICameraInfo, String> Items
@@ -57,14 +67,14 @@ namespace Frism_Inspection_Renew.Models
             }
         }
 
-        public UnoCamera()
+        public UnoCamera(int cameraId)
         {
             /////////////// Set FPS /////////////
             stopwatch = new System.Diagnostics.Stopwatch();
 
             double frametime = 1 / RENDERFPS;
             frameDurationTicks = (int)(System.Diagnostics.Stopwatch.Frequency * frametime);
-
+            ReturnImageFromCamera = new ImageFromCameraModel(cameraId);
         }
 
         public Camera GetCam()
@@ -99,15 +109,17 @@ namespace Frism_Inspection_Renew.Models
         }
 
         /////////////// Return acquired Image /////////////
-        public Bitmap GetLatestFrame()
+        public ImageFromCameraModel GetLatestFrame()
         {
 
             lock (monitor)
             {
                 if (latestFrame != null)
                 {
+
+                    ReturnImageFromCamera.CapturedBitmapImage = latestFrame;
                     Trigger = false;
-                    return latestFrame;
+                    return ReturnImageFromCamera;
                 }
                 return null;
             }
@@ -136,6 +148,7 @@ namespace Frism_Inspection_Renew.Models
                 return IsOpen && camera.StreamGrabber.IsGrabbing;
             }
         }
+
 
         /////////////// Return Cam Parameters /////////////
         public IParameterCollection GetParameters()
@@ -299,7 +312,6 @@ namespace Frism_Inspection_Renew.Models
         }
         protected virtual void OnGrabStarted(Object sender, EventArgs e)
         {
-
             EventHandler<EventArgs> handler = GuiCameraGrabStarted;
             if (handler != null)
             {
@@ -314,9 +326,9 @@ namespace Frism_Inspection_Renew.Models
                 handler.Invoke(this, e);
             }
         }
-        protected virtual void RaiseEventFrameCaptured(EventArgs e)
+        protected virtual void RaiseEventFrameCaptured(ImageCapturedEventArgs e)
         {
-            EventHandler<EventArgs> handler = GuiCameraFrameReadyForDisplay;
+            EventHandler<ImageCapturedEventArgs> handler = GuiCameraFrameReadyForDisplay;
             if (handler != null)
             {
                 handler.Invoke(this, e);
@@ -324,7 +336,6 @@ namespace Frism_Inspection_Renew.Models
         }
         public void OnImageGrabbed(Object sender, ImageGrabbedEventArgs e)
         {
-
             try
             {
                 IGrabResult grabResult = e.GrabResult;
@@ -340,9 +351,6 @@ namespace Frism_Inspection_Renew.Models
                         IntPtr ptrBmp = bmpData.Scan0;
                         converter.Convert(ptrBmp, bmpData.Stride * bitmap.Height, grabResult);
                         bitmap.UnlockBits(bmpData);
-
-
-
                         lock (monitor)
                         {
                             if (latestFrame != null)
@@ -350,12 +358,19 @@ namespace Frism_Inspection_Renew.Models
                                 latestFrame.Dispose();
                             }
                             latestFrame = bitmap;
+                            ReturnImageFromCamera.CapturedBitmapImage = latestFrame;
                         }
                         if (m_bFullScreen)
                         {
                             ImageWindow.DisplayImage(0, grabResult);
                         }
-                        RaiseEventFrameCaptured(EventArgs.Empty);
+
+                        ImageCapturedEventArgs capturedEvent = new ImageCapturedEventArgs();
+                        capturedEvent.imageFromCameraModel = ReturnImageFromCamera;
+
+                        RaiseEventFrameCaptured(capturedEvent);
+
+
                     }
                 }
                 else
@@ -370,8 +385,6 @@ namespace Frism_Inspection_Renew.Models
             }
         }
 
-
-
         /////////////// Assign Fnc to Cam /////////////
         protected void ConnectToCameraEvents()
         {
@@ -385,6 +398,7 @@ namespace Frism_Inspection_Renew.Models
                 camera.StreamGrabber.GrabStopped += OnGrabStopped;
             }
         }
+
         protected void DisconnectFromCameraEvents()
         {
             if (IsCreated)
@@ -428,6 +442,13 @@ namespace Frism_Inspection_Renew.Models
                 DestroyCamera();
             }
             camera = new Camera(info);
+
+
+
+            ICameraInfo info2 = camera.CameraInfo;
+
+
+
             ConnectToCameraEvents();
         }
 

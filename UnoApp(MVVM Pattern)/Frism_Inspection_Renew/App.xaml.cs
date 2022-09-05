@@ -1,4 +1,7 @@
-﻿using Frism_Inspection_Renew.Views;
+﻿using Frism_Inspection_Renew.Models;
+using Frism_Inspection_Renew.Stores;
+using Frism_Inspection_Renew.ViewModels;
+using Frism_Inspection_Renew.Views;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -15,53 +18,41 @@ namespace Frism_Inspection_Renew
     /// </summary>
     public partial class App : Application
     {
+        
         public static string[] Args;
-        private void App_Startup(object sender, StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
+            NavigationStore navigationStore = new NavigationStore();
+            
 
+            navigationStore.CurrentViewModel = new MainViewModel(navigationStore);
 
-            if (e.Args.Length > 0)
+            MainWindow = new MainWindow()
             {
-                Args = e.Args;
+                DataContext = new WindowViewModel(navigationStore)
+            };
+            MainWindow.Show();
 
-            }
-
-
-
-
+            base.OnStartup(e);
 
 
-            Task.Factory.StartNew(() =>
-            {
-                ////simulate some work being done
-                //for (int i = 1; i <= 100; i++)
-                //{
-                //    //simulate a part of work being done
-                //    System.Threading.Thread.Sleep(300);
+            //if (e.Args.Length > 0)
+            //{
+            //    Args = e.Args;
 
-                //    //because we're not on the UI thread, we need to use the Dispatcher
-                //    //associated with the splash screen to update the progress bar
-                //    splashScreen.Dispatcher.Invoke(() => splashScreen.Progress = i);
-                //}
+            //}
 
-                //since we're not on the UI thread
-                //once we're done we need to use the Dispatcher
-                //to create and show the main window
-                this.Dispatcher.Invoke(() =>
-                {
-                    //initialize the main window, set it as the application main window
-                    //and close the splash screen
-                    var mainWindow = new MainView();
-                    this.MainWindow = mainWindow;
-                    mainWindow.Show();
+            //Task.Factory.StartNew(() =>
+            //{
+            //    this.Dispatcher.Invoke(() =>
+            //    {
+            //        var mainWindow = new MainView();
+            //        this.MainWindow = mainWindow;
+            //        mainWindow.Show();
 
+            //    });
+            //});
 
-
-                });
-            });
-
-            //var mainWindow = new MainWindow();
-            //mainWindow.Show();
         }
     }
 }

@@ -12,17 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Frism_Inspection_Renew.Views
+namespace Frism_Inspection_Renew
 {
     /// <summary>
-    /// SplashWindow.xaml에 대한 상호 작용 논리
+    /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class SplashWindow : Window
+    public partial class MainWindow : Window
     {
-        public SplashWindow()
+        public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
         }
     }
 }

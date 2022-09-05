@@ -44,8 +44,5 @@ namespace Frism_Inspection_Renew
         }
 
 
-
-
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Frism_Inspection_Renew.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace Frism_Inspection_Renew.Views
         public Sub_SetCameraView()
         {
             InitializeComponent();
+            //this.DataContext = new MainViewModel();
         }
     }
 }

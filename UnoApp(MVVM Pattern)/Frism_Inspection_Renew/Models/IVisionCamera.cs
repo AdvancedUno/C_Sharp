@@ -1,4 +1,5 @@
 ﻿using Basler.Pylon;
+using Frism_Inspection_Renew.Events;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Basler.Pylon.PLCamera;
-
 
 namespace Frism_Inspection_Renew.Models
 {
@@ -18,13 +18,13 @@ namespace Frism_Inspection_Renew.Models
         event EventHandler<EventArgs> GuiCameraGrabStarted;
         event EventHandler<EventArgs> GuiCameraGrabStopped;
         event EventHandler<EventArgs> GuiCameraConnectionToCameraLost;
-        event EventHandler<EventArgs> GuiCameraFrameReadyForDisplay;
+        event EventHandler<ImageCapturedEventArgs> GuiCameraFrameReadyForDisplay;
 
         bool IsOpened();
 
         void SetCamParameter(TriggerModeEnum triggerMode, TriggerSourceEnum triggerSource, string mode, string source);
 
-        Bitmap GetLatestFrame();
+        ImageFromCameraModel GetLatestFrame();
 
         void DestroyCamera();
 
@@ -67,5 +67,7 @@ namespace Frism_Inspection_Renew.Models
         void SetGainParameter(FloatName name, double value);
 
         void CreateByCameraInfo(ICameraInfo info);
+
+
     }
 }
