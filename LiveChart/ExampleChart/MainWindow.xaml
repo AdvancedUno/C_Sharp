@@ -1,0 +1,15 @@
+﻿<Window x:Class="ExampleChart.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:local="clr-namespace:ExampleChart"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
+
+    <Window.DataContext>
+        <local:ViewModel />
+    </Window.DataContext>
+
+    <lvc:CartesianChart
+        Series="{Binding SeriesVal}">
+    </lvc:CartesianChart>
+
+</Window>
