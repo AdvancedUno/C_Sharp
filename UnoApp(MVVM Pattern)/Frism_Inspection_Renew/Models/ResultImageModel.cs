@@ -19,6 +19,18 @@ namespace Frism_Inspection_Renew.Models
         private float _resultMaxDefectSize;
         public float ResultMaxDefectSize { get => _resultMaxDefectSize; set => _resultMaxDefectSize = value; }
 
+        public ResultImageModel()
+        {
+           // BitmapResultImage = new Bitmap(1200, 1600 );
+
+        }
+
+        public Bitmap GetBitmapResultImage()
+        {
+            return BitmapResultImage;
+        }
+
+
 
     }
 }

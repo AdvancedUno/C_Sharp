@@ -42,21 +42,21 @@
 
             <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 10 0 10">
                 <Button Content="1번 카메라 설정" Command="{Binding UpdateCommand}" Height="30"/>
-                <local:Sub_SetCameraView x:Name="FirstBlock" />
+                <!--<local:Sub_SetCameraView x:Name="FirstBlock" />-->
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="1" Margin="0 10 0 10">
                 <Button Content="2번 카메라 설정" Command="{Binding UpdateCommand}" Height="30"/>
-                <local:Sub_SetCameraView x:Name="SecondBlock" />
+                <!--<local:Sub_SetCameraView x:Name="SecondBlock" />-->
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="0" Margin="0 0 0 10">
                 <Button Content="3번 카메라 설정" Command="{Binding UpdateCommand}" Height="30"/>
-                <local:Sub_SetCameraView x:Name="ThirdBlock" />
+                <!--<local:Sub_SetCameraView x:Name="ThirdBlock" />-->
             </StackPanel>
 
             <StackPanel Grid.Row="2" Grid.Column="1" Margin="0 0 0 10">
                 <Button Content="4번 카메라 설정" Command="{Binding UpdateCommand}" Height="30"/>
-                <local:Sub_SetCameraView x:Name="FourthBlock"/>
+                <!--<local:Sub_SetCameraView x:Name="FourthBlock"/>-->
             </StackPanel>
 
 

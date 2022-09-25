@@ -7,21 +7,48 @@ using System.Threading.Tasks;
 
 namespace Frism_Inspection_Renew.Models
 {
-    public class IOSaveModel
+    public static class IOSaveModel
     {
-        private BlockingCollection<int> _saveBlowSignal;
-        public BlockingCollection<int> SaveBlowSignal { get => _saveBlowSignal; set => _saveBlowSignal = value; }
+        private static BlockingCollection<bool> _saveBlowSignal = new BlockingCollection<bool>();
+        public static BlockingCollection<bool> SaveBlowSignal { get => _saveBlowSignal; set => _saveBlowSignal = value; }
 
-        public IOSaveModel()
+        private static BlockingCollection<ImageGroupModel> _saveImageBuffer = new BlockingCollection<ImageGroupModel>();
+        public static BlockingCollection<ImageGroupModel> SaveImageBuffer { get => _saveImageBuffer; set => _saveImageBuffer = value; }
+
+        public static bool CheckBlowSignalBuffer()
         {
-            SaveBlowSignal = new BlockingCollection<int>();
+            if (SaveBlowSignal.Count() < 1) return false;
+            else return true;
         }
 
-        public int GetImageInfoModel()
+        public static bool GetBlowSignalValue()
         {
-            if (SaveBlowSignal.Count() < 1) return -1;
             return SaveBlowSignal.Take();
         }
+
+        public static void AddSignalValue(bool signal)
+        {
+            SaveBlowSignal.Add(signal);
+        }
+
+        public static bool CheckImageBuffer()
+        {
+            if (SaveImageBuffer.Count() < 1) return false;
+            else return true;
+        }
+
+        public static ImageGroupModel GetImageFromBuffer()
+        {
+            return SaveImageBuffer.Take();
+        }
+
+        public static void AddImageToBuffer(ImageGroupModel imageGroupModel)
+        {
+            SaveImageBuffer.Add(imageGroupModel);
+        }
+
+
+
 
 
     }

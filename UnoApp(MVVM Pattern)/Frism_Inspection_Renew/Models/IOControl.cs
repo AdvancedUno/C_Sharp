@@ -13,7 +13,7 @@ namespace Frism_Inspection_Renew.Models
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private bool _continueBlowSignal = false;
+        private bool _continueBlowSignal = true;
         public bool ContinueBlowSignal { get => _continueBlowSignal; set => _continueBlowSignal = value; }
        
 
@@ -40,68 +40,109 @@ namespace Frism_Inspection_Renew.Models
         public int StartPort { get => _startPort; set => _startPort = value; }
 
         private int _portCount = 1;
+
+
+
+        public IOControl()
+        {
+      
+        }
+
         public int PortCount { get => _portCount; set => _portCount = value; }
+        
 
         public void IOBlowSig()
         {
+            //string deviceDescription = "PCI-1730,BID#0";
+            //string profilePath = "D:\\profile_i\\dev2.xml";
+            //int startPort = 0;
+            //int portCount = 1;
+            //ErrorCode errorCode = ErrorCode.Success;
 
-            ErrorCode errorCode = ErrorCode.Success;
-
-            InstantDiCtrl instantDiCtrl = new InstantDiCtrl();
+            //InstantDiCtrl instantDiCtrl = new InstantDiCtrl();
             try
             {
-                instantDiCtrl.SelectedDevice = new DeviceInformation(DeviceDescription);
-                errorCode = instantDiCtrl.LoadProfile(ProfilePath);
-                if (BioFailed(errorCode))
-                {
-                    throw new Exception();
-                }
+                //instantDiCtrl.SelectedDevice = new DeviceInformation(deviceDescription);
+                //errorCode = instantDiCtrl.LoadProfile(profilePath);
+                //if (BioFailed(errorCode))
+                //{
+                //    throw new Exception();
+                //}
 
-                //Console.WriteLine("Reading ports' status is in progress..., any key to quit!\n");
+                ////Console.WriteLine("Reading ports' status is in progress..., any key to quit!\n");
 
-                byte[] buffer = new byte[64];
-                bool bSensorFlag = false;
+                //Console.WriteLine("IO running");
+                //byte[] buffer = new byte[64];
+                //bool bSensorFlag = false;
 
                 while (ContinueBlowSignal)
                 {
                     //Console.WriteLine("ReadBuffer");
-                    errorCode = instantDiCtrl.Read(StartPort, PortCount, buffer);
-                    if (BioFailed(errorCode))
-                    {
-                        throw new Exception();
-                    }
-                    int intbyte = buffer[0];
+                    //errorCode = instantDiCtrl.Read(startPort, portCount, buffer);
+                    //if (BioFailed(errorCode))
+                    //{
+                    //    throw new Exception();
+                    //}
+                    //int intbyte = buffer[0];
+                    setBlowReady();
 
-                    if (buffer[0] > 0)
-                    {
-                        while (true)
-                        {
-                            //Console.WriteLine("Buffer Value : " + buffer[0]);
-                            errorCode = instantDiCtrl.Read(StartPort, PortCount, buffer);
-                            if (buffer[0] == 0)
-                            {
-                                //blowDelegateClass.StartBlowing();
-                                break;
-                            }
-                        }
-                    }
+                    //if (buffer[0] > 0)
+                    //{
+
+                    //    while (true)
+                    //    {
+                    //        //Console.WriteLine("Buffer Value : " + buffer[0]);
+                    //        errorCode = instantDiCtrl.Read(startPort, portCount, buffer);
+                    //        if (buffer[0] == 0)
+                    //        {
+                    //            setBlowReady();
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+
                     Thread.Sleep(5);
                 }
             }
             catch (Exception e)
             {
-                string errStr = BioFailed(errorCode) ? " Some error occurred. And the last error code is " + errorCode.ToString()
-                                                          : e.Message;
-                Console.WriteLine(errStr);
+                //string errStr = BioFailed(errorCode) ? " Some error occurred. And the last error code is " + errorCode.ToString()
+               //                                           : e.Message;
+                //Console.WriteLine(errStr);
                 Logger.Error(e.Message + " _IOBlow");
             }
             finally
             {
-                instantDiCtrl.Dispose();
-                Console.ReadKey(false);
+               // instantDiCtrl.Dispose();
+               // Console.ReadKey(false);
 
             }
         }
+
+        public void setBlowReady()
+        {
+            
+            //Console.WriteLine("setBlowReady : " + qSaveBlowSignal.Count);
+
+            if (IOSaveModel.CheckBlowSignalBuffer())
+            {
+                bool temp;
+                int nSleep = 100;
+                temp = IOSaveModel.GetBlowSignalValue();
+
+                if (temp)
+                {
+                    Console.WriteLine("NG Blow\n");
+                    blow(nSleep);
+                }
+                else
+                {
+                    Console.WriteLine("OK NON Blow\n");
+                    //Thread.Sleep(nSleep);
+                }
+            }
+        }
+
         public bool BioFailed(ErrorCode err)
         {
             return err < ErrorCode.Success && err >= ErrorCode.ErrorHandleNotValid;
@@ -117,36 +158,6 @@ namespace Frism_Inspection_Renew.Models
                 }
             }
         }
-
-
-        public void setBlowReady()
-        {
-            bool temp;
-            int nSleep = 100;
-            //Console.WriteLine("setBlowReady : " + qSaveBlowSignal.Count);
-
-            //if (SaveBlowSignal.Count > 0)
-            //{
-            //    temp = SaveBlowSignal.Take();
-
-            //    if (!temp)
-            //    {
-            //        Console.WriteLine("NG Blow\n");
-            //        blow(nSleep);
-
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("OK NON Blow\n");
-            //        //Thread.Sleep(nSleep);
-            //    }
-
-            //}
-
-
-
-        }
-
 
         public void setBlowDevice()
         {
@@ -165,8 +176,6 @@ namespace Frism_Inspection_Renew.Models
                 //blowDelegateClass = new BlowDelegateClass();
                 //blowDelegateClass.blowEvent += setBlowReady;
 
-
-
             }
             catch (Exception exception)
             {
@@ -177,8 +186,6 @@ namespace Frism_Inspection_Renew.Models
 
         public void blow(int nDelay)
         {
-
-
             Console.WriteLine("BLOWWWWWWWWWWWW");
             BufferForWriting = new byte[64];
             try

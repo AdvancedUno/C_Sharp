@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Windows.Forms;
+using System.Collections.ObjectModel;
 
 namespace Frism_Inspection_Renew
 {
@@ -282,8 +283,6 @@ namespace Frism_Inspection_Renew
                     string stm = "SELECT * FROM DNNFilePath";
                     using (var cmd = new SQLiteCommand(stm, con))
                     {
-
-
                         dr = cmd.ExecuteReader();
 
                         while (dr.Read())
@@ -357,14 +356,14 @@ namespace Frism_Inspection_Renew
 
         /////////////// Return Setting ID /////////////
         #region Return ID
-        public static List<string> CamInfos()
+        public static ObservableCollection<string> CamInfos()
         {
             if (!System.IO.File.Exists(path))
             {
                 return null;
             }
 
-            List<string> output = new List<string>();
+            ObservableCollection<string> output = new ObservableCollection<string>();
             try
             {
                 using (var con = new SQLiteConnection(cs))
@@ -1102,8 +1101,6 @@ namespace Frism_Inspection_Renew
             {
                 Logger.Error(ex.Message + " UpdateDataBaseExTime");
             }
-
-
         }
 
         public static void UpdateDataBaseLEDVal(string settingId, List<string> LEDinfo)

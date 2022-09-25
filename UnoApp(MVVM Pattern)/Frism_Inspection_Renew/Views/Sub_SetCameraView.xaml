@@ -69,6 +69,6 @@
 
             <TextBlock x:Name="outputTextBlock" TextWrapping="Wrap" Margin="0,10,0,0"/>
         </StackPanel>
-        <local:ScreenView x:Name="PreviewImage" Grid.Row="1" HorizontalAlignment="Center"  Margin="0,10,0,0" Height="390"/>
+        <!--<local:ScreenView x:Name="PreviewImage" Grid.Row="1" HorizontalAlignment="Center"  Margin="0,10,0,0" Height="390"/>-->
     </Grid>
 </UserControl>

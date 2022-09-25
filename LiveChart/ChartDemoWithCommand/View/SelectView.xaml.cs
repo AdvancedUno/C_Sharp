@@ -1,6 +1,4 @@
-﻿using Frism_Inspection_Renew;
-using Frism_Inspection_Renew.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,19 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Frism_Inspection_Renew.Views
+namespace ChartDemoWithCommand.View
 {
     /// <summary>
-    /// MainView.xaml에 대한 상호 작용 논리
+    /// SelectView.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class MainView : UserControl
+    public partial class SelectView : UserControl
     {
-        public MainView()
+        public SelectView()
         {
             InitializeComponent();
-            //this.DataContext = new MainViewModel();
         }
     }
 }

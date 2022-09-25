@@ -1,6 +1,4 @@
-﻿using Frism_Inspection_Renew;
-using Frism_Inspection_Renew.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,19 +10,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Frism_Inspection_Renew.Views
+namespace ChartDemoWithCommand
 {
     /// <summary>
-    /// MainView.xaml에 대한 상호 작용 논리
+    /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class MainView : UserControl
+    public partial class MainWindow : Window
     {
-        public MainView()
+        public MainWindow()
         {
             InitializeComponent();
-            //this.DataContext = new MainViewModel();
+            content.Content = Activator.CreateInstance(null, $"ChartDemoWithCommand.View.ChartView").Unwrap();
+
         }
     }
 }

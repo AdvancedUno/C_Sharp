@@ -155,33 +155,7 @@ namespace Frism_Inspection_Renew.Models
             set{_showSigClassDelegate = value;}
         }
 
-        private Sub_MainView _sub_MainView1;
-        public Sub_MainView Sub_MainView1
-        {
-            get{return _sub_MainView1;}
-            set{_sub_MainView1 = value;}
-        }
-
-        private Sub_MainView _sub_MainView2;
-        public Sub_MainView Sub_MainView2
-        {
-            get{return _sub_MainView2;}
-            set{_sub_MainView2 = value;}
-        }
-
-        private Sub_MainView _sub_MainView3;
-        public Sub_MainView Sub_MainView3
-        {
-            get{return _sub_MainView3;}
-            set{_sub_MainView3 = value;}
-        }
-
-        private Sub_MainView _sub_MainView4;
-        public Sub_MainView Sub_MainView4
-        {
-            get{return _sub_MainView4;}
-            set{_sub_MainView4 = value;}
-        }
+      
 
         private int _iMaxThreadCnt;
         public int iMaxThreadCnt

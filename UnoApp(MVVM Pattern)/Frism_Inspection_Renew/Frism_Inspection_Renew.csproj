@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\build\OpenCvSharp3-AnyCPU.props" Condition="Exists('..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\build\OpenCvSharp3-AnyCPU.props')" />
   <Import Project="..\packages\SQLite.3.13.0\build\net45\SQLite.props" Condition="Exists('..\packages\SQLite.3.13.0\build\net45\SQLite.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -87,10 +88,18 @@
       <HintPath>..\packages\NLog.5.0.1\lib\net46\NLog.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenCvSharp4.4.6.0.20220608\lib\netstandard2.0\OpenCvSharp.dll</HintPath>
+      <HintPath>..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\lib\net461\OpenCvSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.Blob, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\lib\net461\OpenCvSharp.Blob.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenCvSharp4.Extensions.4.6.0.20220608\lib\netstandard2.0\OpenCvSharp.Extensions.dll</HintPath>
+      <HintPath>..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\lib\net461\OpenCvSharp.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenCvSharp.UserInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\lib\net461\OpenCvSharp.UserInterface.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SQLitePCLRaw.core, Version=2.1.0.1603, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.core.2.1.0\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>
@@ -148,8 +157,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\CustomICameraInfoModel.cs" />
+    <Compile Include="Models\CustomSliderModel.cs" />
     <Compile Include="Models\DnnSetingInfoModel.cs" />
     <Compile Include="Models\FileCamera.cs" />
+    <Compile Include="Models\HistoryModel.cs" />
     <Compile Include="Models\ImageFromCameraModel.cs" />
     <Compile Include="Models\ImageGroupModel.cs" />
     <Compile Include="Models\ImageInfoModel.cs" />
@@ -158,11 +169,12 @@
     <Compile Include="Models\IOControl.cs" />
     <Compile Include="Models\IOSaveModel.cs" />
     <Compile Include="Models\IVisionCamera.cs" />
+    <Compile Include="Models\LEDControlModel.cs" />
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\ResultImageModel.cs" />
     <Compile Include="Models\StoreImageInfos.cs" />
     <Compile Include="Models\UnoCamera.cs" />
-    <Compile Include="Models\VisionCameraGroup.cs" />
+    <Compile Include="Models\VisionCameraGroupModel.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\ParameterNavigationService.cs" />
     <Compile Include="Stores\NavigationStore.cs" />
@@ -184,14 +196,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\ScreenView.xaml.cs">
-      <DependentUpon>ScreenView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SetCameraView.xaml.cs">
       <DependentUpon>SetCameraView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Sub_MainView.xaml.cs">
-      <DependentUpon>Sub_MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Sub_SetCameraView.xaml.cs">
       <DependentUpon>Sub_SetCameraView.xaml</DependentUpon>
@@ -211,17 +217,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ScreenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\SetCameraView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Sub_MainView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Sub_SetCameraView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -282,6 +280,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\SQLite.3.13.0\build\net45\SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLite.3.13.0\build\net45\SQLite.props'))" />
     <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\build\OpenCvSharp3-AnyCPU.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\build\OpenCvSharp3-AnyCPU.props'))" />
   </Target>
   <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
 </Project>

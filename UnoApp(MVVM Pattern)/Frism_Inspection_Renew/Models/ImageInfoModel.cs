@@ -36,17 +36,51 @@ namespace Frism_Inspection_Renew.Models
         private string _savePath;
         public string SavePath { get => _savePath; set => _savePath = value; }
 
+        private bool _resultNG;
+        public bool ResultNG { get => _resultNG; set => _resultNG = value; }
+
+        private int _cropPosX;
+        public int CropPosX { get => _cropPosX; set => _cropPosX = value; }
+
+        private int _cropPosY;
+        public int CropPosY { get => _cropPosY; set => _cropPosY = value; }
+
+        private int _cropWidth;
+        public int CropWidth { get => _cropWidth; set => _cropWidth = value; }
+
+        private int _cropHeight;
+        public int CropHeight { get => _cropHeight; set => _cropHeight = value; }
+
         public ImageInfoModel(int cameraId)
         {
             CameraId = cameraId;
             CameraPosition = null;
             ImageWidth = -1;
             ImageHeight = -1;
-            ResultImage = null;
+            ResultImage = new ResultImageModel();
             SaveId = -1;
             SavePath = null;
-            DnnSettingInfoModel = new DnnSetingInfoModel();
+            //DnnSettingInfoModel = new DnnSetingInfoModel();
         }
+
+        public Bitmap GetBitmapRawImage()
+        {
+            return BitmapRawImage;
+        }
+        public ResultImageModel GetBitmapResultImageModel()
+        {
+            return ResultImage;
+        }
+
+        public void SetCropVal(string sCropInfo)
+        {
+            string[] collectionCropInfo = sCropInfo.Split(',');
+            CropPosX = (int)(float.Parse(collectionCropInfo[0]) * 1600);
+            CropPosY = (int)(float.Parse(collectionCropInfo[1]) * 1200);
+            CropWidth = (int)(float.Parse(collectionCropInfo[2]) * 1600);
+            CropHeight = (int)(float.Parse(collectionCropInfo[3]) * 1200);
+        }
+
 
     }
 }
