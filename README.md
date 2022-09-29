@@ -6,3 +6,4 @@ Async processes with TaskCompletionSource : https://www.levibotelho.com/developm
 
 
 LiveChart 2 : https://lvcharts.com/docs/WPF/2.0.0-beta.330/gallery
+LiveChart 1 : https://lvcharts.net/
