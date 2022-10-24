@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChartDemoWithCommand"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"  Background="#FF0C0707">
     <Grid>
-        <Grid.RowDefinitions>
-            <!--<RowDefinition Height="*"></RowDefinition>-->
-            <RowDefinition Height="*"></RowDefinition>
+        <!--<Grid.RowDefinitions>
+            --><!--<RowDefinition Height="*"></RowDefinition>--><!--
+            <--><!--RowDefinition--><!-- Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>-->
         <ContentControl x:Name="content" Grid.Column="0"></ContentControl>
     </Grid>
 </Window>

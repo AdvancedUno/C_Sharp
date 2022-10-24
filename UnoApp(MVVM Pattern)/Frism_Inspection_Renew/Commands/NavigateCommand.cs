@@ -16,6 +16,8 @@ namespace Frism_Inspection_Renew.Commands
         //private readonly Func<TViewModel> _createViewModel;
         private readonly NavigationService<TViewModel> _navigationService;
 
+    
+
         public NavigateCommand(NavigationService<TViewModel> navigationService)
         {
             _navigationService = navigationService;
@@ -25,6 +27,7 @@ namespace Frism_Inspection_Renew.Commands
 
         public override void Execute(object parameter)
         {
+            
             _navigationService.Navigate();
             //_navigationStore.CurrentViewModel = _createViewModel();
         }

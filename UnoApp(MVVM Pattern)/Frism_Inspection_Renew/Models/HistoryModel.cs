@@ -240,8 +240,6 @@ namespace Frism_Inspection_Renew.Models
                 ShowException(exception);
             }
 
-
-
             //OutputTextBlock.Text = outputText.ToString();
             //ListView1.ItemsSource = file;
         }
@@ -256,11 +254,19 @@ namespace Frism_Inspection_Renew.Models
             bmp1.MakeTransparent(System.Drawing.Color.White);
             Bitmap result = new Bitmap(Math.Max(bmp1.Width, bmp2.Width),
                                        Math.Max(bmp1.Height, bmp2.Height));
-            using (Graphics g = Graphics.FromImage(result))
+            try
             {
-                g.DrawImage(bmp2, System.Drawing.Point.Empty);
-                g.DrawImage(bmp1, System.Drawing.Point.Empty);
+                using (Graphics g = Graphics.FromImage(result))
+                {
+                    g.DrawImage(bmp2, System.Drawing.Point.Empty);
+                    g.DrawImage(bmp1, System.Drawing.Point.Empty);
+                }
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " MergedBitmaps");
+            }
+
             return result;
         }
 

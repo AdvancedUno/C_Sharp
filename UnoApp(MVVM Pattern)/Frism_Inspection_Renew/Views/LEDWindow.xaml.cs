@@ -1,5 +1,4 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,10 +18,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-
-namespace Frism_Inspection_Renew.Models
+namespace Frism_Inspection_Renew.Views
 {
-    public class LEDControlModel: INotifyPropertyChanged
+    /// <summary>
+    /// LEDWindow.xaml에 대한 상호 작용 논리
+    /// </summary>
+    public partial class LEDWindow : Window
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         enum Cmd
@@ -49,141 +50,73 @@ namespace Frism_Inspection_Renew.Models
             SET_OFFSET = 0xFC,
 
         }
-
         private readonly int mDefaultCh_Max = 4;
-
-        private SerialPort _serialPortObj = new SerialPort();
-        public SerialPort SerialPortObj { get => _serialPortObj; set => _serialPortObj = value; }
-
-        private DispatcherTimer _timer = new DispatcherTimer();
-        public DispatcherTimer Timer { get => _timer; set => _timer = value; }
+        public SerialPort serialPort1 = new SerialPort();
+        private DispatcherTimer timer1 = new DispatcherTimer();
 
         private byte[] mRxBuf = new byte[1024];
+        private int mRxDataLength;
+        private int size = 1024;
 
 
-        private int _rxDataLength;
-        public int DataLength { get => _rxDataLength; set => _rxDataLength = value; }
-
-        private Boolean _mIsComSelected = false;
-        public bool MIsComSelected { get => _mIsComSelected; set => _mIsComSelected = value; }
-
+        private Boolean mIsComSelected = false;
 
         private int[] mCh_Values = new int[102];
 
-        private OleDbConnection _oleDbConn;
-        public OleDbConnection OleDbConn { get => _oleDbConn; set => _oleDbConn = value; }
+        private OleDbConnection mConn;
+        private DataTable mDt;
+        private int mFullTrans_RowCount;
+        private int mFullTrans_UnitNum;
+        private int mSubBoard_Count;
+        private int mChannelCount = 8;
+        private int mGet_LedValue_Ch;//광량 값 요청 채널
 
-        private BackgroundWorker _bgWorker;
-        public BackgroundWorker BgWorker { get => _bgWorker; set => _bgWorker = value; }
+        private BackgroundWorker bw = new BackgroundWorker(); //BackgroundWorker클래스를 선언 및 할당
 
         public static RoutedCommand MyCommand_CtrlN = new RoutedCommand();
 
-
-        private Button _btnGetOffset;
-        public Button BtnGetOffset { get => _btnGetOffset; set => _btnGetOffset = value; }
-
-        private Button _btnSetOffset = new Button();
-        public Button BtnSetOffset { get => _btnSetOffset; set => _btnSetOffset = value; }
-
-        private List<string> _comportDeviceList;
-        public List<string> ComportDeviceList { 
-            get => _comportDeviceList;
-            set
-            {
-                _comportDeviceList = value;
-                OnPropertyChanged("ComportDeviceList");
-            } 
-        }
+        private Button mbtnGetOffset = new Button();
+        private Button mbtnSetOffset = new Button();
 
         private Byte mHeader = 0x50;// P
         private Byte mCheckSum = 0x43;// C
 
-        private int _redVal = 0;
-        public int RedVal { get => _redVal; set => _redVal = value; }
+        public int redVal = 0;
+        public int greenVal = 0;
+        public int blueVal = 0;
+        public int whiteVal = 0;
 
-        private int _greenVal = 0;
-        public int GreenVal { get => _greenVal; set => _greenVal = value; }
+        public bool LEDInfoSaved = false;
 
-        private int _blueVal = 0;
-        public int BlueVal { get => _blueVal; set => _blueVal = value; }
-
-        private int _whiteVal = 0;
-        public int WhiteVal { get => _whiteVal; set => _whiteVal = value; }
-
-        private double _sldRedValue = 0;
-        public double SldRedValue { get => _sldRedValue; set => _sldRedValue = value; }
-
-        private double _sldGreenValue = 0;
-        public double SldGreenValue { get => _sldGreenValue; set => _sldGreenValue = value; }
-
-        private double _sldBlueValue = 0;
-        public double SldBlueValue { get => _sldBlueValue; set => _sldBlueValue = value; }
-
-        private double _sldWhiteValue = 0;
-        public double SldWhiteValue { get => _sldWhiteValue; set => _sldWhiteValue = value; }
-
-        private bool _myLEDInfoSaved = false;
-        public bool MyLEDInfoSaved { get => _myLEDInfoSaved; set => _myLEDInfoSaved = value; }
-        
-        private string _baudrateValue;
-        public string BaudrateValue { 
-            get => _baudrateValue;
-            set { 
-                _baudrateValue = value;
-                OnPropertyChanged("BaudrateValue");
-            }
-
-        }
-
-
-
-
-        public LEDControlModel()
+        public LEDWindow()
         {
+            InitializeComponent();
 
             MyCommand_CtrlN.InputGestures.Add(new KeyGesture(Key.N, ModifierKeys.Control));
             //CommandBindings.Add(new CommandBinding(MyCommand_CtrlN, onAppendOffsetBtn));
-            SerialPortObj = new SerialPort();
-            OleDbConn = new OleDbConnection();
-            BgWorker = new BackgroundWorker();
-            BtnGetOffset = new Button();
-            BtnSetOffset = new Button();
-            ComportDeviceList = new List<string>();
 
 
 
-            OleDbConn.ConnectionString = "Provider=Microsoft.Jet.Oledb.4.0; Data Source=" + AppDomain.CurrentDomain.BaseDirectory + "\\Ch102_DB.mdb";
-
-            //GetComport(ref CboComport);
-            //if (CboComport.Items.Count > 0) CboComport.SelectedIndex = (CboComport.Items.Count - 1);// 0;
+            GetComport(ref CboComport);
+            if (CboComport.Items.Count > 0) CboComport.SelectedIndex = (CboComport.Items.Count - 1);// 0;
             //Connect your access database
-
-            GetComport();
-
-            //if (ComportDeviceList.Count > 0) CboComport.SelectedIndex = (CboComport.Items.Count - 1);// 0;
-
-            BaudrateValue = "19200";
-
-            BgWorker.WorkerReportsProgress = true;
-            //스레드에서 취소 지원 여부-
-            BgWorker.WorkerSupportsCancellation = true;
-
-            BtnSetOffset.Content = "Set Offset";
-
-            BtnGetOffset.Content = "Get Offset";
-            BtnGetOffset.Click += OnbtnGetOffset_Click;
+            mConn = new OleDbConnection();
+            mConn.ConnectionString = "Provider=Microsoft.Jet.Oledb.4.0; Data Source=" + AppDomain.CurrentDomain.BaseDirectory + "\\Ch102_DB.mdb";
 
 
 
+            cboBaudrate.Text = "19200";
 
+            bw.WorkerReportsProgress = true;
+            //스레드에서 취소 지원 여부
+            bw.WorkerSupportsCancellation = true;
+
+            mbtnSetOffset.Content = "Set Offset";
+
+            mbtnGetOffset.Content = "Get Offset";
+            mbtnGetOffset.Click += OnbtnGetOffset_Click;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
 
         private void OnbtnGetOffset_Click(object sender, RoutedEventArgs e)
@@ -196,9 +129,9 @@ namespace Frism_Inspection_Renew.Models
 
             try
             {
-                SerialPortObj.DiscardInBuffer();
-                DataLength = 0;
-                SerialPortObj.Write(message, 0, message.Length);
+                serialPort1.DiscardInBuffer();
+                mRxDataLength = 0;
+                serialPort1.Write(message, 0, message.Length);
             }
             catch (Exception ex)
             {
@@ -216,21 +149,21 @@ namespace Frism_Inspection_Renew.Models
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void GetComport()
+        private void GetComport(ref ComboBox cboCom)
         {
-            
+            cboCom.Items.Clear();
             foreach (string comPort in SerialPort.GetPortNames())
             {
                 if (comPort.Length > 4)
                 {
                     if (!Char.IsDigit(Char.Parse(comPort.Substring(4, 1))))
-                        ComportDeviceList.Add(comPort.Substring(0, 4));
+                        cboCom.Items.Add(comPort.Substring(0, 4));
                     else
-                        ComportDeviceList.Add(comPort);
+                        cboCom.Items.Add(comPort);
                 }
                 else
                 {
-                    ComportDeviceList.Add(comPort);
+                    cboCom.Items.Add(comPort);
                 }
             }
         }
@@ -243,16 +176,16 @@ namespace Frism_Inspection_Renew.Models
 
             try
             {
-                if (SerialPortObj.IsOpen) SerialPortObj.Close();
+                if (serialPort1.IsOpen) serialPort1.Close();
 
-                SerialPortObj.PortName = "COM10";
-                SerialPortObj.BaudRate = Int32.Parse(BaudrateValue.ToString());
-                SerialPortObj.DataBits = 8;
-                SerialPortObj.StopBits = StopBits.One;
-                SerialPortObj.Parity = Parity.None;
-                SerialPortObj.Encoding = Encoding.ASCII;
+                serialPort1.PortName = "COM10";
+                serialPort1.BaudRate = Int32.Parse(cboBaudrate.Text.ToString());
+                serialPort1.DataBits = 8;
+                serialPort1.StopBits = StopBits.One;
+                serialPort1.Parity = Parity.None;
+                serialPort1.Encoding = Encoding.ASCII;
 
-                SerialPortObj.Open();
+                serialPort1.Open();
 
                 rValue = true;
             }
@@ -274,16 +207,16 @@ namespace Frism_Inspection_Renew.Models
 
             try
             {
-                if (SerialPortObj.IsOpen) SerialPortObj.Close();
+                if (serialPort1.IsOpen) serialPort1.Close();
 
-                SerialPortObj.PortName = "COM10"; ;
-                SerialPortObj.BaudRate = iBaudrate;
-                SerialPortObj.DataBits = 8;
-                SerialPortObj.StopBits = StopBits.One;
-                SerialPortObj.Parity = Parity.None;
-                SerialPortObj.Encoding = Encoding.ASCII;
+                serialPort1.PortName = "COM10"; ;
+                serialPort1.BaudRate = iBaudrate;
+                serialPort1.DataBits = 8;
+                serialPort1.StopBits = StopBits.One;
+                serialPort1.Parity = Parity.None;
+                serialPort1.Encoding = Encoding.ASCII;
 
-                SerialPortObj.Open();
+                serialPort1.Open();
 
                 rValue = true;
             }
@@ -303,19 +236,19 @@ namespace Frism_Inspection_Renew.Models
         {
             if (Com_Open())
             {
-                //BtnComOpen.IsEnabled = false;
-                //BtnComClose.IsEnabled = true;
-                MIsComSelected = true;
+                BtnComOpen.IsEnabled = false;
+                BtnComClose.IsEnabled = true;
+                mIsComSelected = true;
                 //Button_Active(true);
             }
         }
 
         private void BtnComClose_Click(object sender, RoutedEventArgs e)
         {
-            SerialPortObj.Close();
-            //BtnComOpen.IsEnabled = true;
-            //BtnComClose.IsEnabled = false;
-            MIsComSelected = false;
+            serialPort1.Close();
+            BtnComOpen.IsEnabled = true;
+            BtnComClose.IsEnabled = false;
+            mIsComSelected = false;
             //Button_Active(false);
         }
 
@@ -323,26 +256,26 @@ namespace Frism_Inspection_Renew.Models
         private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             //this.Invoke(new EventHandler(SerialReceived));
-            int RxDataLength = SerialPortObj.BytesToRead; // 수신된 데이터 갯수
+            int RxDataLength = serialPort1.BytesToRead; // 수신된 데이터 갯수
 
             //timer1.Stop();
             if (RxDataLength != 0) // 수신된 데이터의 수가 0이 아닐때만 처리하자
             {
                 byte[] buff = new byte[RxDataLength];
-                SerialPortObj.Read(buff, 0, RxDataLength);
+                serialPort1.Read(buff, 0, RxDataLength);
 
                 for (int iTemp = 0; iTemp < RxDataLength; iTemp++)
                 {
-                    mRxBuf[DataLength++] = buff[iTemp];
+                    mRxBuf[mRxDataLength++] = buff[iTemp];
                 }
-                Timer.Interval = TimeSpan.FromMilliseconds(100);
-                Timer.Start();
+                timer1.Interval = TimeSpan.FromMilliseconds(100);
+                timer1.Start();
             }
         }
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
-            Timer.Stop();
-            RxData_Display(mRxBuf, DataLength);
+            timer1.Stop();
+            RxData_Display(mRxBuf, mRxDataLength);
             //RxData_Parsing(mRxBuf, mRxDataLength);
         }
         private void TxData_Display(byte[] Buf, int DataCount)
@@ -373,21 +306,22 @@ namespace Frism_Inspection_Renew.Models
 
         private void _rdoLedOff_Checked(object sender, RoutedEventArgs e)
         {
-            //if (_rdoLedOff.IsChecked.Value)
-            //{
-            //    Led_OnOff(0x00, 0);
-            //}
+            if (_rdoLedOff.IsChecked.Value)
+            {
+                Led_OnOff(0x00, 0);
+
+            }
 
         }
 
         private void _rdoLedOn_Checked(object sender, RoutedEventArgs e)
         {
 
-            //if (_rdoLedOn.IsChecked.Value)
-            //{
-            //    Led_OnOff(0x00, 1);
+            if (_rdoLedOn.IsChecked.Value)
+            {
+                Led_OnOff(0x00, 1);
 
-            //}
+            }
         }
         /// <summary>
         /// 
@@ -407,9 +341,9 @@ namespace Frism_Inspection_Renew.Models
 
             try
             {
-                SerialPortObj.DiscardInBuffer();
-                DataLength = 0;
-                SerialPortObj.Write(message, 0, message.Length);
+                serialPort1.DiscardInBuffer();
+                mRxDataLength = 0;
+                serialPort1.Write(message, 0, message.Length);
             }
             catch (Exception ex)
             {
@@ -437,9 +371,9 @@ namespace Frism_Inspection_Renew.Models
 
             try
             {
-                SerialPortObj.DiscardInBuffer();
-                DataLength = 0;
-                SerialPortObj.Write(message, 0, message.Length);
+                serialPort1.DiscardInBuffer();
+                mRxDataLength = 0;
+                serialPort1.Write(message, 0, message.Length);
             }
             catch (Exception ex)
             {
@@ -462,9 +396,9 @@ namespace Frism_Inspection_Renew.Models
 
             try
             {
-                SerialPortObj.DiscardInBuffer();
-                DataLength = 0;
-                SerialPortObj.Write(message, 0, message.Length);
+                serialPort1.DiscardInBuffer();
+                mRxDataLength = 0;
+                serialPort1.Write(message, 0, message.Length);
             }
             catch (Exception ex)
             {
@@ -482,96 +416,97 @@ namespace Frism_Inspection_Renew.Models
         }
 
 
+
         private void RedSld_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //int temp = (int)SldRedValue;
-            //RedTxt.Text = temp.ToString();
+            int temp = (int)RedSld.Value;
+            RedTxt.Text = temp.ToString();
+
         }
 
         private void GreenSld_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //int temp = (int)SldGreenValue;
-            //GreenTxt.Text = temp.ToString();
+            int temp = (int)GreenSld.Value;
+
+            GreenTxt.Text = temp.ToString();
         }
 
         private void BlueSld_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //int temp = (int)SldBlueValue;
-            //BlueTxt.Text = temp.ToString();
+            int temp = (int)BlueSld.Value;
+            BlueTxt.Text = temp.ToString();
         }
 
         private void WhiteSld_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //int temp = (int)SldWhiteValue;
-            //WhiteTxt.Text = temp.ToString();
+            int temp = (int)WhiteSld.Value;
+            WhiteTxt.Text = temp.ToString();
         }
 
         private void saveBtn_Click(object sender, RoutedEventArgs e)
         {
 
-            RedVal = (int)SldRedValue; ;
-            GreenVal = (int)SldGreenValue; ;
-            BlueVal = (int)SldBlueValue;
-            WhiteVal = (int)SldWhiteValue;
+            redVal = Int32.Parse(RedTxt.Text);
+            greenVal = Int32.Parse(GreenTxt.Text);
+            blueVal = Int32.Parse(BlueTxt.Text);
+            whiteVal = Int32.Parse(WhiteTxt.Text);
 
-            //BlueSld.Value = BlueVal;
-            //RedSld.Value = RedVal;
-            //GreenSld.Value = GreenVal;
-            //WhiteSld.Value = WhiteVal;
+            BlueSld.Value = blueVal;
+            RedSld.Value = redVal;
+            GreenSld.Value = greenVal;
+            WhiteSld.Value = whiteVal;
 
 
-            //LEDInfoSaved = true;
 
+
+            LEDInfoSaved = true;
+
+            this.Hide();
         }
 
 
         public void setLEDValues()
         {
 
-            //RedTxt.Text = RedVal.ToString();
-            //GreenTxt.Text = GreenVal.ToString();
-            //BlueTxt.Text = BlueVal.ToString();
-            //WhiteTxt.Text = WhiteVal.ToString();
+            RedTxt.Text = redVal.ToString();
+            GreenTxt.Text = greenVal.ToString();
+            BlueTxt.Text = blueVal.ToString();
+            WhiteTxt.Text = whiteVal.ToString();
 
         }
 
 
         private void RedBtn_Click(object sender, RoutedEventArgs e)
         {
-            int temp = (int)RedVal; //Int32.Parse(RedTxt.Text);
+            int temp = Int32.Parse(RedTxt.Text);
             Set_DimmingValue(1, temp);
         }
 
         private void GreenBtn_Click(object sender, RoutedEventArgs e)
         {
-            int temp = (int)GreenVal; //Int32.Parse(GreenTxt.Text);
+            int temp = Int32.Parse(GreenTxt.Text);
             Set_DimmingValue(2, temp);
         }
 
         private void BlueBtn_Click(object sender, RoutedEventArgs e)
         {
-            int temp = (int)BlueVal; //Int32.Parse(BlueTxt.Text);
+            int temp = Int32.Parse(BlueTxt.Text);
             Set_DimmingValue(3, temp);
         }
 
         private void WhiteBtn_Click(object sender, RoutedEventArgs e)
         {
-            int temp = (int)WhiteVal; //Int32.Parse(WhiteTxt.Text);
+            int temp = Int32.Parse(WhiteTxt.Text);
             Set_DimmingValue(0, temp);
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (SerialPortObj.IsOpen)
+            if (serialPort1.IsOpen)
             {
                 Led_OnOff(0x00, 0);
-                SerialPortObj.Close();
+                serialPort1.Close();
             }
         }
-
     }
-
-
-   
 }
-

@@ -12,6 +12,7 @@ namespace Frism_Inspection_Renew.ViewModels
         private readonly NavigationStore _navigationStore;
 
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+        
 
         public WindowViewModel(NavigationStore navigationStore)
         {
@@ -23,6 +24,7 @@ namespace Frism_Inspection_Renew.ViewModels
         private void OnCurrentViewModelChanged()
         {
             OnPropertyChanged(nameof(CurrentViewModel));
+            
         }
     }
 }

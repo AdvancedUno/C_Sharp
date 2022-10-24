@@ -27,6 +27,9 @@ namespace Frism_Inspection_Renew.Stores
 
         }
 
+       
+
+
         private void OnCurrentViewModelChaged()
         {
             CurrentViewModelChanged?.Invoke();

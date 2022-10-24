@@ -111,7 +111,6 @@ namespace Frism_Inspection_Renew.Models
         /////////////// Return acquired Image /////////////
         public ImageFromCameraModel GetLatestFrame()
         {
-
             lock (monitor)
             {
                 if (latestFrame != null)
@@ -174,8 +173,15 @@ namespace Frism_Inspection_Renew.Models
 
         public void SetCamParameter(PLCamera.TriggerModeEnum triggerMode, PLCamera.TriggerSourceEnum triggerSource, string mode, string source)
         {
-            camera.Parameters[triggerMode].SetValue(mode);
-            camera.Parameters[triggerSource].SetValue(source);
+            try
+            {
+                camera.Parameters[triggerMode].SetValue(mode);
+                camera.Parameters[triggerSource].SetValue(source);
+            }
+            catch(Exception excepiton)
+            {
+                Console.WriteLine(excepiton + " SetCamParameter");
+            }
         }
 
 
@@ -210,12 +216,22 @@ namespace Frism_Inspection_Renew.Models
         /////////////// Stop & End Grabbing /////////////
         public void StopGrabbing()
         {
-
-            camera.StreamGrabber.Stop();
-            if (stopwatch.IsRunning)
+            try
             {
-                stopwatch.Stop();
+                if (IsOpen)
+                {
+                    camera.StreamGrabber.Stop();
+                    if (stopwatch.IsRunning)
+                    {
+                        stopwatch.Stop();
+                    }
+                }
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " StopGrabbing");
+            }
+            
         }
         public void CloseCamera()
         {
@@ -367,6 +383,7 @@ namespace Frism_Inspection_Renew.Models
 
                         ImageCapturedEventArgs capturedEvent = new ImageCapturedEventArgs();
                         capturedEvent.imageFromCameraModel = ReturnImageFromCamera;
+                        capturedEvent.cameraNumber = ReturnImageFromCamera.CameraId;
 
                         RaiseEventFrameCaptured(capturedEvent);
 
@@ -441,9 +458,9 @@ namespace Frism_Inspection_Renew.Models
             {
                 DestroyCamera();
             }
+            
+            
             camera = new Camera(info);
-
-
 
             ICameraInfo info2 = camera.CameraInfo;
 
@@ -455,50 +472,86 @@ namespace Frism_Inspection_Renew.Models
         /////////////// Continuous Grab /////////////
         public void StartContinuousShotGrabbing()
         {
-            if (!MainMode)
+            try
             {
-                Configuration.AcquireContinuous(camera, null);
+                if (!MainMode)
+                {
+                    Configuration.AcquireContinuous(camera, null);
+                }
+
+                camera.StreamGrabber.Start(GrabStrategy.OneByOne, GrabLoop.ProvidedByStreamGrabber);
             }
+            catch (Exception exception) 
+            {
+                Console.WriteLine(exception.Message + " StartContinuousShotGrabbing");
 
-            camera.StreamGrabber.Start(GrabStrategy.OneByOne, GrabLoop.ProvidedByStreamGrabber);
-
+            }
+           
 
         }
 
         /////////////// Single Grab /////////////
         public void StartSingleShotGrabbing()
         {
-
-            Configuration.AcquireSingleFrame(camera, null);
-            camera.StreamGrabber.Start(1, GrabStrategy.OneByOne, GrabLoop.ProvidedByUser);
-            camera.Parameters[PLCamera.TriggerMode].SetValue(PLCamera.TriggerMode.On);
-            camera.Parameters[PLCamera.TriggerSource].SetValue(PLCamera.TriggerSource.Line1);
+            try
+            {
+                Configuration.AcquireSingleFrame(camera, null);
+                camera.StreamGrabber.Start(1, GrabStrategy.OneByOne, GrabLoop.ProvidedByUser);
+                camera.Parameters[PLCamera.TriggerMode].SetValue(PLCamera.TriggerMode.On);
+                camera.Parameters[PLCamera.TriggerSource].SetValue(PLCamera.TriggerSource.Line1);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " StartSingleShotGrabbing");
+            }
         }
 
         /////////////// Software Trigger /////////////
         public void SoftwareTrigger()
         {
-            camera.WaitForFrameTriggerReady(100, TimeoutHandling.ThrowException);
-            camera.ExecuteSoftwareTrigger();
-            Trigger = true;
+            try
+            {
+                camera.WaitForFrameTriggerReady(100, TimeoutHandling.ThrowException);
+                camera.ExecuteSoftwareTrigger();
+                Trigger = true;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " SoftwareTrigger");
+            }
         }
 
         public void ExecuteSoftwareTrigger(CommandName commandName)
         {
-            camera.Parameters[commandName].Execute();
+            try
+            {
+                camera.Parameters[commandName].Execute();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " ExecuteSoftwareTrigger");
+            }
         }
 
         /////////////// Open Camera /////////////
         public void OpenCamera()
         {
-            if (!IsCreated)
+            try
             {
-                throw new InvalidOperationException("Cannot open camera. No camera has been created.");
+                if (!IsCreated)
+                {
+                    throw new InvalidOperationException("Cannot open camera. No camera has been created.");
+                }
+                if (!IsOpen)
+                {
+                    camera.Open();
+                }
             }
-            if (!IsOpen)
+            catch (Exception exception)
             {
-                camera.Open();
+                Console.WriteLine(exception.Message + " OpenCamera");
             }
+
         }
         public void Dispose()
         {

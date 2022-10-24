@@ -27,10 +27,10 @@ namespace Frism_Inspection_Renew.Models
         private InstantDoCtrl _instantDoCtrl;
         public InstantDoCtrl InstantDoCtrl { get => _instantDoCtrl; set => _instantDoCtrl = value; }
 
-        private string _deviceDescription = "PCI-1730,BID#0";
+        private string _deviceDescription = "PCIE-1730,BID#0";
         public string DeviceDescription { get => _deviceDescription; set => _deviceDescription = value; }
 
-        private string _profilePath = "D:\\profile_i\\dev2.xml";
+        private string _profilePath = "C:\\Advantech\\DAQNavi\\DAQNavi\\NavigatorPlugin\\profile\\PCIe-1730_0.xml";
         public string ProfilePath { get => _profilePath; set => _profilePath = value; }
 
         private byte[] _bufferForWriting;
@@ -55,9 +55,9 @@ namespace Frism_Inspection_Renew.Models
         {
             //string deviceDescription = "PCI-1730,BID#0";
             //string profilePath = "D:\\profile_i\\dev2.xml";
-            //int startPort = 0;
-            //int portCount = 1;
-            //ErrorCode errorCode = ErrorCode.Success;
+            int startPort = 0;
+            int portCount = 1;
+            ErrorCode errorCode = ErrorCode.Success;
 
             //InstantDiCtrl instantDiCtrl = new InstantDiCtrl();
             try
@@ -72,34 +72,34 @@ namespace Frism_Inspection_Renew.Models
                 ////Console.WriteLine("Reading ports' status is in progress..., any key to quit!\n");
 
                 //Console.WriteLine("IO running");
-                //byte[] buffer = new byte[64];
+                byte[] buffer = new byte[64];
                 //bool bSensorFlag = false;
 
                 while (ContinueBlowSignal)
                 {
+
                     //Console.WriteLine("ReadBuffer");
-                    //errorCode = instantDiCtrl.Read(startPort, portCount, buffer);
-                    //if (BioFailed(errorCode))
-                    //{
-                    //    throw new Exception();
-                    //}
-                    //int intbyte = buffer[0];
-                    setBlowReady();
-
-                    //if (buffer[0] > 0)
-                    //{
-
-                    //    while (true)
-                    //    {
-                    //        //Console.WriteLine("Buffer Value : " + buffer[0]);
-                    //        errorCode = instantDiCtrl.Read(startPort, portCount, buffer);
-                    //        if (buffer[0] == 0)
-                    //        {
-                    //            setBlowReady();
-                    //            break;
-                    //        }
-                    //    }
-                    //}
+                    errorCode = InstantDoCtrl.Read(startPort, portCount, buffer);
+                    if (BioFailed(errorCode))
+                    {
+                        throw new Exception();
+                    }
+                    int intbyte = buffer[0];
+                    
+                    if (buffer[0] > 0)
+                    {
+                        setBlowReady();
+                        //while (true)
+                        //{
+                        //    //Console.WriteLine("Buffer Value : " + buffer[0]);
+                        //    errorCode = InstantDoCtrl.Read(startPort, portCount, buffer);
+                        //    if (buffer[0] == 0)
+                        //    {
+                        //        setBlowReady();
+                        //        break;
+                        //    }
+                        //}
+                    }
 
                     Thread.Sleep(5);
                 }
@@ -128,8 +128,8 @@ namespace Frism_Inspection_Renew.Models
             {
                 bool temp;
                 int nSleep = 100;
-                temp = IOSaveModel.GetBlowSignalValue();
-
+                temp = true;// IOSaveModel.GetBlowSignalValue();
+                IOSaveModel.GetBlowSignalValue();
                 if (temp)
                 {
                     Console.WriteLine("NG Blow\n");

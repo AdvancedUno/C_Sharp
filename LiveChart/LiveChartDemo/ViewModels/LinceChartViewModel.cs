@@ -21,7 +21,6 @@ namespace LiveChartDemo.ViewModels
         {
             Values = new ChartValues<double> { };
             OpenFile();
-
         }
 
         public ChartValues<double> Values
@@ -36,7 +35,6 @@ namespace LiveChartDemo.ViewModels
                 OnPropertyChanged("Values");
             }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -54,12 +52,11 @@ namespace LiveChartDemo.ViewModels
                 Worksheet worksheet1 = workbook.Worksheets.get_Item(5);
 
                 application.Visible = false;
-
+               
                 int row = worksheet1.UsedRange.EntireRow.Count;
                 Console.WriteLine(row);
                 //Range rng = worksheet1.Range[ws.Cells[1, 1], ws.Cells[row, numOfColumn]];
-
-
+                
                 Range startRange = worksheet1.Cells[5, 3];
                 Range endRange = worksheet1.Cells[100, 3];
 
@@ -83,9 +80,6 @@ namespace LiveChartDemo.ViewModels
                     //Console.WriteLine(data);
                     data += "\n";
                 }
-
-
-
             }
         }
 
@@ -110,8 +104,5 @@ namespace LiveChartDemo.ViewModels
                 GC.Collect();   // 가비지 수집
             }
         }
-
-
-
     }
 }

@@ -16,6 +16,8 @@ using Basler.Pylon;
 using System.Drawing.Imaging;
 using OpenCvSharp.Extensions;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
+using Size = OpenCvSharp.Size;
 
 namespace Frism_Inspection_Renew.Models
 {
@@ -90,11 +92,16 @@ namespace Frism_Inspection_Renew.Models
 
         //[DllImport("INTELLIZ_D_INSPECT.dll", CharSet = CharSet.None, EntryPoint = "DestoryAllNet", ExactSpelling = true)]
         //extern public static void DestoryAllNet();
+
+
+
+
         #endregion
 
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
+        private object lockInferObject = new object();
+        public bool InpectingBool = false;
         public InferenceModel()
         {
             TotalTimeProcess = new Stopwatch();
@@ -128,58 +135,55 @@ namespace Frism_Inspection_Renew.Models
 
         public ImageGroupModel InferDLL(ImageGroupModel imageGroupModel)
         {
-            Logger.Debug("InferDLL");
-            
-            try {
+
+                Logger.Debug("InferDLL");
+
+            //Logger.Debug("InferDLL");
+
+            try
+            {
                 CheckContinueInsp = false;
                 Stopped = false;
                 InferReadyFlag = true;
 
                 Logger.Info("Ready to process");
 
-                Task[] taskArray = new Task[4];
-                for (int i = 0; i < taskArray.Length; i++)
+                lock (lockInferObject)
                 {
-                    taskArray[i] = Task.Factory.StartNew((Action)(() => {
-                        imageGroupModel.ImageInfoModelList[i] = InferImage(imageGroupModel.ImageInfoModelList[i]);
+
+                    Task[] taskArray = new Task[5];
+                    for (int i = 0; i < 5; i++)
+                    {
+                        int num = i;
+                        ImageInfoModel tempImageInfoModel = imageGroupModel.GetImageInfoModels()[num];
+                        taskArray[i] = Task.Factory.StartNew((Action)(() =>
+                        {
+                            Console.WriteLine("tast Id : --  " + i);
+                            imageGroupModel.GetImageInfoModels()[num] = InferImage(tempImageInfoModel);
+                        }
+                        ));
+                        Thread.Sleep(1);
+                        //taskArray[i].Start();
                     }
-                    ));
-                    Thread.Sleep(5);
-                    //taskArray[i].Start();
+
+                    Task.WaitAll(taskArray);
+
+                    
                 }
-
-                Task.WaitAll(taskArray);
-                
-                //foreach (var task in taskArray)
-                //{
-                //    var data = task.;
-                //}
-
-                //for (int i = 0; i < imageGroupModel.ImageInfoModelList.Count; i++)
-                //{
-                //    var myResult = await tasks[i].Task;
-                //    imageGroupModel.ImageInfoModelList[i] = tasks[i].Result;
-                //    if (imageGroupModel.ImageInfoModelList[i].ResultNG == true)
-                //    {
-                //        imageGroupModel.InferResultNG = true;
-                //    }
-
-                //}
-                //InferReadyFlag = false;
-
             }
             catch (Exception exception)
             {
                 System.Windows.Forms.MessageBox.Show(exception.Message);
                 Logger.Error(exception.Message + " InferDLL");
             }
-
+            
             return imageGroupModel;
         }
 
         public void SettingDnnFirst(ImageGroupModel imageGroupModel)
         {
             int i = 0;
+            SetInferFileLogOn("C:/temp/log.txt");
             foreach (ImageInfoModel imageInfoModel in imageGroupModel.GetImageInfoModels())
             {
                 imageInfoModel.DnnSettingInfoModel.ThreadId = i;
@@ -232,7 +236,7 @@ namespace Frism_Inspection_Renew.Models
             {
                 Console.WriteLine("ThreadID  InferDLL : __" + imageInfoModel.DnnSettingInfoModel.ThreadId);
                 threadId = imageInfoModel.DnnSettingInfoModel.ThreadId;
-                
+
                 //InitInferMultiMaxTile(threadId, maxTileWidth, maxTileHeight);
                 InitInferMultiMaxTile(threadId, maxTileWidth, maxTileHeight);
                 SetInitImageSize(threadId, maxTileWidth, maxTileHeight);
@@ -261,20 +265,21 @@ namespace Frism_Inspection_Renew.Models
 
                 //Read_OCR_Info(json);
 
+
+
                 double lowerPValue = imageInfoModel.DnnSettingInfoModel.UppperPValue;
                 SetMultiClassProbability(threadId, 2, lowerPValue);
 
                 float pValue = new float();
 
                 //Mat image = Cv2.ImRead("../../../../test.bmp", ImreadModes.Grayscale);
-                Mat image = Cv2.ImRead(@"D:\training_tb\project\Mint_Cup\Top\images\13153536_[Top].bmp", ImreadModes.Grayscale);
+                Mat image = Cv2.ImRead(@"C:\Users\abc\Desktop\Intelliz\Image\Top\18565184_[2].bmp", ImreadModes.Grayscale);
 
                 //Mat src1 = new Mat(new OpenCvSharp.Size(1600, 1200), MatType.CV_8UC1, 255);
                 int errorCode = 0;
                 for (int i = 0; i < 5; i++)
                 {
-
-                    Mat src1 = new Mat(new OpenCvSharp.Size(1600, 1200), MatType.CV_8UC1, 255);
+                    Mat src1 = new Mat(new OpenCvSharp.Size(400, 300), MatType.CV_8UC1);
                     //errorCode = InspectMultiGetP_Ptr(iThreadID, src1.CvPtr, src1.CvPtr, ref pValue);
                     errorCode = InspectMultiGetP_Select(threadId, image.CvPtr, 2, src1.CvPtr, ref pValue);
                     if (errorCode > 0)
@@ -297,9 +302,7 @@ namespace Frism_Inspection_Renew.Models
                 if (retCode > 0)
                 {
                     //Program.ErrorBlow();
-
                     Logger.Error("Error : " + retCode + "Thread ID: " + imageInfoModel.DnnSettingInfoModel.ThreadId);
-
                     return;
                 }
             }
@@ -344,9 +347,12 @@ namespace Frism_Inspection_Renew.Models
                 {
                     //mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(newImage);
                     mat = BitmapConverter.ToMat(newImage);
+
+                    Cv2.Resize(mat, mat, new Size(0, 0), 0.5, 0.5);
                     if (mat.Channels() > 1)
                     {
-                        Cv2.CvtColor(mat, mat, ColorConversionCodes.BGR2GRAY);
+                        Console.WriteLine("Channels Num : "+ mat.Channels());
+                        //Cv2.CvtColor(mat, mat, ColorConversionCodes.BGR2GRAY);
                     }
                     outputMat = new Mat();
                 
@@ -384,7 +390,7 @@ namespace Frism_Inspection_Renew.Models
                     }
 
                     imageInfoModel.ResultNG = checkNG;
-                    imageInfoModel.ResultImage.BitmapResultImage = BitmapConverter.ToBitmap(outputMat); ;
+                    imageInfoModel.ResultImage.BitmapResultImage = BitmapConverter.ToBitmap(outputMat); 
                     //imageInfoModel.ResultImage.BitmapResultImage.Save("D:/TB/Image/" + 8888 + ".bmp", ImageFormat.Bmp);
 
 
@@ -393,13 +399,13 @@ namespace Frism_Inspection_Renew.Models
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine(exception.Message);
+                    Console.WriteLine(exception.Message + " InferImage");
                     Logger.Error(exception.Message + " ");
                 }
             }
             else
             {
-                Console.WriteLine("NoImage");
+                Console.WriteLine("NoImage InferImage");
             }
 
 

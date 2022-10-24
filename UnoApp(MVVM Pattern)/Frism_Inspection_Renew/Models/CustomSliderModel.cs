@@ -125,16 +125,26 @@ namespace Frism_Inspection_Renew.Models
 
         private int PercentToSliderValue(double percent)
         {
-            int result;
-            if (Logarithmic)
+            int result = 0;
+            try
             {
-                result = (int)(Math.Log(percent + 1, 2) * SLIDER_CONSTANT_FACTOR);
+                
+                if (Logarithmic)
+                {
+                    result = (int)(Math.Log(percent + 1, 2) * SLIDER_CONSTANT_FACTOR);
+                }
+                else
+                {
+                    result = (int)(((MaxVal - MinVal) / 100.0) * percent);
+                }
+                
             }
-            else
+            catch (Exception exception)
             {
-                result = (int)(((MaxVal - MinVal) / 100.0) * percent);
+                Console.WriteLine(exception.Message + " PercentToSliderValue");
             }
             return result;
+
         }
         private double SliderToPercentValue(int sliderValue)
         {
@@ -296,6 +306,7 @@ namespace Frism_Inspection_Renew.Models
                 catch (Exception ex)
                 {
                     // Ignore any errors here.
+                    Console.WriteLine(ex.Message + " slider_ValueChanged");
                     Logger.Error(ex.Message);
                 }
                 finally

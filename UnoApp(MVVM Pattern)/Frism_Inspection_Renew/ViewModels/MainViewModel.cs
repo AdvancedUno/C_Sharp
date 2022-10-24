@@ -26,26 +26,18 @@ using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.IO;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
+using GalaSoft.MvvmLight.Command;
 
 namespace Frism_Inspection_Renew.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        
+
         private MainModel mainModel;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         
-        private Dictionary<ICameraInfo, String> _cameraInfos;
-        public Dictionary<ICameraInfo, string> CameraInfos { get
-            {
-                return _cameraInfos;
-            } 
-            set
-            {
-                _cameraInfos = value;
-                OnPropertyChanged("CameraInfos");
-            }
-        }
 
         /// <summary>
         /// Main Window Commands
@@ -57,7 +49,21 @@ namespace Frism_Inspection_Renew.ViewModels
         public ICommand ShowHistoryBtn { get; set; }
         public ICommand InspectionSettingBtn { get; set; }
         public ICommand InspectCountResetBtn { get; set; }
-        
+        private ICommand _windowCloseCommand;
+        public ICommand WindowCloseCommand {
+            get
+            {
+               
+                return _windowCloseCommand;
+            }
+            set
+            {
+                
+                _windowCloseCommand = value;
+                OnPropertyChanged("WindowCloseCommand");
+            }
+        }
+
         public String outputTxt { get; set; }
 
 
@@ -67,7 +73,17 @@ namespace Frism_Inspection_Renew.ViewModels
         public ICommand StartSingleCameraSelectionWidonBtn { get; set; }
 
         private ObservableCollection<string> _savedInfosList = null;
-        public ObservableCollection<string> SavedInfosList { get => _savedInfosList; set => _savedInfosList = value; }
+        public ObservableCollection<string> SavedInfosList
+        {
+            get => _savedInfosList;
+            set
+            {
+                _savedInfosList = value;
+                OnPropertyChanged("SavedInfosList");
+            }
+
+
+        }
 
         //private BlockingCollection<bool> _bufferForIOBlow;
         //public BlockingCollection<bool> BufferForIOBlow { get => _bufferForIOBlow; set => _bufferForIOBlow = value; }
@@ -78,9 +94,9 @@ namespace Frism_Inspection_Renew.ViewModels
         private VisionCameraGroupModel _visionCameraGroup;
         public VisionCameraGroupModel VisionCameraGroup { get => _visionCameraGroup; set => _visionCameraGroup = value; }
 
-        private CustomSliderModel _customSlider;
-        public CustomSliderModel CustomSlider { get => _customSlider; set => _customSlider = value; }
-              
+        private VisionCameraGroupModel _visionCameraGroupSecond;
+        public VisionCameraGroupModel VisionCameraGroupSecond { get => _visionCameraGroupSecond; set => _visionCameraGroupSecond = value; }
+
 
         private ImageGroupModel _imageGroupModel;
         public ImageGroupModel MainImageGroupModel { get => _imageGroupModel; set => _imageGroupModel = value; }
@@ -114,133 +130,14 @@ namespace Frism_Inspection_Renew.ViewModels
         private List<string> _camExtimeInfo;
         public List<string> CamExtimeInfo { get => _camExtimeInfo; set => _camExtimeInfo = value; }
 
-        private string _firstCamExtimeValue;
-        public string FirstCamExtimeValue { 
-            get => _firstCamExtimeValue;
-            set {
-                _firstCamExtimeValue = value;
-                OnPropertyChanged("FirstCamExtimeValue");
-            }
-
-        }
-
-        private string _secondCamExtimeValue;
-        public string SecondCamExtimeValue { 
-            get => _secondCamExtimeValue;
-            set
-            {
-                _secondCamExtimeValue = value;
-                OnPropertyChanged("SecondCamExtimeValue");
-            }
-        }
-
-        private string _thirdCamExtimeValue;
-        public string ThirdCamExtimeValue { 
-            get => _thirdCamExtimeValue;
-            set
-            {
-                _thirdCamExtimeValue = value;
-                OnPropertyChanged("ThirdCamExtimeValue");
-            }
-        }
-
-        private string _fourthCamExtimeValue;
-        public string FourthCamExtimeValue { 
-            get => _fourthCamExtimeValue;
-            set
-            {
-                _fourthCamExtimeValue = value;
-                OnPropertyChanged("FourthCamExtimeValue");
-            }
-        }
-
-        private string _firstCameraIDValue;
-        public string FirstCameraIDValue { 
-            get => _firstCameraIDValue;
-            set
-            {
-                _firstCameraIDValue = value;
-                OnPropertyChanged("FirstCameraIDValue");
-            }
-        }
-
-        private string _secondCameraIDValue;
-        public string SecondCameraIDValue { 
-            get => _secondCameraIDValue;
-            set
-            {
-                _secondCameraIDValue = value;
-                OnPropertyChanged("SecondCameraIDValue");
-            }
-        }
-
-        private string _thirdCameraIDValue;
-        public string ThirdCameraIDValue { 
-            get => _thirdCameraIDValue;
-            set
-            {
-                _thirdCameraIDValue = value;
-                OnPropertyChanged("ThirdCameraIDValue");
-            }
-        }
-
-        private string _fourthCameraIDValue;
-        public string FourthCameraIDValue { 
-            get => _fourthCameraIDValue;
-            set
-            {
-                _fourthCameraIDValue = value;
-                OnPropertyChanged("FourthCameraIDValue");
-            }
-        }
-
-        private string _firstExposureTime;
-        public string FirstExposureTime { 
-            get => _firstExposureTime;
-            set
-            {
-                _firstExposureTime = value;
-                OnPropertyChanged("FirstExposureTime");
-            }
-        }
-
-        private string _secondExposureTime;
-        public string SecondExposureTime { 
-            get => _secondExposureTime;
-            set
-            {
-                _secondExposureTime = value;
-                OnPropertyChanged("SecondExposureTime");
-            }
-        }
-
-        private string _thirdExposureTime;
-        public string ThirdExposureTime { 
-            get => _thirdExposureTime;
-            set
-            {
-                _thirdExposureTime = value;
-                OnPropertyChanged("ThirdExposureTime");
-            }
-        }
-
-        private string _fourthExposureTime;
-        public string FourthExposureTime { 
-            get => _fourthExposureTime;
-            set
-            {
-                _fourthExposureTime = value;
-                OnPropertyChanged("FourthExposureTime");
-            }
-
-        }
 
         private string _recipeID;
-        public string RecipeID { 
+        public string RecipeID
+        {
             get => _recipeID;
             set
             {
-                Console.WriteLine("pppp");
+
                 _recipeID = value;
                 OnPropertyChanged("RecipeID");
             }
@@ -249,43 +146,37 @@ namespace Frism_Inspection_Renew.ViewModels
         private string _selectedCamereIDComboBox;
         public string SelectedCamereIDComboBox { get => _selectedCamereIDComboBox; set => _selectedCamereIDComboBox = value; }
 
-        private bool _startedPaint;
-        public bool StartedPaint { get => _startedPaint; set => _startedPaint = value; }
+        private bool _stopInspecBtnEnable = false;
+        public bool StopInspecBtnEnable
+        {
+            get => _stopInspecBtnEnable;
+            set
+            {
 
-        private System.Windows.Point _downPoint;
-        public System.Windows.Point DownPoint { get => _downPoint; set => _downPoint = value; }
-
-        private System.Windows.Point _upPoint;
-        public System.Windows.Point UpPoint { get => _upPoint; set => _upPoint = value; }
-
-        private double _posX = 0;
-        public double PosX { 
-            get => _posX; 
-            set => _posX = value; 
+                _stopInspecBtnEnable = value;
+                OnPropertyChanged("StopInspecBtnEnable");
+            }
         }
 
-        private double _posY = 0;
-        public double PosY { 
-            get => _posY; 
-            set => _posY = value; 
+
+        private bool _startInspecBtnEnable = false;
+        public bool StartInspecBtnEnable
+        {
+            get => _startInspecBtnEnable;
+            set
+            {
+
+                _startInspecBtnEnable = value;
+                OnPropertyChanged("StartInspecBtnEnable");
+            }
         }
 
-        private double _width = 0;
-        public double Width { 
-            get => _width; 
-            set => _width = value; 
-        }
-
-        private double _height = 0;
-        public double Height { 
-            get => _height; 
-            set => _height = value; 
-        }
 
 
         public System.Windows.Threading.DispatcherTimer timer;
 
         public ICommand NavigateSetCameraCommand { get; }
+        public ICommand NavigateDNNSettingCommand { get; }
 
         public String OutputTxt
         {
@@ -300,67 +191,94 @@ namespace Frism_Inspection_Renew.ViewModels
             }
         }
 
-        private BitmapImage _firstCameraImageSource = new BitmapImage();
-        public BitmapImage FirstCameraImageSource
+        private List<BitmapImage> _cameraImageSourceGroup;
+        public List<BitmapImage> CameraImageSourceGroup
         {
-            get { return _firstCameraImageSource; }
+            get => _cameraImageSourceGroup;
             set
             {
-                this._firstCameraImageSource = value;
-                OnPropertyChanged("FirstCameraImageSource");
-            }
-        }
-
-        private BitmapImage _secondCameraImageSource = new BitmapImage();
-        public BitmapImage SecondCameraImageSource
-        {
-            get { return _secondCameraImageSource; }
-            set
-            {
-                this._secondCameraImageSource = value;
-                OnPropertyChanged("SecondCameraImageSource");
-            }
-        }
-
-        private BitmapImage _thridCameraImageSource = new BitmapImage();
-        public BitmapImage ThirdCameraImageSource
-        {
-            get { return _thridCameraImageSource; }
-            set
-            {
-                this._thridCameraImageSource = value;
-                OnPropertyChanged("ThirdCameraImageSource");
+                _cameraImageSourceGroup = value;
             }
         }
 
 
-        private BitmapImage _fourthCameraImageSource = new BitmapImage();
-        public BitmapImage FourthCameraImageSource
+        private BlockingCollection<Bitmap> _cameraImageBitmapQueue;
+        public BlockingCollection<Bitmap> CameraImageBitmapQueue { get => _cameraImageBitmapQueue; set => _cameraImageBitmapQueue = value; }
+
+
+        private List<BitmapImage> _cameraImageSourceGroupSecond;
+        public List<BitmapImage> CameraImageSourceGroupSecond
         {
-            get { return _fourthCameraImageSource; }
+            get => _cameraImageSourceGroupSecond;
             set
             {
-                this._fourthCameraImageSource = value;
-                OnPropertyChanged("FourthCameraImageSource");
+                _cameraImageSourceGroupSecond = value;
+                OnPropertyChanged("CameraImageSourceGroupSecond");
             }
         }
 
 
-
-        private List<BitmapImage> _cameraImageSourceGroup = new List<BitmapImage>();
-        public List<BitmapImage> CameraImageSourceGroup { get => _cameraImageSourceGroup; set => _cameraImageSourceGroup = value; }
-
-
-
-
-
-        public MainViewModel(NavigationStore navigationStore)
+        private List<BitmapImage> _viewImageSourceGroup;
+        public List<BitmapImage> ViewImageSourceGroup
         {
-            NavigateSetCameraCommand = new NavigateCommand<SetCameraViewModel>(new NavigationService<SetCameraViewModel>(navigationStore, () => new SetCameraViewModel(navigationStore)));
-            NumCamera = 4;
+            get => _viewImageSourceGroup;
+            set
+            {
+                _viewImageSourceGroup = value;
+                OnPropertyChanged("ViewImageSourceGroup");
+            }
+        }
+
+        private List<BitmapImage> _viewImageSourceGroupSecond;
+        public List<BitmapImage> ViewImageSourceGroupSecond
+        {
+            get => _viewImageSourceGroupSecond;
+            set
+            {
+                _viewImageSourceGroupSecond = value;
+                OnPropertyChanged("ViewImageSourceGroupSecond");
+            }
+        }
+
+        public SideBarViewModel SideBarViewModel { get; }
+
+        private void NavigationChaged(object obj)
+        {
+            Console.WriteLine("NavigationChaged");
+            VisionCameraGroup.ResetCameraAll();
+            VisionCameraGroupSecond.ResetCameraAll();
+
+
+
+        }
+
+
+        public ICommand WindowClosedCommand { get; private set; }
+
+
+
+        private void WindowClosed(EventArgs e)
+        {
+            Console.WriteLine("aaaaaaaaaaa");
+        }
+
+        public MainViewModel(SideBarViewModel sideBarViewModel)
+        {
+            WindowClosedCommand = new RelayCommand<EventArgs>(WindowClosed, (e) => true);
+
+
+
+            SideBarViewModel = sideBarViewModel;
+            SideBarViewModel.NavigateHomeChanged = SetCameraBtnRun;
+            SideBarViewModel.NavigateSetCameraChanged = SetCameraBtnRun;
+            SideBarViewModel.NavigateDNNSettingChanged = SetCameraBtnRun;
+
+
+            NumCamera = 5;
+            
             InitVariables(NumCamera);
             InitCommands();
-            
+
         }
 
         public void InitVariables(int numCamera)
@@ -368,32 +286,49 @@ namespace Frism_Inspection_Renew.ViewModels
             try
             {
                 mainModel = new MainModel();
-                VisionCameraGroup = new VisionCameraGroupModel(numCamera);
+                VisionCameraGroup = new VisionCameraGroupModel(3);
+                VisionCameraGroup.CheckFileCamera = false;
+
+                VisionCameraGroupSecond = new VisionCameraGroupModel(2);
+                VisionCameraGroupSecond.CheckFileCamera = false;
+
+                CameraImageSourceGroup = new List<BitmapImage>();
+                CameraImageSourceGroupSecond = new List<BitmapImage>();
+
+                CameraImageBitmapQueue = new BlockingCollection<Bitmap>();
+
+                for (int i = 0; i < numCamera; i++)
+                {
+                    CameraImageSourceGroup.Add(new BitmapImage());
+                    CameraImageSourceGroupSecond.Add(new BitmapImage());    
+                }
+
 
                 MainImageGroupModel = new ImageGroupModel(numCamera);
                 checkCamIDList = new BlockingCollection<int>();
                 IOControlModel = new IOControl();
                 ImageSave = new ImageSaveModel();
-                CustomSlider = new CustomSliderModel();
+                
 
                 VisionCameraGroup.ImageCapturedSignal += OnImageReady;
+                VisionCameraGroupSecond.ImageCapturedSignal += OnImageReadySecond;
+
                 MainInferenceModel = new InferenceModel();
                 MainInferenceModel.InitThread(numCamera);
 
-                CameraImageSourceGroup.Add(FirstCameraImageSource);
-                CameraImageSourceGroup.Add(SecondCameraImageSource);
-                CameraImageSourceGroup.Add(ThirdCameraImageSource);
-                CameraImageSourceGroup.Add(FourthCameraImageSource);
 
-                timer = new DispatcherTimer();
-                for(int i = 0; i < VisionCameraGroup.GetIVisionCameraList().Count(); i++)
-                {
-                    timer.Tick += VisionCameraGroup.GetIVisionCameraList()[i].GiveImageFile;
-                    checkCamIDList.Add(0);
-                }
-                timer.Interval = TimeSpan.FromMilliseconds(1000);
+
+                //timer = new DispatcherTimer();
+                //for (int i = 0; i < VisionCameraGroup.GetIVisionCameraList().Count(); i++)
+                //{
+                //    //timer.Tick += VisionCameraGroup.GetIVisionCameraList()[i].GiveImageFile;
+                //    checkCamIDList.Add(0);
+                //}
+                //timer.Interval = TimeSpan.FromMilliseconds(1000);
 
                 IOControlModel.setBlowDevice();
+
+
 
                 DBAcess.CreateDB();
 
@@ -407,15 +342,17 @@ namespace Frism_Inspection_Renew.ViewModels
                 CamExtimeInfo = new List<string>(new string[numCamera]);
 
 
-                StartSavingImage();
-                UpdateDeviceList();
-                StartIOSig();
+
             }
             catch (Exception e)
             {
-                throw e;
+                Console.WriteLine(e.Message);
+                
             }
         }
+
+
+
 
         public void InitCommands()
         {
@@ -428,9 +365,12 @@ namespace Frism_Inspection_Renew.ViewModels
                 ShowHistoryBtn = new Command(ShowHistoryBtnRun, CanExecute_func);
                 InspectionSettingBtn = new Command(InspectionSettingBtnRun, CanExecute_func);
                 InspectCountResetBtn = new Command(InspectCountResetBtnRun, CanExecute_func);
+                WindowCloseCommand = new Command(CloseWindow, CanExecute_func);
+
+                // new Command(WindowCloseCommandRun, CanExecute_func);
             }
             catch (Exception exception)
-            
+
             {
                 ShowException(exception);
             }
@@ -441,22 +381,7 @@ namespace Frism_Inspection_Renew.ViewModels
             return true;
         }
 
-        /// <summary>
-        /// OnPropertyChanged
-        /// </summary>
-        #region
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        #endregion
         private void ShowException(Exception exception)
         {
             System.Windows.Forms.MessageBox.Show("Exception caught:\n" + exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -465,60 +390,116 @@ namespace Frism_Inspection_Renew.ViewModels
         private void SetCameraBtnRun(object obj)
         {
             // call  mainModel.SetCamera to open
+            //InitRecipe();
+
+            VisionCameraGroup.ResetCameraAll();
+            VisionCameraGroupSecond.ResetCameraAll();
+            StopSavingImage();
+            StopIOSig();
+
+
+            MainInferenceModel = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            //NavigateSetCameraCommand.Execute(obj);  
             Console.WriteLine("SetCameraBtnRun");
+        }        
+        private void CloseWindow(object obj)
+        {
+            // call  mainModel.SetCamera to open
+            //InitRecipe();
+            Console.WriteLine("WindowClosing");
         }
 
         private void InitializeBtnRun(object obj)
         {
             try
             {
-                Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                OpenCamera();
-                Console.WriteLine(MainImageGroupModel.GetImageInfoModels().Count);
+                StartInspecBtnEnable = true;
+                //InitRecipe(RecipeID);
+                StopSavingImage();
+                StopIOSig();
+                StartSavingImage();
+                StartIOSig();
 
-                Console.WriteLine(RecipeID);
+                //OpenCamera();
+                //Console.WriteLine(MainImageGroupModel.GetImageInfoModels().Count);
+
+                //Console.WriteLine(RecipeID);
                 MainImageGroupModel.UpdateDnnFiles(DBAcess.GiveDNNFileSetting(RecipeID));
-                MainImageGroupModel.UpdateCropInfoSetting(RecipeID);
-
+                //MainImageGroupModel.UpdateCropInfoSetting(RecipeID);
                 MainInferenceModel.SettingDnnFirst(MainImageGroupModel);
 
-                Console.WriteLine("InitializeBtnRun");
-            }
-            catch(Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
+                IOControlModel.blow(100);
+                Thread.Sleep(100);
+                IOControlModel.blow(100);
+                Thread.Sleep(100);
+                IOControlModel.blow(100);
 
-        }        
+                //InitRecipe();
+
+                //Console.WriteLine("InitializeBtnRun");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception + " InitializeBtnRun");
+            }
+        }
 
         private void StopInspectBtnRun(object obj)
         {
-            timer.Stop();
+            //timer.Stop();
+            StopInspecBtnEnable = false;
+            StartInspecBtnEnable = true;
+            VisionCameraGroup.StopGrabbingAll();
+            VisionCameraGroupSecond.StopGrabbingAll();
+
+
+
             Console.WriteLine("StopInspectBtnRun");
         }
 
         private void StartInspectBtnRun(object obj)
         {
-            timer.Start();
+            StopInspecBtnEnable = true;
+            StartInspecBtnEnable = false;
+            VisionCameraGroup.StartGrabbingContinousCameraAll();
+            VisionCameraGroupSecond.StartGrabbingContinousCameraAll();
+
+            //timer.Start();
             Console.WriteLine("Insp Start");
         }
 
         private void ShowHistoryBtnRun(object obj)
         {
             Console.WriteLine("ShowHistoryBtnRun");
-        } 
-
+        }
         private void InspectionSettingBtnRun(object obj)
         {
-            Console.WriteLine("InspectionSettingBtnRun");
+            try
+            {
+                Console.WriteLine("InspectionSettingBtnRun");
+                VisionCameraGroup.ResetCameraAll();
+                VisionCameraGroupSecond.ResetCameraAll();
+                MainInferenceModel = null;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                StopIOSig();
+                StopSavingImage();
+                //NavigateDNNSettingCommand.Execute(obj);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " InspectionSettingBtnRun");
+            }
+            
         }
-        
+
         private void InspectCountResetBtnRun(object obj)
         {
             Console.WriteLine("InspectCountResetBtnRun");
         }
-
-
 
         private void SettingRecipe(object obj)
         {
@@ -535,17 +516,19 @@ namespace Frism_Inspection_Renew.ViewModels
             try
             {
                 VisionCameraGroup.ResetCameraAll();
+                VisionCameraGroupSecond.ResetCameraAll();
 
                 ResetCameraInfo();
                 CameraIDInfo = DBAcess.GiveCamSettings(RecipeID);
                 CamExtimeInfo = DBAcess.GiveExTimeSetting(RecipeID);
                 //LEDVal = DBAcess.GiveLEDValSetting(CamID);
                 DnnFileInfo = DBAcess.GiveDNNFileSetting(RecipeID);
-
-
                 //UpdateDnnFiles(DnnFilePath);
-
-                VisionCameraGroup.UpdateCamera(RecipeID, CameraIDInfo, CamExtimeInfo);
+                VisionCameraGroup.UpdateDeviceList();
+                VisionCameraGroupSecond.UpdateDeviceList();
+                
+                VisionCameraGroup.UpdateCamera(RecipeID, CameraIDInfo.GetRange(0, 3), CamExtimeInfo.GetRange(0, 3));
+                VisionCameraGroupSecond.UpdateCamera(RecipeID, CameraIDInfo.GetRange(3, 2), CamExtimeInfo.GetRange(3, 2));
 
                 //UpdateLED(LEDVal);
             }
@@ -555,71 +538,10 @@ namespace Frism_Inspection_Renew.ViewModels
             }
         }
 
-        private void SettingRecipe(string OptionId, List<string> savedInfos, List<string> camExposuretimeInfo, List<string> LEDVal)
-        {
-            if (OptionId == "")
-            {
-                System.Windows.Forms.MessageBox.Show("Please enter a Key Value");
-                return;
-            }
-
-            List<string> listCropValues = new List<string>();
-            if (savedInfos.Contains(OptionId))
-            {
-                ///////////// DNN //////////////////////
-
-                DnnFileInfo = DBAcess.GiveDNNFileSetting(OptionId);
-
-                for (int i = 0; i < UpdatedDnnFileInfo.Count(); i++)
-                {
-                    if (UpdatedDnnFileInfo[i] != null)
-                    {
-                        DnnFileInfo[i] = UpdatedDnnFileInfo[i];
-                    }
-                }
-
-                //////////////// Crop /////////////////////
-                //listCropValues = DBAcess.GiveCropInfoSetting(OptionId);
-                
-                //if (FirstBlock.PreviewImage.GetCropValToSave() != "null")
-                //{
-                //    listCropValues[0] = FirstBlock.PreviewImage.GetCropValToSave();
-                //}
-            }
-            else
-            {
-                ///////////// Crop ////////////////
-                //listCropValues.Add(FirstBlock.PreviewImage.GetCropValToSave());
-            }
-
-            if (savedInfos.Contains(OptionId))
-            {
-                DBAcess.UpdateDataBase(OptionId, CameraIDInfo); 
-                DBAcess.UpdateDataBaseExTime(OptionId, CamExtimeInfo);
-
-                DBAcess.UpdateDataBaseLEDVal(OptionId, LEDVal);
-
-                if (DnnFileInfo[0] != "0")
-                {
-                    DBAcess.UpdateDataBaseDNNFilePath(OptionId, DnnFileInfo);
-                }
-                DBAcess.UpdateDataBaseCropInfo(OptionId, listCropValues);
-            }
-            else
-            {
-                DBAcess.InsertCamera(OptionId, CameraIDInfo);
-                DBAcess.InsertExTime(OptionId, CamExtimeInfo);
-                DBAcess.InsertLEDVal(OptionId, LEDVal);
-                DBAcess.InsertDNNFilePath(OptionId, DnnFileInfo);
-                DBAcess.InsertCropInfo(OptionId, listCropValues);
-            }
-
-            ResetCameraInfo();
-
-        }
-
+        
         private void ResetCameraInfo()
         {
+
 
 
 
@@ -639,186 +561,192 @@ namespace Frism_Inspection_Renew.ViewModels
                 // Display OpenFileDialog by calling ShowDialog method 
                 var result = dlg.ShowDialog();
 
-                // Get the selected file name and display in a TextBox 
+                // Get the selected file name and display in a TextBox
                 if (result == true)
                 {
-                    // Open document 
+                    // Open document
                     filename = dlg.FileName;
-
                 }
-
                 UpdatedDnnFileInfo[pos] = filename;
-
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message);
             }
             return filename;
-
         }
 
         private void OnImageReady(Object sender, EventArgs e)
         {
-            
             int count = 0;
             Console.WriteLine("ImageReady");
-            foreach (IVisionCamera visionCamera in VisionCameraGroup.GetIVisionCameraList())
+            try
             {
-                MainImageGroupModel.GetImageInfoModels()[count].BitmapRawImage = visionCamera.GetLatestFrame().CapturedBitmapImage;
-                CameraImageSourceGroup[count] = ToBitmapImage(visionCamera.GetLatestFrame().CapturedBitmapImage);
-                //MainImageGroupModel.GetImageInfoModels()[count].BitmapRawImage.Save("D:/TB/Image/" + count + ".bmp", ImageFormat.Bmp);
-                count++;
+                foreach (IVisionCamera visionCamera in VisionCameraGroup.GetIVisionCameraList())
+                {
+                    CameraImageBitmapQueue.Add(new Bitmap(visionCamera.GetLatestFrame().CapturedBitmapImage));
+                     
+                    CameraImageSourceGroup[count] = ToBitmapImage(visionCamera.GetLatestFrame().CapturedBitmapImage);
+
+                    count++;
+                }
+
+                OnPropertyChanged("CameraImageSourceGroup");
+                
+                //UpdateCameraImageSourceGroup(CameraImageSourceGroup);
+
             }
-            if(count == 4)
+            catch(Exception exception)
             {
-                Console.WriteLine("ImageReady");
-                MainImageGroupModel = MainInferenceModel.InferDLL(MainImageGroupModel);
-                IOSaveModel.AddSignalValue(MainImageGroupModel.InferResultNG);
-                IOSaveModel.AddImageToBuffer(MainImageGroupModel);
+                Console.WriteLine(exception.Message + " OnImageReady MainviewModel");
             }
         }
+        private object lockInferObject = new object();
+        private ImageGroupModel tempImageGroupModel;
+        private void OnImageReadySecond(Object sender, EventArgs e)
+        {
+            int count = 0;
+            int i = 3;
+            
+            try
+            {
+                
+                lock (lockInferObject)
+                {
+                    tempImageGroupModel = new ImageGroupModel(5);
+
+                    if (CameraImageBitmapQueue.Count < 3)
+                    {
+                        Console.WriteLine("No images in the queue");
+                        return;
+                    }
+                    
+                    tempImageGroupModel.ImageInfoModelList = MainImageGroupModel.ImageInfoModelList;
+
+                    foreach (IVisionCamera visionCamera in VisionCameraGroupSecond.GetIVisionCameraList())
+                    {
+                        tempImageGroupModel.GetImageInfoModels()[count + i].BitmapRawImage = new Bitmap(visionCamera.GetLatestFrame().CapturedBitmapImage);
+                        CameraImageSourceGroupSecond[count] = ToBitmapImage(visionCamera.GetLatestFrame().CapturedBitmapImage);
+                        count++;
+                    }
+                    Console.WriteLine("CameraImageBitmapQueue  -- " + CameraImageBitmapQueue.Count);
+                    for (i = 0; i < 3; i++)
+                    {
+                        tempImageGroupModel.GetImageInfoModels()[i].BitmapRawImage = CameraImageBitmapQueue.Take();
+
+                    }
+
+                    //myList1 = myList1.Concat(myList2).ToList();
+
+                    OnPropertyChanged("CameraImageSourceGroupSecond");
+
+
+                    //UpdateCameraImageSourceGroupSecond(CameraImageSourceGroupSecond);
+
+                    //Console.WriteLine("ImageReady");
+                }
+
+
+                Task.Factory.StartNew((Action)(() =>
+                {
+                    Thread.Sleep(100);
+                    tempImageGroupModel = MainInferenceModel.InferDLL(tempImageGroupModel);
+                    IOSaveModel.AddSignalValue(tempImageGroupModel.InferResultNG);
+                    IOSaveModel.AddImageToBuffer(tempImageGroupModel);
+                }
+                ));
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " OnImageReady MainviewModel");
+            }
+        }
+
+
+
+        private void UpdateCameraImageSourceGroup(List<BitmapImage> bitmapImageList)
+        {
+            Dispatcher.CurrentDispatcher.Invoke(() => ViewImageSourceGroup = bitmapImageList);
+            //ViewImageSourceGroup = bitmapImageList;
+        }        
         
+        
+
+
+
         #region Bitmap 형식을 BitmapImage 로 변환 
         public BitmapImage ToBitmapImage(Bitmap bitmap)
         {
-            BitmapImage temp = new BitmapImage();
+            BitmapImage bitmapImage = new BitmapImage();
             try
             {
-
                 using (var memory = new MemoryStream())
                 {
-
                     bitmap.Save(memory, ImageFormat.Bmp);
-
                     memory.Position = 0;
-                    var bitmapImage = new BitmapImage();
+                    //memory.Seek(0, SeekOrigin.Begin);
+                    //var bitmapImage = new BitmapImage();
                     bitmapImage.BeginInit();
                     bitmapImage.StreamSource = memory;
                     bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                     bitmapImage.EndInit();
                     bitmapImage.Freeze();
 
-                    temp = bitmapImage;
+                    //temp = bitmapImage;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message + "toBitmap");
             }
-            return temp;
+
+            return bitmapImage;
         }
         #endregion
 
         public void StartIOSig()
         {
-            Thread tSignal = new Thread(new ThreadStart(IOControlModel.IOBlowSig));
-            tSignal.Start();
-        } 
+            try
+            {
+                IOControlModel.ContinueBlowSignal = true;
+                Thread tSignal = new Thread(new ThreadStart(IOControlModel.IOBlowSig));
+                tSignal.Start();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " StartIOSig");
+            }
+
+        }
+
+        public void StopIOSig()
+        {
+            IOControlModel.ContinueBlowSignal = false;
+        }
 
         public void StartSavingImage()
         {
-            Thread tSaveImage = new Thread(new ThreadStart(ImageSave.SaveImageThread));
-            tSaveImage.Start();
+            try
+            {
+                ImageSave.ContinueSaveImage = true;
+                Thread tSaveImage = new Thread(new ThreadStart(ImageSave.SaveImageThread));
+                tSaveImage.Start();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " StartSavingImage");
+            }
+            
+        }
+
+        public void StopSavingImage()
+        {
+            ImageSave.ContinueSaveImage = false;
         }
 
         private void OpenCamera()
         {
             VisionCameraGroup.OpenCamera(RecipeID);
-        }
-
-        public void UpdateDeviceList()
-        {
-            Logger.Debug("Update Device List");
-
-            try
-            {
-                List<ICameraInfo> cameraInfos = CameraFinder.Enumerate();
-
-                if (cameraInfos.Count > 0)
-                {
-                    CameraInfos = new Dictionary<ICameraInfo, String>();
-                    foreach (ICameraInfo cameraInfo in cameraInfos)
-                    {
-                        CameraInfos.Add(cameraInfo, cameraInfo[CameraInfoKey.FriendlyName]);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e.Message + " UpdateDeviceList MainW");
-
-            }
-        }
-
-        private void MainWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            //if (camera.GetMainMode()) return;
-
-            StartedPaint = true;
-
-            //DownPoint = e.GetPosition(ImageGrid);
-        }
-
-        private void MainWindow_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            //if (camera.GetMainMode()) return;
-
-            //UpPoint = e.GetPosition(ImageGrid);
-            StartedPaint = false;
-        }
-
-        private void MainWindow_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            //if (camera.GetMainMode()) return;
-            //if (StartedPaint)
-            //{
-
-            //    var point = e.GetPosition(ImageGrid);
-
-            //    if (point.X < DownPoint.X || point.Y < DownPoint.Y)
-            //    {
-            //        return;
-            //    }
-
-            //    var rect = new System.Windows.Rect(DownPoint, point);
-
-            //    //CropRectangle.Margin = new Thickness(rect.Left, rect.Top, 0, 0);
-            //    //CropRectangle.Width = rect.Width;
-            //    //CropRectangle.Height = rect.Height;
-            //    //CropRectangle.Visibility = Visibility.Visible;
-            //    if (rect.Width < 100 || rect.Height < 100)
-            //    {
-            //       // CropRectangle.Visibility = Visibility.Hidden;
-            //        return;
-            //    }
-
-            //    double temp = 390.0 / 1200.0 * 1600.0;
-            //    PosX = DownPoint.X / Math.Round(temp, 6);
-            //    //PosY = DownPoint.Y / Math.Round(PreviewImage.Height, 6);
-            //    Width = Math.Round(rect.Width, 3) / Math.Round(temp, 6);
-            //    //Height = Math.Round(rect.Height, 3) / Math.Round(PreviewImage.Height, 6);
-            //}
-        }
-
-        public string GetCropValToSave()
-        {
-            string listCropVal = "null";
-            if (PosX + PosY + Width + Height > 0)
-            {
-                listCropVal = string.Format("{0},{1},{2},{3}", Math.Round(PosX, 6), Math.Round(PosY, 6), Math.Round(Width, 6), Math.Round(Height, 6));
-            }
-
-            return listCropVal;
-        }
-
-        public void SetCropVal(string sCropInfo)
-        {
-            string[] collectionCropInfo = sCropInfo.Split(',');
-            PosX = (int)(float.Parse(collectionCropInfo[0]) * 1600);
-            PosY = (int)(float.Parse(collectionCropInfo[1]) * 1200);
-            Width = (int)(float.Parse(collectionCropInfo[2]) * 1600);
-            Height = (int)(float.Parse(collectionCropInfo[3]) * 1200);
         }
     }
 }

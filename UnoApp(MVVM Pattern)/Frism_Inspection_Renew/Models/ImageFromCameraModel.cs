@@ -9,7 +9,7 @@ namespace Frism_Inspection_Renew.Models
 {
     public class ImageFromCameraModel
     {
-        private Bitmap _capturedBitmapImage;
+        private Bitmap _capturedBitmapImage = null;
         public Bitmap CapturedBitmapImage { get => _capturedBitmapImage; set => _capturedBitmapImage = value; }
         
         private int _cameraId;

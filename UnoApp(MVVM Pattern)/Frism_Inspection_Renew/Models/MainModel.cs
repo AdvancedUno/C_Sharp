@@ -21,8 +21,6 @@ namespace Frism_Inspection_Renew.Models
         {
             setEvent?.Invoke(ThreadCnt, Width, Height, GpuNo, MinDefectNumTop, MinPValTop, MinDefectNumSide, MinPValSide);
         }
-
-
     };
 
 

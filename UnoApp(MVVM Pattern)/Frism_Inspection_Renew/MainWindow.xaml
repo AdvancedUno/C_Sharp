@@ -6,16 +6,37 @@
         xmlns:viewmodels ="clr-namespace:Frism_Inspection_Renew.ViewModels"
         xmlns:views ="clr-namespace:Frism_Inspection_Renew.Views"
         xmlns:local="clr-namespace:Frism_Inspection_Renew"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"        
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+        xmlns:command="http://www.galasoft.ch/mvvmlight"
+        xmlns:components="clr-namespace:Frism_Inspection_Renew.Components"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="MainWindow" Height="1080" Width="1820" 
+        >
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding WindowClosedCommand}"   />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    
+    
+    <!--<i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <cmd:EventToCommand Command="{Binding Path=ClosingCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>-->
+    
+    
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
 
-        <ContentControl Content="{Binding CurrentViewModel}" Grid.Column="1">
+
+        <ContentControl Content="{Binding CurrentViewModel}" Grid.Column="0">
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
                     <views:MainView/>
@@ -23,14 +44,14 @@
                 <DataTemplate DataType="{x:Type viewmodels:SetCameraViewModel}">
                     <views:SetCameraView/>
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
-                    <views:LoginView/>
+                <DataTemplate DataType="{x:Type viewmodels:DNNSettingViewModel}">
+                    <views:DNNSettingView/>
                 </DataTemplate>
             </ContentControl.Resources>
+
         </ContentControl>
 
     </Grid>
 
-    
-    
+
 </Window>

@@ -40,9 +40,9 @@ namespace LiveChartDemo.Views
             Chart.Update(true);
         }
 
+        private void CartesianChart_Loaded(object sender, RoutedEventArgs e)
+        {
 
-
-
-
+        }
     }
 }

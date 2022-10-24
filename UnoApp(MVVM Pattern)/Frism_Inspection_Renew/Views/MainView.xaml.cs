@@ -26,5 +26,10 @@ namespace Frism_Inspection_Renew.Views
             InitializeComponent();
             //this.DataContext = new MainViewModel();
         }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

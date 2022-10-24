@@ -23,6 +23,7 @@ namespace Frism_Inspection_Renew.Services
         public void Navigate()
         {
             _navigationStore.CurrentViewModel = _createViewModel();
+            
         }
 
     }

@@ -7,6 +7,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ComboBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" x:Name="TableComboBox"  ItemsSource="{Binding DataChartName}"/>
+        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" x:Name="ChangeTalbe" Content="Change" Click="ChangeTalbe_Click" />
+
+        <ContentControl x:Name="content1" Grid.Column="0" Grid.Row="2"></ContentControl>
+        <ContentControl x:Name="content2" Grid.Column="0" Grid.Row="3"></ContentControl>
+        <ContentControl x:Name="content3" Grid.Column="1" Grid.Row="2"></ContentControl>
+        <ContentControl x:Name="content4" Grid.Column="1" Grid.Row="3"></ContentControl>
     </Grid>
 </UserControl>

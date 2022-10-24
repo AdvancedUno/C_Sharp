@@ -11,9 +11,25 @@ namespace Frism_Inspection_Renew.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string propertyName = null)
+        public void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            //Console.WriteLine(propertyName);
+            PropertyChangedEventHandler handler = PropertyChanged;
+            
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
+
+
+        //public event PropertyChangedEventHandler PropertyChanged;
+
+        //protected void OnPropertyChanged(string propertyName = null)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
+
+       
     }
 }

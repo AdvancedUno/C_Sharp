@@ -10,21 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Frism_Inspection_Renew
+namespace Frism_Inspection_Renew.Views
 {
     /// <summary>
-    /// MainWindow.xaml에 대한 상호 작용 논리
+    /// DNNSettingView.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DNNSettingView : UserControl
     {
-        public MainWindow()
+        public DNNSettingView()
         {
             InitializeComponent();
-            
         }
-
-
     }
 }

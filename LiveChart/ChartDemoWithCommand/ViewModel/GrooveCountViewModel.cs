@@ -1,28 +1,29 @@
-﻿using System;
+﻿using ChartDemoWithCommand.Command;
+using LiveCharts.Events;
+using LiveCharts;
+using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System;
-using LiveCharts;
-using LiveCharts.Events;
-using ChartDemoWithCommand.Command;
-using Microsoft.Office.Interop.Excel;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using System.Windows.Controls;
-using System.Diagnostics;
-using LiveCharts.Charts;
 using ChartDemoWithCommand.Model;
 
 namespace ChartDemoWithCommand.ViewModel
 {
-    public partial class ChartViewModel:INotifyPropertyChanged
+    public class GrooveCountViewModel
     {
+        string filePath = @"C:\Users\sales\Downloads\K2 FW MX SHEET (R_CH합본)_220628.xlsx";
         
+
+
 
         private List<ChartValues<double>> _saveChartsList;
         public List<ChartValues<double>> SaveChartsList { get => _saveChartsList; set => _saveChartsList = value; }
+
+        public string[] Labels { get; set; }
 
         public MyCommand<ChartPoint> DataHoverCommand { get; set; }
         public MyCommand<ChartPoint> DataClickCommand { get; set; }
@@ -32,41 +33,40 @@ namespace ChartDemoWithCommand.ViewModel
         public Func<double, string> XFormatter { get; set; }
 
         private ChartInfoModel _chartInfo;
-        public ChartInfoModel ChartInfo { 
-            get => _chartInfo; 
-            set => _chartInfo = value; 
+        public ChartInfoModel ChartInfo
+        {
+            get => _chartInfo;
+            set => _chartInfo = value;
         }
 
-        public ChartViewModel(int chartIndexNumber, int ColumNumber)
+        public GrooveCountViewModel(int chartIndexNumber, int ColumNumber)
         {
             try
             {
+
                 ChartInfo = new ChartInfoModel();
                 SaveChartsList = new List<ChartValues<double>>();
+
                 SaveChartsList.Add(ChartInfo.FirstValues);
                 SaveChartsList.Add(ChartInfo.SecondValues);
-                SaveChartsList.Add(ChartInfo.ThirdValues);
-                SaveChartsList.Add(ChartInfo.FourthValues);
 
                 ChartInfo.ChartIndexNumber = chartIndexNumber;
 
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 2; i++)
                 {
-                    OpenFile(i, i + 4 * ColumNumber);
+                    OpenFile(i, i * 2 + 13 + ColumNumber);
                 }
 
                 OpenFileName();
 
-                ChartInfo.ChartName = ChartInfo.ChartNameList[chartIndexNumber - 1][ColumNumber - 1];
+                //ChartName = ChartNameList[chartIndexNumber - 1][ColumNumber];
 
-
-                
+                Labels = new[] { "Chrome", "Mozilla", "Opera", "IE" };
 
                 DataClickCommand = new MyCommand<ChartPoint>
                 {
-
                     ExecuteDelegate = p => Console.WriteLine(
-                        "[COMMAND] you clicked " + p.X + ", " + p.Y)
+                        "[COMMAND] you clicked " + p.X + ", " + p.Y + "aaaaaaaaaaaa")
                 };
                 DataHoverCommand = new MyCommand<ChartPoint>
                 {
@@ -82,14 +82,11 @@ namespace ChartDemoWithCommand.ViewModel
                     ExecuteDelegate = e => Console.WriteLine("[COMMAND] Axis range changed")
                 };
 
-                ChartInfo.TimeLabel_X.Add("aaa");
-
-
                 XFormatter = val => new DateTime((long)val).ToString("dd MMM");
             }
-            catch (Exception exception)
+            catch(Exception exception)
             {
-                Console.WriteLine(exception);
+                Console.WriteLine(exception.Message);
             }
         }
 
@@ -101,24 +98,28 @@ namespace ChartDemoWithCommand.ViewModel
 
         public void OpenFile(int chartIndex, int chartID)
         {
-            if (ChartInfo.FilePath != "")
+            if (filePath != "")
             {
                 double[] keepValue = new double[] { };
                 Microsoft.Office.Interop.Excel.Application application = new Microsoft.Office.Interop.Excel.Application();
-                Workbook workbook = application.Workbooks.Open(Filename: @ChartInfo.FilePath);
+                Workbook workbook = application.Workbooks.Open(Filename: @filePath);
                 Worksheet worksheet1 = workbook.Worksheets.get_Item(ChartInfo.ChartIndexNumber);
 
                 application.Visible = false;
 
-                //int row = worksheet1.UsedRange.EntireRow.Count;
+                int row = worksheet1.UsedRange.EntireRow.Count;
                 //Console.WriteLine(row);
                 //Range rng = worksheet1.Range[ws.Cells[1, 1], ws.Cells[row, numOfColumn]];
 
-                Range startRange = worksheet1.Cells[15, chartID];
-                Range endRange = worksheet1.Cells[50, chartID];
+
+                Range startRange = worksheet1.Cells[10, chartID];
+                Range endRange = worksheet1.Cells[row, chartID];
 
                 Range range = worksheet1.get_Range(startRange, endRange);
                 object[,] rawData = range.Value;
+
+                //Console.WriteLine(rawData.GetLength(0));
+                //Console.WriteLine(rawData.GetLength(1));
 
                 String data = "";
                 for (int i = 1; i <= rawData.GetLength(0); ++i)
@@ -134,10 +135,6 @@ namespace ChartDemoWithCommand.ViewModel
                     data += "\n";
                 }
 
-
-
-
-
                 workbook.Close();
                 application.Quit();
 
@@ -146,18 +143,20 @@ namespace ChartDemoWithCommand.ViewModel
                 ReleaseObject(worksheet1);
                 ReleaseObject(startRange);
                 ReleaseObject(endRange);
+
             }
         }
 
+
         public void OpenFileName()
         {
-            if (ChartInfo.FilePath != "")
+            if (filePath != "")
             {
                 double[] keepValue = new double[] { };
                 Microsoft.Office.Interop.Excel.Application application = new Microsoft.Office.Interop.Excel.Application();
-                Workbook workbook = application.Workbooks.Open(Filename: @ChartInfo.FilePath);
+                Workbook workbook = application.Workbooks.Open(Filename: @filePath);
                 Worksheet worksheet1 = workbook.Worksheets.get_Item(ChartInfo.ChartIndexNumber);
-                
+
                 application.Visible = false;
 
                 int col = worksheet1.UsedRange.EntireColumn.Count;
@@ -183,12 +182,9 @@ namespace ChartDemoWithCommand.ViewModel
                             tableData += (tableNameData[i, j].ToString() + " ");
                             ChartInfo.DataChartName.Add(tableNameData[i, j].ToString());
                         }
-
                     }
-                    //Console.WriteLine(data);
                     tableData += "\n";
                 }
-
                 workbook.Close();
                 application.Quit();
 
@@ -199,6 +195,9 @@ namespace ChartDemoWithCommand.ViewModel
                 ReleaseObject(endTableNameRange);
             }
         }
+
+
+
 
         void ReleaseObject(object obj)
         {
@@ -222,4 +221,6 @@ namespace ChartDemoWithCommand.ViewModel
             }
         }
     }
+
+
 }

@@ -3,152 +3,194 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Frism_Inspection_Renew.Views"
+        xmlns:local="clr-namespace:Frism_Inspection_Renew.Views" xmlns:components="clr-namespace:Frism_Inspection_Renew.Components"
         mc:Ignorable="d"
-        Height="1080" Width="1920"  HorizontalAlignment="Left" VerticalAlignment="Top">
-    <Grid Grid.Row="0" Margin="0,0,0,27">
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
 
-        
-        <Viewbox Margin="0,5,10,903" Stretch="None">
-            <Grid Height="98" Width="1793">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="73*"/>
-                    <RowDefinition Height="26*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="검사 레시피:" Width="134" HorizontalAlignment="Left" VerticalAlignment="Top" TextAlignment="Center" Height="22" Margin="0,11,0,0" />
-                <ComboBox  
+        Height="1000" Width="1920"  HorizontalAlignment="Left" VerticalAlignment="Top">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding WindowClosedCommand}"  />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <components:SideBarView Grid.Column="0" DataContext="{Binding SideBarViewModel}"/>
+
+        <Grid Grid.Row="0" Margin="0,0,0,-10" Grid.Column="1">
+
+
+
+
+            <Viewbox Margin="0,0,0,903" Stretch="None">
+                <Grid Height="98" Width="1793">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="73*"/>
+                        <RowDefinition Height="26*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="검사 레시피:" Width="134" HorizontalAlignment="Left" VerticalAlignment="Top" TextAlignment="Center" Height="22" Margin="0,11,0,0" />
+                    <ComboBox  
                     x:Name="CameraInfoBox"  
                     Margin="134,5,1495,37.5"  
                     ItemsSource="{Binding Path=SavedInfosList}"
                     SelectedItem="{Binding Path=RecipeID, Mode=TwoWay}"
                     />
-                <Button  x:Name="SelectCameraButton" Content="카메라 설정" Command="{Binding NavigateSetCameraCommand}" VerticalAlignment="Center" Height="30" Margin="298,5,1221,37.5"  />
-                <TextBlock Text="처리 시간:  " FontSize="13" Grid.Row="0" HorizontalAlignment="Center" Margin="623,0,1101,26"/>
-                <TextBlock Text="검사 시간:  " FontSize="13" HorizontalAlignment="Center" Margin="623,25,1101,0" />
-                
-                <TextBlock x:Name="ProcessTimeTxt" FontSize="13" Text="0 ms" Grid.Row="0" HorizontalAlignment="Center" Margin="737,0,1012,25" Width="44" />
-                <TextBlock x:Name="InspTimeTxt" FontSize="13" Text="0 ms" HorizontalAlignment="Center" Margin="737,25,1012,0" Width="44" />
+                    <Button  x:Name="SetCamerasButton" Content="초기화"  Command="{Binding InitializeBtn}" Margin="8,40,1667,16" Grid.RowSpan="2"/>
+                    <!--<Button  x:Name="SelectCameraButton" Content="카메라 설정" Command="{Binding SetCameraBtn}" VerticalAlignment="Center" Height="30" Margin="298,5,1221,37.5"  />-->
+                    <TextBlock Text="처리 시간:  " FontSize="13" Grid.Row="0" HorizontalAlignment="Center" Margin="623,0,1101,26"/>
+                    <TextBlock Text="검사 시간:  " FontSize="13" HorizontalAlignment="Center" Margin="623,25,1101,0" />
 
-                <TextBlock Text="평균 처리 시간:  " FontSize="13" Grid.Row="0" HorizontalAlignment="Center" Margin="840,0,853,25"/>
-                <TextBlock Text="평균 검사 시간:  " FontSize="13" HorizontalAlignment="Center" Margin="840,25,853,0"/>
+                    <TextBlock x:Name="ProcessTimeTxt" FontSize="13" Text="0 ms" Grid.Row="0" HorizontalAlignment="Center" Margin="737,0,1012,25" Width="44" />
+                    <TextBlock x:Name="InspTimeTxt" FontSize="13" Text="0 ms" HorizontalAlignment="Center" Margin="737,25,1012,0" Width="44" />
 
-                <TextBlock x:Name="AvgProcessTimeTxt" FontSize="13" Text="0 ms" Grid.Row="0" HorizontalAlignment="Center" Margin="990,0,775,25"/>
-                <TextBlock x:Name="AvgInspTimeTxt" FontSize="13" Text="0 ms" HorizontalAlignment="Center" Margin="990,25,775,0"/>
+                    <TextBlock Text="평균 처리 시간:  " FontSize="13" Grid.Row="0" HorizontalAlignment="Center" Margin="840,0,853,25"/>
+                    <TextBlock Text="평균 검사 시간:  " FontSize="13" HorizontalAlignment="Center" Margin="840,25,853,0"/>
 
-
-                <TextBlock x:Name="NGTxt" Width="131" Background="Red" TextAlignment="Center" Text="NG" FontSize="30" FontWeight="Bold" Grid.Row="0" HorizontalAlignment="Center" Margin="1372,0,290,31.5"/>
-                <TextBlock x:Name="OKTxt" Width="131" Background="Green" TextAlignment="Center" Text="OK" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Margin="1372,43,290,14" Grid.RowSpan="2"/>
-
-                <TextBlock x:Name="NGNumTxt" FontSize="30" Text="0 %  [0]"  Grid.Row="0" HorizontalAlignment="Center" Margin="1512,-4,143,35.5" Width="138" TextAlignment="Center"/>
-                <TextBlock x:Name="OKNumTxt" FontSize="30" Text="0 %  [0]" HorizontalAlignment="Center" Margin="1512,43,141,14" Width="140" TextAlignment="Center" Grid.RowSpan="2"/>
-
-                <Button Content="Count Reset" FontSize="18" x:Name="CountResetBtn" Command="{Binding InspectCountResetBtn}" Grid.Row="0" Width="138" Margin="0,-1,0,13" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="86" Grid.RowSpan="2"/>
+                    <TextBlock x:Name="AvgProcessTimeTxt" FontSize="13" Text="0 ms" Grid.Row="0" HorizontalAlignment="Center" Margin="990,0,775,25"/>
+                    <TextBlock x:Name="AvgInspTimeTxt" FontSize="13" Text="0 ms" HorizontalAlignment="Center" Margin="990,25,775,0"/>
 
 
-                <TextBlock Grid.Row="0" x:Name="CameraSignalTxt" Width="130" Background="Gray" TextAlignment="Center" Text="카메라 촬영" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="1194,28,469,19.5" Height="25" LineHeight="6" />
-                <TextBlock x:Name="BlowSignalTxt" Width="130" Background="Gray" TextAlignment="Center" Text="공압 ON" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,18" Height="23" Grid.RowSpan="2" />
+                    <TextBlock x:Name="NGTxt" Width="131" Background="Red" TextAlignment="Center" Text="NG" FontSize="30" FontWeight="Bold" Grid.Row="0" HorizontalAlignment="Center" Margin="1372,0,290,31.5"/>
+                    <TextBlock x:Name="OKTxt" Width="131" Background="Green" TextAlignment="Center" Text="OK" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Margin="1372,43,290,14" Grid.RowSpan="2"/>
 
-                <Button  x:Name="SetCamerasButton" Content="초기화"  Command="{Binding InitializeBtn}" Margin="28,43,1500,13" Grid.RowSpan="2"/>
+                    <TextBlock x:Name="NGNumTxt" FontSize="30" Text="0 %  [0]"  Grid.Row="0" HorizontalAlignment="Center" Margin="1512,-4,143,35.5" Width="138" TextAlignment="Center"/>
+                    <TextBlock x:Name="OKNumTxt" FontSize="30" Text="0 %  [0]" HorizontalAlignment="Center" Margin="1512,43,141,14" Width="140" TextAlignment="Center" Grid.RowSpan="2"/>
 
-                <Button  x:Name="StopButton" Content="Stop" Command="{Binding StopInspectBtn}" IsEnabled="False" Margin="293,43,1450,13" Grid.RowSpan="2"/>
-
-                <Button  x:Name="ContinueButton" Content="검사시작" Command="{Binding StartInspectBtn}" IsEnabled="True" Margin="343,43,1386,13" Grid.RowSpan="2"/>
-                <Button  x:Name="HistoryButton" Content="다시보기" Command="{Binding ShowHistoryBtn}"  VerticalAlignment="Center" Height="42" Margin="407,43,1319,13" Grid.RowSpan="2"/>
-                <Button Content="검사 설정" x:Name="DnnOptionBtn" Command="{Binding InspectionSettingBtn}" Margin="474,43,1246,13" Grid.RowSpan="2"/>
-
-                <TextBlock x:Name="textInitial" Width="130" Background="Gray" TextAlignment="Center" Text="초기화" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,48.5" Height="22" />
+                    <Button Content="Count Reset" FontSize="18" x:Name="CountResetBtn" Command="{Binding InspectCountResetBtn}" Grid.Row="0" Width="138" Margin="0,-1,0,13" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="86" Grid.RowSpan="2"/>
 
 
+                    <TextBlock Grid.Row="0" x:Name="CameraSignalTxt" Width="130" Background="Gray" TextAlignment="Center" Text="카메라 촬영" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="1194,28,469,19.5" Height="25" LineHeight="6" />
+                    <TextBlock x:Name="BlowSignalTxt" Width="130" Background="Gray" TextAlignment="Center" Text="공압 ON" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,18" Height="23" Grid.RowSpan="2" />
 
+                    <!--<Button  x:Name="SetCamerasButton" Content="초기화"  Command="{Binding InitializeBtn}" Margin="28,43,1500,13" Grid.RowSpan="2"/>-->
 
-            </Grid>
-        </Viewbox>
+                    <Button  x:Name="StopButton" Content="정지" Command="{Binding StopInspectBtn}" IsEnabled="{Binding StopInspecBtnEnable, UpdateSourceTrigger=PropertyChanged}" Margin="134,40,1577,16" Grid.RowSpan="2" Click="StopButton_Click" />
 
-        <Button  Grid.Row="0" x:Name="SnapShotButton" Content="Snap Shot" Command="{Binding UpdateCommand}"  Margin="608,56,1239,924" Height="30" IsEnabled="False" Visibility="Hidden"/>
+                    <Button  x:Name="ContinueButton" Content="검사시작" Command="{Binding StartInspectBtn}" IsEnabled="{Binding StartInspecBtnEnable, UpdateSourceTrigger=PropertyChanged}" Margin="216,40,1495,16" Grid.RowSpan="2"/>
+                    <Button  x:Name="HistoryButton" Content="다시보기" Command="{Binding ShowHistoryBtn}"  VerticalAlignment="Top" Height="42" Margin="123,40,1603,0" Grid.RowSpan="2" Visibility="Hidden"/>
+                    <Button Content="검사 설정" x:Name="DnnOptionBtn" Command="{Binding InspectionSettingBtn}" Margin="190,40,1530,16" Grid.RowSpan="2" Visibility="Hidden"/>
+
+                    <TextBlock x:Name="textInitial" Width="130" Background="Gray" TextAlignment="Center" Text="초기화" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Margin="1194,0,469,48.5" Height="22" />
 
 
 
 
-        <Grid HorizontalAlignment="Stretch" Margin="28,0,0,-18" Background="#FFE0E8FF" VerticalAlignment="Bottom" Height="916" RenderTransformOrigin="0.498,0.503">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="158*"/>
-                <ColumnDefinition Width="159*"/>
-
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="168*"/>
-                <RowDefinition Height="163*"/>
-                <RowDefinition Height="0*"/>
-            </Grid.RowDefinitions>
-
-
-            <Grid HorizontalAlignment="Stretch" Margin="0,10,10,0" Grid.Column="0">
-                <Grid Background="White">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Image Name="PreviewImage1" Source="{Binding FirstCameraImageSource, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
-                    <Rectangle x:Name="CropRectangle1" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
-                    <Border x:Name="CamBorder1" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
-                        <TextBlock Name="Cam1" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
-                    </Border>
                 </Grid>
+            </Viewbox>
 
-            </Grid>
-            <Grid HorizontalAlignment="Stretch" Margin="0,10,10,10" Grid.Column="1">
-                <Grid Background="White" Margin="0,0,0,-10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Image Name="PreviewImage2" Source="{Binding SecondCameraImageSource, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
-                    <Rectangle x:Name="CropRectangle2" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
-                    <Border x:Name="CamBorder2" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
-                        <TextBlock Name="Cam2" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
-                    </Border>
+            <Button  Grid.Row="0" x:Name="SnapShotButton" Content="Snap Shot" Command="{Binding UpdateCommand}"  Margin="608,56,1239,924" Height="30" IsEnabled="False" Visibility="Hidden"/>
+
+
+
+
+            <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0" Background="#FFE0E8FF" VerticalAlignment="Bottom" Height="916" RenderTransformOrigin="0.498,0.503">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="158*"/>
+                    <ColumnDefinition Width="159*"/>
+                    <ColumnDefinition Width="159*"/>
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="168*"/>
+                    <RowDefinition Height="163*"/>
+                    <RowDefinition Height="0*"/>
+                </Grid.RowDefinitions>
+
+
+                <Grid HorizontalAlignment="Stretch" Margin="0,10,10,0" Grid.Column="0">
+                    <Grid Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Image x:Name="image1" Source="{Binding CameraImageSourceGroup[0],  UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
+                        <Rectangle x:Name="CropRectangle1" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
+                        <Border x:Name="CamBorder1" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
+                            <TextBlock Name="Cam1" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
+                        </Border>
+                    </Grid>
+
                 </Grid>
-            </Grid>
-            <Grid HorizontalAlignment="Stretch" Margin="0,10,10,0" Grid.Column="0" Grid.Row="1">
-                <Grid Background="White">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Image Name="PreviewImage3" Source="{Binding ThirdCameraImageSource, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
-                    <Rectangle x:Name="CropRectangle3" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
-                    <Border x:Name="CamBorder3" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
-                        <TextBlock Name="Cam3" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
-                    </Border>
+                <Grid HorizontalAlignment="Stretch" Margin="0,10,10,10" Grid.Column="1">
+                    <Grid Background="White" Margin="0,0,0,-10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image x:Name="image2" Source="{Binding CameraImageSourceGroup[1], UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
+                        <Rectangle x:Name="CropRectangle2" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
+                        <Border x:Name="CamBorder2" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
+                            <TextBlock Name="Cam2" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
+                        </Border>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Grid HorizontalAlignment="Stretch" Margin="0,10,0,0" Grid.Column="1" Grid.Row="1">
-                <Grid Background="White">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Image Name="PreviewImage4" Source="{Binding FourthCameraImageSource, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
-                    <Rectangle x:Name="CropRectangle4" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
-                    <Border x:Name="CamBorder4" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
-                        <TextBlock Name="Cam4" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
-                    </Border>
+                <Grid HorizontalAlignment="Stretch" Margin="0,10,10,0" Grid.Column="0" Grid.Row="1">
+                    <Grid Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image x:Name="image3" Source="{Binding CameraImageSourceGroup[2], UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
+                        <Rectangle x:Name="CropRectangle3" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
+                        <Border x:Name="CamBorder3" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
+                            <TextBlock Name="Cam3" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+                <Grid HorizontalAlignment="Stretch" Margin="0,10,0,0" Grid.Column="1" Grid.Row="1">
+                    <Grid Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image x:Name="image4" Source="{Binding CameraImageSourceGroupSecond[0], UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
+                        <Rectangle x:Name="CropRectangle4" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
+                        <Border x:Name="CamBorder4" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
+                            <TextBlock Name="Cam4" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+                <Grid HorizontalAlignment="Stretch" Margin="0,10,10,10" Grid.Column="2">
+                    <Grid Background="White" Margin="0,0,0,-10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image x:Name="image5" Source="{Binding CameraImageSourceGroupSecond[1], UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="390"/>
+                        <Rectangle x:Name="CropRectangle5" StrokeThickness="2" Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"></Rectangle>
+                        <Border x:Name="CamBorder5" x:FieldModifier="public" Background="Gray" Grid.Row="2" Grid.Column="0" Margin="0 0 0 0" >
+                            <TextBlock Name="Cam5" x:FieldModifier="public" FontSize="25" TextAlignment="Center" Text="Ready" VerticalAlignment="Center" FontStretch="Expanded" FontWeight="Bold"/>
+                        </Border>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>

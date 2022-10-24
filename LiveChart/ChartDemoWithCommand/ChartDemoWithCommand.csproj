@@ -68,7 +68,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\ChartInfoModel.cs" />
     <Compile Include="ViewModel\ChartViewModel.cs" />
+    <Compile Include="ViewModel\GrooveCountViewModel.cs" />
     <Compile Include="View\ChartView.xaml.cs">
       <DependentUpon>ChartView.xaml</DependentUpon>
     </Compile>

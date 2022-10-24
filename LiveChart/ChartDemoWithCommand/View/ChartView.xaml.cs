@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,14 +24,37 @@ namespace ChartDemoWithCommand.View
     /// <summary>
     /// ChartView.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class ChartView : UserControl
+    public partial class ChartView : UserControl, INotifyPropertyChanged
     {
-        public ChartView()
+        //private int _selectedIndex = 0;
+        //public int SelectedIndex { 
+        //    get => _selectedIndex;
+        //    set 
+        //    {
+        //        _selectedIndex = value;     
+        //        OnPropertyChanged("SelectedIndex");
+        //    } 
+        //}
+
+        public ChartView(int TableID, int ChartID, int ChartType)
         {
             InitializeComponent();
-            DataContext = new ChartViewModel();
+
+            if (ChartType == 0)
+            {
+                DataContext = new ChartViewModel(TableID, ChartID);
+            }
+            else if(ChartType == 1)
+            {
+                DataContext = new GrooveCountViewModel(TableID, ChartID);
+            }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private void ChartOnDataClick(object sender, ChartPoint p)
         {
@@ -58,11 +82,8 @@ namespace ChartDemoWithCommand.View
         {
             var point = Chart.ConvertToChartValues(e.GetPosition(Chart));
 
-            X.Text = point.X.ToString("N");
-            Y.Text = point.Y.ToString("N");
+            //X.Text = point.X.ToString("N");
+            //Y.Text = point.Y.ToString("N");
         }
-
-
-
     }
 }

@@ -13,11 +13,12 @@ namespace Frism_Inspection_Renew
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection\\CameraInfo.db";
-        public static string cs = @"URI=file:" + Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\INTELLIZ Corp\\Frism Inspection\\CameraInfo.db";
+        public static string path = "C:/Frism/CameraInfo.db";
+        public static string cs = @"URI=file:" + "C:/Frism/CameraInfo.db";
         SQLiteConnection con;
         SQLiteCommand cmd;
         public static SQLiteDataReader dr;
+        public static int CameraNum = 5;
 
 
 
@@ -43,10 +44,7 @@ namespace Frism_Inspection_Renew
                     using (var cmd = new SQLiteCommand(stm, con))
                     {
 
-
-
                         dr = cmd.ExecuteReader();
-
 
 
                         while (dr.Read())
@@ -165,10 +163,10 @@ namespace Frism_Inspection_Renew
                         {
                             if (dr.GetString(0) == camId)
                             {
-                                output.Add(dr.GetString(1));
-                                output.Add(dr.GetString(2));
-                                output.Add(dr.GetString(3));
-                                output.Add(dr.GetString(4));
+                                for(int i = 1; i <= CameraNum; i++)
+                                {
+                                    output.Add(dr.GetString(i));
+                                }
                             }
                         }
                     }
@@ -211,10 +209,12 @@ namespace Frism_Inspection_Renew
                         {
                             if (dr.GetString(0) == camId)
                             {
-                                output.Add(dr.GetString(1));
-                                output.Add(dr.GetString(2));
-                                output.Add(dr.GetString(3));
-                                output.Add(dr.GetString(4));
+                                for (int i = 1; i <= CameraNum; i++)
+                                {
+                                    output.Add(dr.GetString(i));
+
+                                }
+                                
                             }
                         }
                         dr.Close();
@@ -251,10 +251,10 @@ namespace Frism_Inspection_Renew
                         {
                             if (dr.GetString(0) == camId)
                             {
-                                output.Add(dr.GetString(1));
-                                output.Add(dr.GetString(2));
-                                output.Add(dr.GetString(3));
-                                output.Add(dr.GetString(4));
+                                for (int i = 1; i <= CameraNum; i++)
+                                {
+                                    output.Add(dr.GetString(i));
+                                }
                             }
                         }
                         dr.Close();
@@ -289,10 +289,10 @@ namespace Frism_Inspection_Renew
                         {
                             if (dr.GetString(0) == camId)
                             {
-                                output.Add(dr.GetString(1));
-                                output.Add(dr.GetString(2));
-                                output.Add(dr.GetString(3));
-                                output.Add(dr.GetString(4));
+                                for (int i = 1; i <= CameraNum; i++)
+                                {
+                                    output.Add(dr.GetString(i));
+                                }
                             }
                         }
                         dr.Close();
@@ -331,11 +331,10 @@ namespace Frism_Inspection_Renew
 
                             if (dr.GetString(0) == camId)
                             {
-
-                                output.Add(dr.GetString(1));
-                                output.Add(dr.GetString(2));
-                                output.Add(dr.GetString(3));
-                                output.Add(dr.GetString(4));
+                                for (int i = 1; i <= CameraNum; i++)
+                                {
+                                    output.Add(dr.GetString(i));
+                                }
                                 break;
                             }
                         }
@@ -372,14 +371,11 @@ namespace Frism_Inspection_Renew
                     string stm = "SELECT * FROM CamInfo";
                     using (var cmd = new SQLiteCommand(stm, con))
                     {
-
-
                         dr = cmd.ExecuteReader();
 
                         while (dr.Read())
                         {
                             output.Add(dr.GetString(0));
-
                         }
                         dr.Close();
                     }
@@ -417,19 +413,22 @@ namespace Frism_Inspection_Renew
 
                         dr = cmd.ExecuteReader();
 
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
-
+                        for (int i = 1; i <= CameraNum; i++)
+                        {
+                            output.Add(null);
+                        }
+                        
+                        
                         while (dr.Read())
                         {
                             if (dr.GetString(0) == "temp")
                             {
-                                output[0] = dr.GetString(1);
-                                output[1] = dr.GetString(2);
-                                output[2] = dr.GetString(3);
-                                output[3] = dr.GetString(4);
+                                for(int i = 0; i < CameraNum; i++)
+                                {
+                                    output[i] = dr.GetString(i+1);
+
+                                }
+
                             }
                         }
                         dr.Close();
@@ -465,19 +464,22 @@ namespace Frism_Inspection_Renew
 
                         dr = cmd.ExecuteReader();
 
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
+                        for (int i = 1; i <= CameraNum; i++)
+                        {
+                            output.Add(null);
+                        }
 
                         while (dr.Read())
                         {
+
                             if (dr.GetString(0) == "temp")
                             {
-                                output[0] = dr.GetString(1);
-                                output[1] = dr.GetString(2);
-                                output[2] = dr.GetString(3);
-                                output[3] = dr.GetString(4);
+
+                                for (int i = 0; i < CameraNum; i++)
+                                {
+                                    output[i] = dr.GetString(i + 1);
+                                }
+
                             }
                         }
                         dr.Close();
@@ -516,19 +518,20 @@ namespace Frism_Inspection_Renew
 
                         dr = cmd.ExecuteReader();
 
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
+                        for (int i = 0; i < CameraNum; i++)
+                        {
+                            output.Add(null);
+                        }
 
                         while (dr.Read())
                         {
                             if (dr.GetString(0) == "temp")
                             {
-                                output[0] = dr.GetString(1);
-                                output[1] = dr.GetString(2);
-                                output[2] = dr.GetString(3);
-                                output[3] = dr.GetString(4);
+                                for (int i = 0; i < CameraNum; i++)
+                                {
+                                    output[i] = dr.GetString(i + 1);
+                                }
+
                             }
                         }
                         dr.Close();
@@ -564,19 +567,21 @@ namespace Frism_Inspection_Renew
                     {
                         dr = cmd.ExecuteReader();
 
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
+                        for (int i = 0; i < CameraNum; i++)
+                        {
+                            output.Add(null);
+                        }
+                        
+
 
                         while (dr.Read())
                         {
                             if (dr.GetString(0) == "temp")
                             {
-                                output[0] = dr.GetString(1);
-                                output[1] = dr.GetString(2);
-                                output[2] = dr.GetString(3);
-                                output[3] = dr.GetString(4);
+                                for (int i = 0; i < CameraNum; i++)
+                                {
+                                    output[i] = dr.GetString(i + 1);
+                                }
                             }
                         }
                         dr.Close();
@@ -614,19 +619,23 @@ namespace Frism_Inspection_Renew
 
                         dr = cmd.ExecuteReader();
 
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
-                        output.Add(null);
+                        for (int i = 0; i < CameraNum; i++)
+                        {
+                            output.Add(null);
+                            
+                        }
+                        
+
 
                         while (dr.Read())
                         {
                             if (dr.GetString(0) == "temp")
                             {
-                                output[0] = dr.GetString(1);
-                                output[1] = dr.GetString(2);
-                                output[2] = dr.GetString(3);
-                                output[3] = dr.GetString(4);
+                                for (int i = 0; i < CameraNum; i++)
+                                {
+                                    output[i] = dr.GetString(i + 1);
+                                }
+  
                             }
                         }
                         dr.Close();
@@ -655,13 +664,13 @@ namespace Frism_Inspection_Renew
                     using (var sqlite = new SQLiteConnection(@"Data Source=" + path))
                     {
                         sqlite.Open();
-                        string sql = "create table CamInfo(id varchar(12),cam1 varchar(25),cam2 varchar(25),cam3 varchar(25),cam4 varchar(25))";
-                        string sqlExtime = "create table CamExTime(id varchar(12),Extime1 varchar(25),Extime2 varchar(25),Extime3 varchar(25),Extime4 varchar(25))";
+                        string sql = "create table CamInfo(id varchar(12),cam1 varchar(25),cam2 varchar(25),cam3 varchar(25),cam4 varchar(25),cam5 varchar(25))";
+                        string sqlExtime = "create table CamExTime(id varchar(12),Extime1 varchar(25),Extime2 varchar(25),Extime3 varchar(25),Extime4 varchar(25),Extime5 varchar(25))";
                         string sqlLED = "create table LEDVal(id varchar(12),LEDRed varchar(25),LEDGreen varchar(25),LEDBlue varchar(25),LEDWhite varchar(25))";
-                        string sqlDNN = "create table DNNFilePath(id varchar(12),TopDnn varchar(25),FirstDnn varchar(25),SecondDnn varchar(25),ThirdDnn varchar(25))";
+                        string sqlDNN = "create table DNNFilePath(id varchar(12),TopDnn varchar(25),FirstDnn varchar(25),SecondDnn varchar(25),ThirdDnn varchar(25), FourthDnn varchar(25))";
                         string sqlBasicSet = "create table BasicSet(id varchar(12),folderPath varchar(25),maxThreadCnt varchar(25),maxTileW varchar(25),maxTileH varchar(25)," +
                             "gpuNum varchar(25),minDefectSizeT varchar(25),minPValT varchar(25),minDefectSizeS varchar(25),minPValS varchar(25))";
-                        string sqlCameraROI = "create table Camera_ROI(id varchar(12),topROI varchar(25),side1ROI varchar(25),side2ROI varchar(25),side3ROI varchar(25))";
+                        string sqlCameraROI = "create table Camera_ROI(id varchar(12),topROI varchar(25),side1ROI varchar(25),side2ROI varchar(25),side3ROI varchar(25), side4ROI varchar(25))";
 
 
                         SQLiteCommand command = new SQLiteCommand(sql, sqlite);
@@ -820,13 +829,14 @@ namespace Frism_Inspection_Renew
                     con.Open();
                     using (var cmd = new SQLiteCommand(con))
                     {
-                        cmd.CommandText = "INSERT INTO CamInfo(id,cam1,cam2,cam3,cam4) VALUES(@id,@cam1,@cam2,@cam3,@cam4)";
+                        cmd.CommandText = "INSERT INTO CamInfo(id,cam1,cam2,cam3,cam4,cam5) VALUES(@id,@cam1,@cam2,@cam3,@cam4,@cam5)";
 
                         cmd.Parameters.AddWithValue("@id", settingId);
                         cmd.Parameters.AddWithValue("@cam1", caminfo[0]);
                         cmd.Parameters.AddWithValue("@cam2", caminfo[1]);
                         cmd.Parameters.AddWithValue("@cam3", caminfo[2]);
                         cmd.Parameters.AddWithValue("@cam4", caminfo[3]);
+                        cmd.Parameters.AddWithValue("@cam5", caminfo[4]);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -847,13 +857,14 @@ namespace Frism_Inspection_Renew
                     con.Open();
                     using (var cmd = new SQLiteCommand(con))
                     {
-                        cmd.CommandText = "INSERT INTO CamExTime(id,Extime1,Extime2,Extime3,Extime4) VALUES(@id,@Extime1,@Extime2,@Extime3,@Extime4)";
+                        cmd.CommandText = "INSERT INTO CamExTime(id,Extime1,Extime2,Extime3,Extime4,Extime5) VALUES(@id,@Extime1,@Extime2,@Extime3,@Extime4,@Extime5)";
 
                         cmd.Parameters.AddWithValue("@id", settingId);
                         cmd.Parameters.AddWithValue("@Extime1", exTimeInfo[0]);
                         cmd.Parameters.AddWithValue("@Extime2", exTimeInfo[1]);
                         cmd.Parameters.AddWithValue("@Extime3", exTimeInfo[2]);
                         cmd.Parameters.AddWithValue("@Extime4", exTimeInfo[3]);
+                        cmd.Parameters.AddWithValue("@Extime5", exTimeInfo[4]);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -903,13 +914,14 @@ namespace Frism_Inspection_Renew
                     con.Open();
                     using (var cmd = new SQLiteCommand(con))
                     {
-                        cmd.CommandText = "INSERT INTO DNNFilePath(id,TopDnn,FirstDnn,SecondDnn,ThirdDnn) VALUES(@id,@TopDnn,@FirstDnn,@SecondDnn,@ThirdDnn)";
+                        cmd.CommandText = "INSERT INTO DNNFilePath(id,TopDnn,FirstDnn,SecondDnn,ThirdDnn,FourthDnn) VALUES(@id,@TopDnn,@FirstDnn,@SecondDnn,@ThirdDnn,@ThirdDnn)";
 
                         cmd.Parameters.AddWithValue("@id", settingId);
                         cmd.Parameters.AddWithValue("@TopDnn", DnnFilePath[0]);
                         cmd.Parameters.AddWithValue("@FirstDnn", DnnFilePath[1]);
                         cmd.Parameters.AddWithValue("@SecondDnn", DnnFilePath[2]);
                         cmd.Parameters.AddWithValue("@ThirdDnn", DnnFilePath[3]);
+                        cmd.Parameters.AddWithValue("@FourthDnn", DnnFilePath[4]);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -926,7 +938,7 @@ namespace Frism_Inspection_Renew
         {
             try
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < CameraNum; i++)
                 {
                     if (imgCropInfo[i] == "null")
                     {
@@ -941,13 +953,14 @@ namespace Frism_Inspection_Renew
                     con.Open();
                     using (var cmd = new SQLiteCommand(con))
                     {
-                        cmd.CommandText = "INSERT INTO Camera_ROI(id,topROI,side1ROI,side2ROI,side3ROI) VALUES(@id,@topROI,@side1ROI,@side2ROI,@side3ROI)";
+                        cmd.CommandText = "INSERT INTO Camera_ROI(id,topROI,side1ROI,side2ROI,side3ROI,side4ROI) VALUES(@id,@topROI,@side1ROI,@side2ROI,@side3ROI,@side4ROI)";
 
                         cmd.Parameters.AddWithValue("@id", settingId);
                         cmd.Parameters.AddWithValue("@topROI", imgCropInfo[0]);
                         cmd.Parameters.AddWithValue("@side1ROI", imgCropInfo[1]);
                         cmd.Parameters.AddWithValue("@side2ROI", imgCropInfo[2]);
                         cmd.Parameters.AddWithValue("@side3ROI", imgCropInfo[3]);
+                        cmd.Parameters.AddWithValue("@side4ROI", imgCropInfo[4]);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -1051,12 +1064,13 @@ namespace Frism_Inspection_Renew
                     con.Open();
                     using (var cmd = new SQLiteCommand(con))
                     {
-                        cmd.CommandText = "UPDATE CamInfo Set cam1=@cam1,cam2=@cam2,cam3=@cam3,cam4=@cam4 where id=@Id";
+                        cmd.CommandText = "UPDATE CamInfo Set cam1=@cam1,cam2=@cam2,cam3=@cam3,cam4=@cam4, cam5=@cam5 where id=@Id";
                         cmd.Prepare();
                         cmd.Parameters.AddWithValue("@cam1", caminfo[0]);
                         cmd.Parameters.AddWithValue("@cam2", caminfo[1]);
                         cmd.Parameters.AddWithValue("@cam3", caminfo[2]);
                         cmd.Parameters.AddWithValue("@cam4", caminfo[3]);
+                        cmd.Parameters.AddWithValue("@cam5", caminfo[4]);
                         cmd.Parameters.AddWithValue("@Id", settingId);
 
                         cmd.ExecuteNonQuery();
@@ -1083,12 +1097,13 @@ namespace Frism_Inspection_Renew
                     con.Open();
                     using (var cmd = new SQLiteCommand(con))
                     {
-                        cmd.CommandText = "UPDATE CamExTime Set Extime1=@Extime1,Extime2=@Extime2,Extime3=@Extime3,Extime4=@Extime4 where id=@Id";
+                        cmd.CommandText = "UPDATE CamExTime Set Extime1=@Extime1,Extime2=@Extime2,Extime3=@Extime3,Extime4=@Extime4,Extime5=@Extime5 where id=@Id";
                         cmd.Prepare();
                         cmd.Parameters.AddWithValue("@Extime1", exTimeInfo[0]);
                         cmd.Parameters.AddWithValue("@Extime2", exTimeInfo[1]);
                         cmd.Parameters.AddWithValue("@Extime3", exTimeInfo[2]);
                         cmd.Parameters.AddWithValue("@Extime4", exTimeInfo[3]);
+                        cmd.Parameters.AddWithValue("@Extime5", exTimeInfo[4]);
                         cmd.Parameters.AddWithValue("@Id", settingId);
 
                         cmd.ExecuteNonQuery();
@@ -1145,12 +1160,13 @@ namespace Frism_Inspection_Renew
                     con.Open();
                     using (var cmd = new SQLiteCommand(con))
                     {
-                        cmd.CommandText = "UPDATE DNNFilePath Set TopDnn=@TopDnn,FirstDnn=@FirstDnn,SecondDnn=@SecondDnn,ThirdDnn=@ThirdDnn where id=@Id";
+                        cmd.CommandText = "UPDATE DNNFilePath Set TopDnn=@TopDnn,FirstDnn=@FirstDnn,SecondDnn=@SecondDnn,ThirdDnn=@ThirdDnn,FourthDnn=@FourthDnn where id=@Id";
                         cmd.Prepare();
                         cmd.Parameters.AddWithValue("@TopDnn", DNNFilePath[0]);
                         cmd.Parameters.AddWithValue("@FirstDnn", DNNFilePath[1]);
                         cmd.Parameters.AddWithValue("@SecondDnn", DNNFilePath[2]);
                         cmd.Parameters.AddWithValue("@ThirdDnn", DNNFilePath[3]);
+                        cmd.Parameters.AddWithValue("@FourthDnn", DNNFilePath[3]);
                         cmd.Parameters.AddWithValue("@Id", settingId);
 
                         cmd.ExecuteNonQuery();
@@ -1180,7 +1196,7 @@ namespace Frism_Inspection_Renew
                     using (var cmd = new SQLiteCommand(con))
                     {
 
-                        cmd.CommandText = "UPDATE Camera_ROI Set topROI=@topROI,side1ROI=@side1ROI,side2ROI=@side2ROI,side3ROI=@side3ROI where id=@Id";
+                        cmd.CommandText = "UPDATE Camera_ROI Set topROI=@topROI,side1ROI=@side1ROI,side2ROI=@side2ROI,side3ROI=@side3ROI,side4ROI=@side4ROI where id=@Id";
                         cmd.Prepare();
 
 
@@ -1189,6 +1205,7 @@ namespace Frism_Inspection_Renew
                         cmd.Parameters.AddWithValue("@side1ROI", imgCropInfo[1]);
                         cmd.Parameters.AddWithValue("@side2ROI", imgCropInfo[2]);
                         cmd.Parameters.AddWithValue("@side3ROI", imgCropInfo[3]);
+                        cmd.Parameters.AddWithValue("@side4ROI", imgCropInfo[4]);
                         cmd.Parameters.AddWithValue("@Id", settingId);
 
                         cmd.ExecuteNonQuery();

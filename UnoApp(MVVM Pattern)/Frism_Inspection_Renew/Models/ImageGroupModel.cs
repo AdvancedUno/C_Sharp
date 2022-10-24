@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
+using System.Xml.Linq;
 
 namespace Frism_Inspection_Renew.Models
 {
-    public class ImageGroupModel
+
+    public class ImageGroupModel : ICloneable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -31,10 +36,25 @@ namespace Frism_Inspection_Renew.Models
         private int _cameraNum;
         public int CameraNum { get => _cameraNum; set => _cameraNum = value; }
 
+        public object Clone()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                if (this.GetType().IsSerializable)
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(stream, this);
+                    stream.Position = 0;
+                    return formatter.Deserialize(stream);
+                }
+                return null;
+            }
+        }
+
         public ImageGroupModel(int cameraNum)
         {
             ImageInfoModelList = new List<ImageInfoModel>();
-            SaveFolderPath = "D:/TB/Image";
+            SaveFolderPath = "C:/Frism/Images";
             CameraNum = cameraNum;
             try
             {
@@ -48,6 +68,28 @@ namespace Frism_Inspection_Renew.Models
                 Logger.Error(exception.Message + " AddImageInfoModel");
             }
         }
+
+        public ImageGroupModel(ImageGroupModel originalImageGroupModel)
+        {
+            //var copy1 = originalImageGroupModel.ImageInfoModelList.Select(s => new Student { name = s.name, age = s.age }).ToList();
+            //ImageInfoModelList = originalImageGroupModel.ImageInfoModelList;
+            //SaveFolderPath = originalImageGroupModel.SaveFolderPath;
+            //CameraNum = cameraNum;
+            //try
+            //{
+            //    for (int i = 0; i < CameraNum; i++)
+            //    {
+            //        CheckImageInfoDict.Add(i, false);
+            //    }
+            //}
+            //catch (Exception exception)
+            //{
+            //    Logger.Error(exception.Message + " AddImageInfoModel");
+            //}
+        }
+
+
+
 
         public int AddImageInfoModel(ImageInfoModel imageInfoModel)
         {
@@ -102,18 +144,25 @@ namespace Frism_Inspection_Renew.Models
 
         public void SetDnnInfo()
         {
-            List<string> basicInfoList = DBAcess.GiveBasicSettings("0");
-            for (int i = 0; i < CameraNum; i++)
+            try
             {
-                if (basicInfoList != null && basicInfoList.Count > 7)
+                List<string> basicInfoList = DBAcess.GiveBasicSettings("0");
+                for (int i = 0; i < CameraNum; i++)
                 {
-                    ImageInfoModelList[i].DnnSettingInfoModel = DnnSetEvent(ImageInfoModelList[i].CameraPosition, Int32.Parse(basicInfoList[0]), Int32.Parse(basicInfoList[1]), Int32.Parse(basicInfoList[2]), Int32.Parse(basicInfoList[3]),
-                    Int32.Parse(basicInfoList[4]), float.Parse(basicInfoList[5]), Int32.Parse(basicInfoList[6]), float.Parse(basicInfoList[7]));
+                    if (basicInfoList != null && basicInfoList.Count > 7)
+                    {
+                        ImageInfoModelList[i].DnnSettingInfoModel = DnnSetEvent(ImageInfoModelList[i].CameraPosition, Int32.Parse(basicInfoList[0]), Int32.Parse(basicInfoList[1]), Int32.Parse(basicInfoList[2]), Int32.Parse(basicInfoList[3]),
+                        Int32.Parse(basicInfoList[4]), float.Parse(basicInfoList[5]), Int32.Parse(basicInfoList[6]), float.Parse(basicInfoList[7]));
+                    }
+                    else
+                    {
+                        ImageInfoModelList[i].DnnSettingInfoModel = DnnSetEvent(ImageInfoModelList[i].CameraPosition, 4, 800, 600, 0, 10, 0.5f, 10, 0.5f);
+                    }
                 }
-                else
-                {
-                    ImageInfoModelList[i].DnnSettingInfoModel = DnnSetEvent(ImageInfoModelList[i].CameraPosition, 1, 1600, 800, 4, 10, 0.5f, 10, 0.5f);
-                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " SetDnnInfo");
             }
         }
 
@@ -122,7 +171,6 @@ namespace Frism_Inspection_Renew.Models
             DnnSetingInfoModel DnnSettingInfoModel = new DnnSetingInfoModel();
             try
             {
-
                 DnnSettingInfoModel.MaxThreadCount = ThreadCnt;
                 DnnSettingInfoModel.MaxTileHeight = Height;
                 DnnSettingInfoModel.MaxTileWidth = Width;
@@ -137,7 +185,6 @@ namespace Frism_Inspection_Renew.Models
                     DnnSettingInfoModel.MinDefectSize = MinDefectNumSide;
                     DnnSettingInfoModel.UppperPValue = MinPValSide;
                 }
-
             }
             catch (Exception exception)
             {

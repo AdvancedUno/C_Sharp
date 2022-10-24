@@ -1,4 +1,5 @@
 ﻿using Frism_Inspection_Renew.Models;
+using Frism_Inspection_Renew.Services;
 using Frism_Inspection_Renew.Stores;
 using Frism_Inspection_Renew.ViewModels;
 using Frism_Inspection_Renew.Views;
@@ -20,39 +21,57 @@ namespace Frism_Inspection_Renew
     {
         
         public static string[] Args;
+
+        private readonly NavigationStore _navigationStore;
+        private readonly SideBarViewModel _sideBarViewModel;
+
+        public App()
+        {
+            _navigationStore = new NavigationStore();
+            _sideBarViewModel = new SideBarViewModel(
+                CreateHomeNaviationService(),
+                CreateSetCameraNavigationService(),
+                CreateDNNSettingNavigationService()
+                ) ;
+        }
+
+        
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            NavigationStore navigationStore = new NavigationStore();
-            
 
-            navigationStore.CurrentViewModel = new MainViewModel(navigationStore);
+            NavigationService<MainViewModel> maineNavigationService = CreateHomeNaviationService();
+            maineNavigationService.Navigate();
+
 
             MainWindow = new MainWindow()
             {
-                DataContext = new WindowViewModel(navigationStore)
+                DataContext = new WindowViewModel(_navigationStore)
             };
             MainWindow.Show();
 
             base.OnStartup(e);
 
 
-            //if (e.Args.Length > 0)
-            //{
-            //    Args = e.Args;
+          
 
-            //}
+        }
 
-            //Task.Factory.StartNew(() =>
-            //{
-            //    this.Dispatcher.Invoke(() =>
-            //    {
-            //        var mainWindow = new MainView();
-            //        this.MainWindow = mainWindow;
-            //        mainWindow.Show();
+        private NavigationService<MainViewModel> CreateHomeNaviationService()
+        {
+            return new NavigationService<MainViewModel>(_navigationStore,
+                () => new MainViewModel(_sideBarViewModel));
+        }
+        private NavigationService<SetCameraViewModel> CreateSetCameraNavigationService()
+        {
+            return new NavigationService<SetCameraViewModel>(_navigationStore,
+                () => new SetCameraViewModel(_sideBarViewModel));
+        }
 
-            //    });
-            //});
-
+        private NavigationService<DNNSettingViewModel> CreateDNNSettingNavigationService()
+        {
+            return new NavigationService<DNNSettingViewModel>(_navigationStore,
+                () => new DNNSettingViewModel(_sideBarViewModel));
         }
     }
 }

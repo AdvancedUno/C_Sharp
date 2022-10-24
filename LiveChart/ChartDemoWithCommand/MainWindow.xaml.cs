@@ -23,8 +23,10 @@ namespace ChartDemoWithCommand
         public MainWindow()
         {
             InitializeComponent();
-            content.Content = Activator.CreateInstance(null, $"ChartDemoWithCommand.View.ChartView").Unwrap();
+            content.Content = Activator.CreateInstance(null, $"ChartDemoWithCommand.View.SelectView").Unwrap();
 
         }
+
+
     }
 }
